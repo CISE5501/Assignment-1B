@@ -48,18 +48,6 @@ const App: React.FC = () => {
       .catch(err => console.log(err))
   }
 
-  const handleSaveTodo = (e: React.FormEvent, formData: IArticle): void => {
-    e.preventDefault()
-    addArticle(formData)
-      .then(({ status, data }) => {
-        if (status !== 201) {
-          throw new Error("Error! Todo not saved")
-        }
-        setArticles(data.articles)
-      })
-      .catch(err => console.log(err))
-  }
-
   return (
     <main className='App'>
       <h1>My Articles</h1>
