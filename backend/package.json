@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
     "start": "concurrently \"npx tsc --watch\" \"nodemon -q dist/js/app.js\""

@@ -16,6 +16,14 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+/*
+* Method to add a new Article into the database
+* The method receives a body object that contains the data entered by user (form)
+* Typecast to avoid typos and restrict body object to match IArticle variables
+* Creates a new Article based on the model
+* Returns a response that contains the created article and the updated article array
+*/
+
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IArticle, "title" | "author" | "doi">
@@ -36,3 +44,52 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
     throw error
   }
 }
+
+/* 
+* Method that updates an article stored in database
+* Uses the id extracted from the req object and passes to findByIdAndUpdate()
+* Returns updated data to user
+*/
+const updateArticle = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req
+    const updateArticle: IArticle | null = await Article.findByIdAndUpdate(
+      { _id: id },
+      body
+    )
+    const allArticles: IArticle[] = await Article.find()
+    res.status(200).json({
+      message: "Article updated",
+      article: updateArticle,
+      articles: allArticles,
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+/* 
+* Method that deletes an article stored in database
+* Uses the id extracted from the req object and passes to findByIdAndRemove()
+* Returns updated data to user
+*/
+const deleteArticle = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const deletedArticle: IArticle | null = await Article.findByIdAndRemove(
+      req.params.id
+    )
+    const allArticles: IArticle[] = await Article.find()
+    res.status(200).json({
+      message: "Article deleted",
+      article: deletedArticle,
+      articles: allArticles,
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export { getArticles, addArticle, updateArticle, deleteArticle }
