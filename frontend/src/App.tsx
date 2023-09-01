@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   const fetchArticles = (): void => {
     getArticles()
-      .then(({ data: { article } }: IArticle[] | any) => setArticles(article))
+      .then(({ data: { articles } }: IArticle[] | any) => setArticles(articles))
       .catch((err: Error) => console.log(err))
   }
   const handleSaveArticle = (e: React.FormEvent, formData: IArticle): void => {

@@ -11,17 +11,7 @@ const Article: React.FC<Props> = ({ article, updateArticle, deleteArticle }) => 
       <div className="Card--text">
         <h1>{article.title}</h1>
         <span>{article.author}</span>
-      </div>
-      <div className="Card--button">
-        <button
-          onClick={() => updateArticle(article)}>
-          Complete
-        </button>
-        <button
-          onClick={() => deleteArticle(article._id)}
-        >
-          Delete
-        </button>
+        <span>{article.doi}</span>
       </div>
     </div>
   )

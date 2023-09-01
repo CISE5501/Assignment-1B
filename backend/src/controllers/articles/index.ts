@@ -1,5 +1,5 @@
 import { Response, Request } from "express"
-import { IArticle } from "./../../types/article"
+import { IArticle } from "../../types/article"
 import Article from "../../models/article"
 
 /*
@@ -26,7 +26,7 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<IArticle, "title" | "author" | "doi">
+    const body = req.body as Pick<IArticle, 'title' | 'author' | 'doi'>
 
     const article: IArticle = new Article({
       title: body.title,
@@ -37,11 +37,10 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
     const newArticle: IArticle = await article.save()
     const allArticles: IArticle[] = await Article.find()
 
-    res
-      .status(201)
-      .json({ message: "Article added", Article: newArticle, Articles: allArticles })
+    res.status(201).json({ message: "Article added", article: newArticle, articles: allArticles })
   } catch (error) {
-    throw error
+        console.log(error)
+        res.status(400).send(error);
   }
 }
 
