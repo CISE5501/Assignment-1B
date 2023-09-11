@@ -1,8 +1,6 @@
 {
     "env": {
-        "MONGO_USER": "User-Admin", 
-        "MONGO_PASSWORD": "tu-vii479A",
-        "MONGO_DB": "ARTICLES_DB",
+        "MONGO_URI": "mongodb+srv://User-Admin:tu-vii479A@5501cluster.12sz4ua.mongodb.net/ARTICLES_DB?retryWrites=true&w=majority",
         "PORT": 4000
     }
 }

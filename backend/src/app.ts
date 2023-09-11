@@ -12,12 +12,12 @@ app.use(express.json())
 app.use(cors())
 app.use(articleRoutes)
 
-const uri: string =  `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@5501cluster.12sz4ua.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+const uri: string | string = process.env.MONGO_URI || "localhost";
 mongoose
   .connect(uri)
   .then(() =>
     app.listen(PORT, () =>
-      console.log(`Server running on http://localhost:${PORT}`)
+      console.log(`Server running on ${process.env.MONGO_URI}`)
     )
   )
   .catch(error => {
