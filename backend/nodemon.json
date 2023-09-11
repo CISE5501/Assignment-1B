@@ -2,6 +2,7 @@
     "env": {
         "MONGO_USER": "User-Admin", 
         "MONGO_PASSWORD": "tu-vii479A",
-        "MONGO_DB": "ARTICLES_DB"
+        "MONGO_DB": "ARTICLES_DB",
+        "PORT": 4000
     }
 }
