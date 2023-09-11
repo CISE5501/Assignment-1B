@@ -8,8 +8,33 @@ const articleSchema: Schema = new Schema(
             required: true,
         },
 
-        author: {
+        authors: {
+            type: Array<String>,
+            required: true,
+        },
+
+        date: {
             type: String,
+            required: true,
+        },
+
+        journal: {
+            type: String,
+            required: true,
+        },
+
+        volume: {
+            type: Number,
+            required: true,
+        },
+
+        issue: {
+            type: Number,
+            required: true,
+        },
+
+        pageRange: {
+            type: Array<Number>,
             required: true,
         },
 
@@ -17,12 +42,23 @@ const articleSchema: Schema = new Schema(
             type: String,
             required: true,
         },
+
+        keywords: {
+            type: Array<String>,
+            required: false,
+        },
+
+        abstract: {
+            type: String,
+            required: false,
+        },
+
     },
     { timestamps: true }
 )
 
 
-//pass in ITodo to the model before it gets exported
-//now Todo model can be used to interact with the database in other files
+//pass in IArticle to the model before it gets exported
+//now Article model can be used to interact with the database in other files
 
 export default model<IArticle>("Article", articleSchema)

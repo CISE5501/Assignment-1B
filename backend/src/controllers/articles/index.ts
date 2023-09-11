@@ -26,12 +26,19 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<IArticle, 'title' | 'author' | 'doi'>
+    const body = req.body as Pick<IArticle, 'title' | 'authors' | 'date' | 'journal' | 'volume' | 'issue' | 'pageRange' | 'doi' | 'keywords' | 'abstract'>
 
     const article: IArticle = new Article({
       title: body.title,
-      author: body.author,
+      authors: body.authors,
+      date: body.date,
+      journal: body.journal,
+      volume: body.volume,
+      issue: body.issue,
+      pageRange: body.pageRange,
       doi: body.doi,
+      keywords: body.keywords,
+      abstract: body.abstract,
     })
 
     const newArticle: IArticle = await article.save()
@@ -39,8 +46,8 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({ message: "Article added", article: newArticle, articles: allArticles })
   } catch (error) {
-        console.log(error)
-        res.status(400).send(error);
+    console.log(error)
+    res.status(400).json(error);
   }
 }
 
