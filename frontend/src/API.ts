@@ -21,8 +21,15 @@ export const addArticle = async (
     try {
         const article: Omit<IArticle, "_id"> = {
             title: formData.title,
-            author: formData.author,
+            authors: formData.authors,
+            date: formData.date,
+            journal: formData.journal,
+            volume: formData.volume,
+            issue: formData.issue,
+            pageRange: formData.pageRange,
             doi: formData.doi,
+            keywords: formData.keywords,
+            abstract: formData.abstract,
         }
         const saveArticle: AxiosResponse<ApiDataType> = await axios.post(
             baseUrl + "/add-article",
