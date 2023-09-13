@@ -1,7 +1,7 @@
 //fetch data
 import axios, { AxiosResponse } from "axios"
 
-const baseUrl: string = "http://localhost:4000"
+const baseUrl: string = "https://backend-ore9irwx5-janenotjung-hue.vercel.app"
 
 export const getArticles = async (): Promise<AxiosResponse<ApiDataType>> => {
     try {

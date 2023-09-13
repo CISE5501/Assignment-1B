@@ -1,7 +1,9 @@
 import { Router } from "express"
-import { getArticles, addArticle, updateArticle, deleteArticle } from "../controllers/articles"
+import { getHome, getArticles, addArticle, updateArticle, deleteArticle } from "../controllers/articles"
 
 const router: Router = Router()
+
+router.get("/", getArticles)
 
 router.get("/articles", getArticles)
 

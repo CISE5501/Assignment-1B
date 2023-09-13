@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(cors())
 app.use(articleRoutes)
 
-const uri = `${process.env.MONGO_URI}`;
+const uri: string = process.env.MONGO_URI || "";
 mongoose
   .connect(uri)
   .then(() =>
@@ -22,3 +22,5 @@ mongoose
   .catch(error => {
     throw error
   })
+
+  export default app;

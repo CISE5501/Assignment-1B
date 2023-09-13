@@ -2,6 +2,14 @@ import { Response, Request } from "express"
 import { IArticle } from "../../types/article"
 import Article from "../../models/article"
 
+
+const getHome = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.status(200).send("home")
+  } catch (error) {
+    throw error
+  }
+}
 /*
 * Method to retrieve array of articles
 * Parameters: Request, Response
@@ -98,4 +106,4 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export { getArticles, addArticle, updateArticle, deleteArticle }
+export { getHome, getArticles, addArticle, updateArticle, deleteArticle }
