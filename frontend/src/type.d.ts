@@ -6,25 +6,30 @@
 
 */
 interface IArticle {
-    _id: string
-    title: string
-    author: string
-    doi: boolean
-    createdAt?: string
-    updatedAt?: string
-  }
-  /*
-  Next, we use that same interface for the ArticleoProps which is
-   the type annotation for the props that will be received by
-    the component responsible for rendering the data.
-  */
-  type ArticleProps = {
-    article: IArticle
-  }
-  
-  type ApiDataType = {
-    message: string
-    status: string
-    articles: IArticle[]
-    article?: IArticle
-  }
+  _id: string
+  title: string
+  authors: string[]
+  date: string
+  journal: string
+  volume: number
+  issue: number
+  pageRange: number[]
+  doi: string
+  keywords: string[]
+  abstract: string
+}
+/*
+Next, we use that same interface for the ArticleProps which is
+ the type annotation for the props that will be received by
+  the component responsible for rendering the data.
+*/
+type ArticleProps = {
+  article: IArticle
+}
+
+type ApiDataType = {
+  message: string
+  status: string
+  articles: IArticle[]
+  article?: IArticle
+}

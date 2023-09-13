@@ -2,6 +2,14 @@ import { Response, Request } from "express"
 import { IArticle } from "../../types/article"
 import Article from "../../models/article"
 
+
+const getHome = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.status(200).send("home")
+  } catch (error) {
+    throw error
+  }
+}
 /*
 * Method to retrieve array of articles
 * Parameters: Request, Response
@@ -26,12 +34,19 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<IArticle, 'title' | 'author' | 'doi'>
+    const body = req.body as Pick<IArticle, 'title' | 'authors' | 'date' | 'journal' | 'volume' | 'issue' | 'pageRange' | 'doi' | 'keywords' | 'abstract'>
 
     const article: IArticle = new Article({
       title: body.title,
-      author: body.author,
+      authors: body.authors,
+      date: body.date,
+      journal: body.journal,
+      volume: body.volume,
+      issue: body.issue,
+      pageRange: body.pageRange,
       doi: body.doi,
+      keywords: body.keywords,
+      abstract: body.abstract,
     })
 
     const newArticle: IArticle = await article.save()
@@ -39,8 +54,8 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({ message: "Article added", article: newArticle, articles: allArticles })
   } catch (error) {
-        console.log(error)
-        res.status(400).send(error);
+    console.log(error)
+    res.status(400).json(error);
   }
 }
 
@@ -91,4 +106,4 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export { getArticles, addArticle, updateArticle, deleteArticle }
+export { getHome, getArticles, addArticle, updateArticle, deleteArticle }
