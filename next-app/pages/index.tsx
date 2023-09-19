@@ -4,7 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Container } from 'react-bootstrap';
 import ArticleItem from "@/components/ArticleItem";
 interface IndexProps {
-    data: { articles: Article[] }
+    data: {
+        message: string 
+        articleData: Article[] }
 }
 
 const headerList = ["Title",
@@ -19,7 +21,7 @@ const headerList = ["Title",
     "Abstract"]
 
 const Index = ({ data }: IndexProps) => {
-    const articleElements = data.articles.map((item, index) => (
+    const articleElements = data.articleData.map((item, index) => (
         <ArticleItem article={item} key={index} />
     ))
 
@@ -43,9 +45,9 @@ const Index = ({ data }: IndexProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const res = await fetch('https://backend-44r1qkg04-janenotjung-hue.vercel.app/articles/')
+    const res = await fetch('https://nest-backend-janenotjung-hue.vercel.app/articles/')
     const data = await res.json()
-    //console.log(data)
+    console.log(data)
     return {
         props: {
             data
