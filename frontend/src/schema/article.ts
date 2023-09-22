@@ -1,11 +1,11 @@
 export type Article = {
   title: string;
   authors: string[];
-  date: String;
+  date: string;
   journal: string;
   volume: number;
   issue: number;
-  pageRange: number[];
+  pageRange: [number, number];
   doi: string;
   keywords: string[];
   abstract: string;
