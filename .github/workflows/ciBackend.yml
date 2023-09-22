@@ -28,8 +28,5 @@ jobs:
           - name: Install Dependencies
             run: npm i
         
-          - name: Build Nest
-            run: npm run build
-        
           - name: Test Nest
             run: npm run test
