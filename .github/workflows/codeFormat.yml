@@ -15,29 +15,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - name: Load frontend
+        run: cd frontend
+
+      - name: Prettify frontend code
+        uses: creyD/prettier_action@v4.3
         with:
-          node-version: 18
+          prettier_options: --write .
 
-      - name: Format frontend
-        run: |
-          cd frontend
-          npm install
-          npm run format
-          cd ..
+      - name: Load backend
+        run: cd backend
 
-      - name: Format backend
-        run: |
-          cd backend
-          npm install
-          npm run format
-          cd ..
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Prettify backend code
+        uses: creyD/prettier_action@v4.3
         with:
-          commit_message: Reformat all files with prettier
-          branch: ${{ github.head_ref }}
+          prettier_options: --write .
+
