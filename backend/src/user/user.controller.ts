@@ -10,14 +10,17 @@ import {
   Res,
 } from '@nestjs/common';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
+import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
 //controller- routes articles to get/post methods
 
 @Controller('articles')
 export class UserController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
-  /*
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly queuedArticleService: QueuedArticleService,
+  ) {}
   @Get()
   async getArticles(@Res() response) {
     try {
@@ -30,7 +33,7 @@ export class UserController {
       return response.status(err.status).json(err.response);
     }
   }
-  
+
   @Get('/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
@@ -43,7 +46,6 @@ export class UserController {
       return response.status(err.status).json(err.response);
     }
   }
-  */
 
   @Post()
   async createArticle(
