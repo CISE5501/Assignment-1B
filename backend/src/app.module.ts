@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { ModeratorController } from './moderator/moderator.controller';
 import { AnalystController } from './analyst/analyst.controller';
+import { QueueController } from './queue/articleQueue.controller';
 import { QueuedArticleSchema } from './models/queuedArticles/queuedArticle.schema';
 import { QueuedArticleService } from './models/queuedArticles/queuedArticle.service';
 import { ArticleSchema } from './models/articles/article.schema';
@@ -29,6 +30,7 @@ import { ArticleService } from './models/articles/article.service';
     AppController,
     ModeratorController,
     AnalystController,
+    QueueController,
     UserController,
   ],
   providers: [AppService, QueuedArticleService],
