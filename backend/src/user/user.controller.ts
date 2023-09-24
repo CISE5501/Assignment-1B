@@ -1,27 +1,26 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpStatus,
   Param,
   Post,
-  Put,
   Res,
 } from '@nestjs/common';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { ArticleService } from 'src/models/articles/article.service';
 
 //controller- routes articles to get/post methods
 
 @Controller('articles')
 export class UserController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
-  /*
-  @Get()
+  constructor(private readonly queuedArticleService: QueuedArticleService, private readonly articleService: ArticleService) {}
+  @Get('')
   async getArticles(@Res() response) {
     try {
-      const articleData = await this.articleService.getAllArticles();
+      const articleData =
+        await this.articleService.getAllArticles();
       return response.status(HttpStatus.OK).json({
         message: 'All articles data found successfully',
         articleData,
@@ -43,9 +42,8 @@ export class UserController {
       return response.status(err.status).json(err.response);
     }
   }
-  */
 
-  @Post()
+  @Post('/new')
   async createArticle(
     @Res() response,
     @Body() createArticleDto: CreateArticleDto,
