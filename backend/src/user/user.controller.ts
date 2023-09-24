@@ -16,7 +16,7 @@ import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.se
 
 @Controller('articles')
 export class UserController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) { }
+  constructor(private readonly queuedArticleService: QueuedArticleService) {}
   /*
   @Get()
   async getArticles(@Res() response) {
@@ -53,9 +53,9 @@ export class UserController {
     try {
       const newArticle =
         await this.queuedArticleService.createArticle(createArticleDto);
-        return response.status(HttpStatus.CREATED).json({
-          message: 'Article has been created successfully',
-          newArticle,
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Article has been created successfully',
+        newArticle,
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -65,6 +65,4 @@ export class UserController {
       });
     }
   }
-
-
 }

@@ -7,9 +7,8 @@ import { UpdateArticleDto } from 'src/models/articles/dto/update-article.dto';
 
 @Injectable()
 export class ArticleService {
-  
   constructor(@InjectModel('Article') private articleModel: Model<IArticle>) {}
-  
+
   async getAllArticles(): Promise<IArticle[]> {
     const articleData = await this.articleModel.find();
     if (!articleData || articleData.length == 0) {
@@ -17,7 +16,7 @@ export class ArticleService {
     }
     return articleData;
   }
-  
+
   async getArticle(articleId: string): Promise<IArticle> {
     const existingArticle = await this.articleModel.findById(articleId).exec();
     if (!existingArticle) {
@@ -25,12 +24,12 @@ export class ArticleService {
     }
     return existingArticle;
   }
-  
+
   async createArticle(createArticleDto: CreateArticleDto): Promise<IArticle> {
     const newArticle = await new this.articleModel(createArticleDto);
     return newArticle.save();
   }
-  
+
   async updateArticle(
     articleId: string,
     updateArticleDto: UpdateArticleDto,
