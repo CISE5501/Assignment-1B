@@ -47,6 +47,22 @@ export class UserController {
     }
   }
 
+  @Get('/includes/:id')
+  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
+    try {
+      await this.articleService.getArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        exists: true,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Article does not exist',
+        exists: false,
+      });
+    }
+  }
+
   @Post()
   async createArticle(
     @Res() response,

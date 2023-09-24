@@ -12,7 +12,7 @@ import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
-@Controller('queued')
+@Controller('queue')
 export class QueueController {
   constructor(
     private readonly articleService: ArticleService,
@@ -27,25 +27,6 @@ export class QueueController {
       return response.status(HttpStatus.OK).json({
         message: 'All queued articles data found successfully',
         articleData,
-      });
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
-  }
-
-  @Get('duplicates')
-  async listDuplicateArticleDOIs(@Res() response) {
-    try {
-      const accepted = await this.articleService.getAllArticles();
-      const acceptedDOIs = accepted.map((article) => article.doi);
-      const queued = await this.queuedArticleService.getAllQueuedArticles();
-      const duplicatesInQueue = queued.filter((queueArticle) =>
-        acceptedDOIs.includes(queueArticle.doi),
-      );
-      const duplicateDOIs = duplicatesInQueue.map((article) => article.doi);
-      return response.status(HttpStatus.OK).json({
-        message: 'All duplicate articles found successfully',
-        duplicateDOIs,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
@@ -70,6 +51,25 @@ export class QueueController {
         message: 'Error: Queue article not created!',
         error: 'Bad Request',
       });
+    }
+  }
+
+  @Get('duplicates')
+  async listDuplicateArticleDOIs(@Res() response) {
+    try {
+      const accepted = await this.articleService.getAllArticles();
+      const acceptedDOIs = accepted.map((article) => article.doi);
+      const queued = await this.queuedArticleService.getAllQueuedArticles();
+      const duplicatesInQueue = queued.filter((queueArticle) =>
+        acceptedDOIs.includes(queueArticle.doi),
+      );
+      const duplicateDOIs = duplicatesInQueue.map((article) => article.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'All duplicate articles found successfully',
+        duplicateDOIs,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
     }
   }
 
@@ -98,6 +98,22 @@ export class QueueController {
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Get('/includes/:id')
+  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
+    try {
+      await this.queuedArticleService.getArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        exists: true,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Article does not exist',
+        exists: false,
+      });
     }
   }
 }
