@@ -1,15 +1,16 @@
 import React from 'react';
-import { Article } from '@/src/schema/article';
+import { QueuedArticle } from '@/src/schema/queuedArticle';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Container } from 'react-bootstrap';
-import ArticleItem from '@/components/ArticleItem';
+import QueueItem from '@/components/QueueItem';
 
-interface IndexProps {
-  data: {
+interface QueueProps {
+  queue: {
     message: string;
-    articleData: Article[];
+    articleData: QueuedArticle[];
   };
+  duplicates: string[],
 }
 
 const headerList = [
@@ -23,16 +24,19 @@ const headerList = [
   'DOI',
   'Keywords',
   'Abstract',
+  'Moderated?',
+  'Analysed?',
+  'Duplicate?'
 ];
 
-const Index = ({ data }: IndexProps) => {
-  const articleElements = data.articleData.map((item, index) => (
-    <ArticleItem article={item} key={index} />
+const Queue = ({ queue, duplicates }: QueueProps) => {
+  const articleElements = queue.articleData.map((item, index) => (
+    <QueueItem article={item} key={index} duplicates={duplicates} />
   ));
 
   return (
     <Container>
-      <h1>Articles</h1>
+      <h1>Queued Articles</h1>
       {articleElements.length > 0 ? (
         <Table className="mb-5">
           <thead>
@@ -46,7 +50,7 @@ const Index = ({ data }: IndexProps) => {
           <tbody>{articleElements}</tbody>
         </Table>
       ) : (
-        <div>No Articles!</div>
+        <div>No Articles in Queue!</div>
       )}
     </Container>
   );
@@ -55,12 +59,14 @@ const Index = ({ data }: IndexProps) => {
 const DOMAIN = 'https://nest-backend-janenotjung-hue.vercel.app/';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await fetch(DOMAIN + 'articles').then(data => data.json());
+  const queueData = await fetch(DOMAIN + 'queue').then((data) => data.json());
+  const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'queue/duplicates',).then((data) => data.json());
   return {
     props: {
-      data,
+      queue: queueData,
+      duplicates,
     },
   };
 };
 
-export default Index;
+export default Queue;

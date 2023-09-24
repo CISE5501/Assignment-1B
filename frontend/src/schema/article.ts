@@ -1,7 +1,7 @@
 export type Article = {
   title: string;
   authors: string[];
-  date: String;
+  date: string;
   journal: string;
   volume: number;
   issue: number;

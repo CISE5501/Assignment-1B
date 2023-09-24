@@ -21,6 +21,7 @@ export class UserController {
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
   ) {}
+
   @Get()
   async getArticles(@Res() response) {
     try {
