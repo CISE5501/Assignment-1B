@@ -9,11 +9,15 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
+import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
 @Controller('queued')
 export class QueueController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly queuedArticleService: QueuedArticleService,
+  ) {}
 
   @Get()
   async getArticles(@Res() response) {
@@ -23,6 +27,25 @@ export class QueueController {
       return response.status(HttpStatus.OK).json({
         message: 'All queued articles data found successfully',
         articleData,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Get('duplicates')
+  async listDuplicateArticleDOIs(@Res() response) {
+    try {
+      const accepted = await this.articleService.getAllArticles();
+      const acceptedDOIs = accepted.map((article) => article.doi);
+      const queued = await this.queuedArticleService.getAllQueuedArticles();
+      const duplicatesInQueue = queued.filter((queueArticle) =>
+        acceptedDOIs.includes(queueArticle.doi),
+      );
+      const duplicateDOIs = duplicatesInQueue.map((article) => article.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'All duplicate articles found successfully',
+        duplicateDOIs,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
