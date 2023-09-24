@@ -1,15 +1,15 @@
 import React from 'react';
-import { Article } from '@/src/schema/article';
+import { QueuedArticle } from '@/src/schema/queuedArticle';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Container } from 'react-bootstrap';
-import ArticleItem from '@/components/ArticleItem';
+import QueuedArticleItem from '@/components/QueuedArticleItem';
 import Link from 'next/link';
 
 interface IndexProps {
   data: {
     message: string;
-    articleData: Article[];
+    articleData: QueuedArticle[];
   };
 }
 
@@ -24,18 +24,17 @@ const headerList = [
   'DOI',
   'Keywords',
   'Abstract',
+  'Is Moderated',
 ];
 
 const Index = ({ data }: IndexProps) => {
   const articleElements = data.articleData.map((item, index) => (
-    <ArticleItem article={item} key={index} />
+    <QueuedArticleItem article={item} key={index} />
   ));
 
   return (
     <Container>
-      <Link href="/addArticle">Add new Article</Link><br></br>
-      <Link href="/moderator">Moderator</Link><br></br>
-      <Link href="/analyst">Analyst</Link><br></br>
+      <Link href="/">Return Home</Link>
       {articleElements.length > 0 ? (
         <Table className="mb-5">
           <thead>
@@ -57,7 +56,7 @@ const Index = ({ data }: IndexProps) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(
-    'https://backend-mocha-ten.vercel.app/articles',
+    'https://backend-mocha-ten.vercel.app/moderator/index',
   );
   const data = await res.json();
   console.log(data);
