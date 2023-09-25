@@ -6,7 +6,7 @@ import { Table, Container } from 'react-bootstrap';
 import ArticleItem from '@/components/ArticleItem';
 import Link from 'next/link';
 
-interface IndexProps {
+export interface IndexProps {
   data: {
     message: string;
     articleData: Article[];

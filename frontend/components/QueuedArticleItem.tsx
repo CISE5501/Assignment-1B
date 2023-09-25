@@ -2,12 +2,11 @@ import React from 'react';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
 interface Props {
   article: QueuedArticle;
-  key: number;
 }
 
-const QueuedArticleItem: React.FC<Props> = ({ article, key }) => {
+const QueuedArticleItem: React.FC<Props> = ({ article }) => {
   return (
-    <tr key={key}>
+    <tr>
       <td>{article.title}</td>
       <td>{article.authors}</td>
       <td>{article.date}</td>
@@ -20,7 +19,7 @@ const QueuedArticleItem: React.FC<Props> = ({ article, key }) => {
       <td>{article.doi}</td>
       <td>{article.keywords}</td>
       <td>{article.abstract}</td>
-      <td>{(article.isModerated === true ? "true" : "false")}</td>
+      <td data-testid='isModerated'>{(article.isModerated === true ? "true" : "false")}</td>
     </tr>
   );
 };

@@ -3,12 +3,11 @@ import { Article } from '@/src/schema/article';
 
 interface Props {
   article: Article;
-  key: number;
 }
 
-const ArticleItem: React.FC<Props> = ({ article, key }) => {
+const ArticleItem: React.FC<Props> = ({ article }) => {
   return (
-    <tr key={key}>
+    <tr>
       <td>{article.title}</td>
       <td>{article.authors}</td>
       <td>{article.date}</td>
