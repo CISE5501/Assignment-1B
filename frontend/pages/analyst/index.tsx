@@ -22,11 +22,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     { key: 'doi', label: 'DOI' },
     { key: 'keywords', label: 'Keywords', displayAs: (keywords) => keywords.join(', ') },
     { key: 'abstract', label: 'Abstract' },
-    { computed: true, label: 'Is Duplicate', content: (data) => (duplicates.includes(data.doi) ? <strong>Yes</strong> : 'No') },
+    { computed: true, label: 'Warnings', content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '') },
     {
       computed: true, label: 'Actions', content: (data) => (
         <div>
-          <button type="button" onClick={() => handleDelete(data)}>Delete</button>
+          <button type="button" onClick={() => handleDelete('queue', data)}>Delete</button>
           <br />
           <button type="button" onClick={() => alert('TODO')}>Mark Analysed</button>
         </div>
