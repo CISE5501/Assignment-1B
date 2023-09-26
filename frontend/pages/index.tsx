@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Container } from 'react-bootstrap';
 import ArticleItem from '@/components/ArticleItem';
+import DOMAIN from '@/DOMAIN';
 
 interface IndexProps {
   data: {
@@ -51,8 +52,6 @@ const Index = ({ data }: IndexProps) => {
     </Container>
   );
 };
-
-const DOMAIN = 'https://nest-backend-janenotjung-hue.vercel.app/';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await fetch(DOMAIN + 'articles').then(data => data.json());

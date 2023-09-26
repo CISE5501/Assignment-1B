@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Container } from 'react-bootstrap';
 import QueueItem from '@/components/QueueItem';
+import DOMAIN from '@/DOMAIN';
 
 interface QueueProps {
   queue: {
@@ -55,8 +56,6 @@ const Queue = ({ queue, duplicates }: QueueProps) => {
     </Container>
   );
 };
-
-const DOMAIN = 'https://nest-backend-janenotjung-hue.vercel.app/';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const queueData = await fetch(DOMAIN + 'queue').then((data) => data.json());
