@@ -26,6 +26,7 @@ export const handleDelete = async (
     });
     if (res.ok) {
       console.log('Article deleted successfully');
+      window.location.reload();
     } else {
       console.error('Error deleting article:', res.statusText);
     }

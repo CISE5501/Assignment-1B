@@ -26,9 +26,6 @@ import { ArticleService } from './models/articles/article.service';
     MongooseModule.forFeature([
       { name: 'QueuedArticle', schema: QueuedArticleSchema },
     ]),
-    MongooseModule.forFeature([
-      { name: 'Article', schema: ArticleSchema },
-    ]),
   ],
   controllers: [
     AppController,
