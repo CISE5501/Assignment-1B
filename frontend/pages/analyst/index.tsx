@@ -2,8 +2,8 @@ import React from 'react';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Container } from 'react-bootstrap';
-import QueuedArticleItem from '@/components/QueuedArticleItem';
+import { Container } from 'react-bootstrap';
+import SortableTable from '@/components/table/SortableTable';
 import Link from 'next/link';
 
 interface IndexProps {
@@ -13,51 +13,32 @@ interface IndexProps {
   };
 }
 
-const headerList = [
-  'Title',
-  'Author(s)',
-  'Date',
-  'Journal',
-  'Volume',
-  'Issue',
-  'Page Range',
-  'DOI',
-  'Keywords',
-  'Abstract',
-  'Is Moderated',
-];
-
 const Index = ({ data }: IndexProps) => {
-  const articleElements = data.articleData.map((item, index) => (
-    <QueuedArticleItem article={item} key={index} />
-  ));
+  const headersList: { key: keyof QueuedArticle; label: string }[] = [
+    { key: 'title', label: 'Title' },
+    { key: 'authors', label: 'Authors' },
+    { key: 'date', label: 'Date' },
+    { key: 'journal', label: 'Journal' },
+    { key: 'volume', label: 'Volume' },
+    { key: 'issue', label: 'Issue' },
+    { key: 'pageRange', label: 'Page Range' },
+    { key: 'doi', label: 'DOI' },
+    { key: 'keywords', label: 'Keywords' },
+    { key: 'abstract', label: 'Abstract' },
+    { key: 'isModerated', label: 'Is Moderated' },
+  ];
 
   return (
     <Container>
       <Link href="/">Return Home</Link>
-      {articleElements.length > 0 ? (
-        <Table className="mb-5">
-          <thead>
-            <tr>
-              {headerList.map((entry, entryID) => (
-                <th key={entryID}>{entry}</th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>{articleElements}</tbody>
-        </Table>
-      ) : (
-        <div>No Articles!</div>
-      )}
+      <br></br>
+      <SortableTable headers={headersList} data={data.articleData} />
     </Container>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(
-    'https://backend-mocha-ten.vercel.app/analyst/index',
-  );
+  const res = await fetch('https://backend-mocha-ten.vercel.app/analyst/index');
   const data = await res.json();
   console.log(data);
   return {
