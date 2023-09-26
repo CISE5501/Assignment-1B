@@ -1,4 +1,5 @@
 export type Article = {
+  readonly _id: string;
   title: string;
   authors: string[];
   date: string;

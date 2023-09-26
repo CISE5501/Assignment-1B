@@ -25,9 +25,9 @@ const headerList = [
   'DOI',
   'Keywords',
   'Abstract',
-  'Moderated?',
-  'Analysed?',
-  'Duplicate?'
+  'Status',
+  'Duplicate?',
+  'Actions',
 ];
 
 const Queue = ({ queue, duplicates }: QueueProps) => {

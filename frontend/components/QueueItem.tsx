@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
+import DOMAIN from '@/DOMAIN';
 
 interface Props {
   article: QueuedArticle;
@@ -8,6 +9,20 @@ interface Props {
 }
 
 const ArticleItem: React.FC<Props> = ({ article, key, duplicates }) => {
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(DOMAIN + `articles/${article._id}`, { method: 'DELETE' });
+      if (res.ok) {
+        console.log('Article deleted successfully');
+      } else {
+        console.error('Error deleting article:', res.statusText);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+  };
+
   return (
     <tr key={key}>
       <td>{article.title}</td>
@@ -22,10 +37,12 @@ const ArticleItem: React.FC<Props> = ({ article, key, duplicates }) => {
       <td>{article.doi}</td>
       <td>{article.keywords}</td>
       <td>{article.abstract}</td>
-      <td>{article.isModerated ? <strong>Yes</strong> : <span>No</span>}</td>
-      <td>No</td>
+      <td>{article.isModerated ? 'To Analyse' : 'To Moderate'}</td>
       <td>{duplicates.includes(article.doi) ? <strong>Yes</strong> : <span>No</span>}</td>
-    </tr>
+      <td>
+        <button type="button" onClick={handleDelete}>Remove</button>
+      </td>
+    </tr >
   );
 };
 
