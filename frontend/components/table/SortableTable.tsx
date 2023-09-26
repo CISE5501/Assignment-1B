@@ -16,7 +16,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => (
         ))}
       </tr>
     </thead>
-    <tbody>
+    <tbody data-testid="data-table-body">
       {data.map((row, i) => (
         <tr key={i}>
           {headers.map((header) => (

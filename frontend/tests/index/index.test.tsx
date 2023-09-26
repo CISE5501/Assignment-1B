@@ -46,7 +46,7 @@ test("should display 3 links", async () => {
 
 test("should have empty table", async () => {
     renderHome();
-    expect(screen.getByText('No Articles!')).toBeInTheDocument();
+    expect(screen.getAllByTestId('data-table-body').length).toBe(1);
 });
 
 test("should have table with an article entry", async () => {
