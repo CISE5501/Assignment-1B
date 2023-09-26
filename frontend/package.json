@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
     "lint": "next lint",
     "start": "next start",
-    "test": "jest --watchAll"
+    "test": "jest ./tests"
   },
   "dependencies": {
     "@types/node": "20.6.0",
