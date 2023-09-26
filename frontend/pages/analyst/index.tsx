@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap';
 import SortableTable from '@/components/table/SortableTable';
 import Link from 'next/link';
 
-interface IndexProps {
+export interface IndexProps {
   data: {
     message: string;
     articleData: QueuedArticle[];
