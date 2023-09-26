@@ -3,8 +3,7 @@ import { Article } from '@/src/schema/article';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Container } from 'react-bootstrap';
-import ArticleItem from '@/components/ArticleItem';
+import { Container } from 'react-bootstrap';
 import SortableTable from '@/components/table/SortableTable';
 import DOMAIN from '@/DOMAIN';
 
@@ -40,8 +39,6 @@ const Index = ({ data }: IndexProps) => {
       <Link href="/moderator">Moderator</Link>
       <br />
       <Link href="/analyst">Analyst</Link>
-      <br />
-      <Link href="/queue">Queue</Link>
       <br />
       <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
