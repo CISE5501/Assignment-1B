@@ -19,53 +19,53 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
     <form className='Form' onSubmit={(e) => saveArticle(e, formData)}>
           <label>
             Article Title:
-            <input onChange={handleForm} type="text" name="title" />
+            <input onChange={handleForm} type="text" id="title" />
           </label>
           <br/>
           <label>
             Author:
-            <input onChange={handleForm} type="text" name="author" />
+            <input onChange={handleForm} type="text" id="author" />
             <button type="button">+</button>
           </label>
           <br/>
           <label>
             Keywords:
-            <input onChange={handleForm} type="text" name="keywords" />
+            <input onChange={handleForm} type="text" id="keywords" />
           </label>
           <br/>
           <label>
             Journal:
-            <input onChange={handleForm} type="text" name="journal" />
+            <input onChange={handleForm} type="text" id="journal" />
           </label>
           <br/>
           <label>
             Date:
-            <input onChange={handleForm} type="date" name="date" />
+            <input onChange={handleForm} type="date" id="date" />
           </label>
           <br/>
           <label>
             DOI:
-            <input onChange={handleForm} type="text" name="doi" />
+            <input onChange={handleForm} type="text" id="doi" />
           </label>
           <br/>
           <label>
             Volume:
-            <input onChange={handleForm} type="number" name="volume" />
+            <input onChange={handleForm} type="number" id="volume" />
           </label>
           <br/>
           <label>
             Issue:
-            <input onChange={handleForm} type="number" name="issue" />
+            <input onChange={handleForm} type="number" id="issue" />
           </label>
           <br/>
           <label>
             Page Range:
-            <input onChange={handleForm} type="number" name="rangeone" />
-            <input onChange={handleForm} type="number" name="rangetwo" />
+            <input onChange={handleForm} type="number" id="rangeone" />
+            <input onChange={handleForm} type="number" id="rangetwo" />
           </label>
           <br/>
           <label>
-              <button type="button">submit</button>
+            <button disabled={formData === undefined ? true : false} type="submit">Submit</button>
           </label>
     </form>
   )
