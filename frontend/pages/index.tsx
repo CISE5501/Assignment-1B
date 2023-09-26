@@ -15,7 +15,6 @@ export interface IndexProps {
   };
 }
 
-
 //returns table using data from VALIDATED articles
 const Index = ({ data }: IndexProps) => {
   const headersList: { key: keyof Article; label: string }[] = [
@@ -34,29 +33,17 @@ const Index = ({ data }: IndexProps) => {
   return (
     <Container>
 
-      <h1>Articles</h1>
-      {articleElements.length > 0 ? (
-        <Table className="mb-5">
-          <thead>
-            <tr>
-              {headerList.map((entry, entryID) => (
-                <th key={entryID}>{entry}</th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>{articleElements}</tbody>
-        </Table>
-      ) : (
-        <div>No Articles!</div>
-      )}
-
+      <strong>Nav</strong>
+      <br />
       <Link href="/addArticle">Add new Article</Link>
-      <br></br>
+      <br />
       <Link href="/moderator">Moderator</Link>
-      <br></br>
+      <br />
       <Link href="/analyst">Analyst</Link>
-      <br></br>
+      <br />
+      <Link href="/queue">Queue</Link>
+      <br />
+      <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
 
     </Container>
