@@ -16,9 +16,12 @@ export const getServerData: (url: string) => GetServerSideProps =
     };
   };
 
-export const handleDelete = async (data: QueuedArticle) => {
+export const handleDelete = async (
+  type: 'queue' | 'articles',
+  data: QueuedArticle,
+) => {
   try {
-    const res = await fetch(DOMAIN + `articles/${data._id}`, {
+    const res = await fetch(DOMAIN + `${type}/${data._id}`, {
       method: 'DELETE',
     });
     if (res.ok) {

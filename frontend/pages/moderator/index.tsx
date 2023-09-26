@@ -27,7 +27,7 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     {
       computed: true, label: 'Actions', content: (data) => (
         <div>
-          <button type="button" onClick={() => handleDelete(data)}>Delete</button>
+          <button type="button" onClick={() => handleDelete('queue', data)}>Delete</button>
           <br />
           <button type="button" onClick={() => alert('TODO')}>Mark Moderated</button>
         </div>
