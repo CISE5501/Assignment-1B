@@ -1,5 +1,5 @@
 import React from 'react';
-import { Article } from '@/src/schema/article';
+import { QueuedArticle } from '@/src/schema/queuedArticle';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
@@ -9,14 +9,12 @@ import Link from 'next/link';
 export interface IndexProps {
   data: {
     message: string;
-    articleData: Article[];
+    articleData: QueuedArticle[];
   };
 }
 
-
-//returns table using data from VALIDATED articles
 const Index = ({ data }: IndexProps) => {
-  const headersList: { key: keyof Article; label: string }[] = [
+  const headersList: { key: keyof QueuedArticle; label: string }[] = [
     { key: 'title', label: 'Title' },
     { key: 'authors', label: 'Authors' },
     { key: 'date', label: 'Date' },
@@ -27,26 +25,22 @@ const Index = ({ data }: IndexProps) => {
     { key: 'doi', label: 'DOI' },
     { key: 'keywords', label: 'Keywords' },
     { key: 'abstract', label: 'Abstract' },
+    { key: 'isModerated', label: 'Is Moderated' },
   ];
 
   return (
     <Container>
-      <Link href="/addArticle">Add new Article</Link>
-      <br></br>
-      <Link href="/moderator">Moderator</Link>
-      <br></br>
-      <Link href="/analyst">Analyst</Link>
+      <Link href="/">Return Home</Link>
       <br></br>
       <SortableTable headers={headersList} data={data.articleData} />
     </Container>
   );
 };
 
-//calls data from backend- connected to /articles
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch('https://backend-mocha-ten.vercel.app/articles');
+  const res = await fetch('https://backend-mocha-ten.vercel.app/analyst/index');
   const data = await res.json();
-  //console.log(data);
+  console.log(data);
   return {
     props: {
       data,

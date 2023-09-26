@@ -1,6 +1,6 @@
-//maps data retrieved from database to a type
+//maps data retrieved from database to a type for queuedArticles
 
-export type Article = {
+export type QueuedArticle = {
   title: string;
   authors: string[];
   date: String;
@@ -11,4 +11,5 @@ export type Article = {
   doi: string;
   keywords: string[];
   abstract: string;
+  isModerated: boolean;
 };
