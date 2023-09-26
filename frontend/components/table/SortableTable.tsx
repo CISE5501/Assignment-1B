@@ -25,17 +25,17 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => (
   <Table className="md-5" >
     <thead>
       <tr>
-        {headers.map((header, i) => (
-          <th key={'key' in header ? header.key : 'computed' + i}>{header.label}</th>
+        {headers.map((header, j) => (
+          <th key={'key' in header ? header.key : 'computed' + j}>{header.label}</th>
         ))}
       </tr>
     </thead>
     <tbody data-testid="data-table-body">
       {data.map((row, i) => (
         <tr key={i}>
-          {headers.map((header) => (
+          {headers.map((header, j) => (
             'computed' in header
-              ? <td key={'computed' + i}>{header.content(row)}</td>
+              ? <td key={'computed' + j}>{header.content(row)}</td>
               : <td key={header.key}>{header.displayAs ? header.displayAs(row[header.key]) : row[header.key]}</td>
           ))}
         </tr>
