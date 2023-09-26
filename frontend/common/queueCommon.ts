@@ -2,18 +2,19 @@ import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
 import DOMAIN from '@/DOMAIN';
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queueData = await fetch(DOMAIN + 'queue').then((data) => data.json());
-  const { duplicateDOIs: duplicates } = await fetch(
-    DOMAIN + 'queue/duplicates',
-  ).then((data) => data.json());
-  return {
-    props: {
-      queueData,
-      duplicates,
-    },
+export const getServerData: (url: string) => GetServerSideProps =
+  (url) => async () => {
+    const queueData = await fetch(DOMAIN + url).then((data) => data.json());
+    const { duplicateDOIs: duplicates } = await fetch(
+      DOMAIN + 'queue/duplicates',
+    ).then((data) => data.json());
+    return {
+      props: {
+        queueData,
+        duplicates,
+      },
+    };
   };
-};
 
 export const handleDelete = async (data: QueuedArticle) => {
   try {

@@ -21,9 +21,9 @@ export class ModeratorController {
   async getArticles(@Res() response) {
     try {
       const articleData =
-        await this.queuedArticleService.getAllQueuedArticles();
+        await this.queuedArticleService.getAllUnmoderatedArticles();
       return response.status(HttpStatus.OK).json({
-        message: 'All articles data found successfully',
+        message: 'All unmoderated articles data found successfully',
         articleData,
       });
     } catch (err) {

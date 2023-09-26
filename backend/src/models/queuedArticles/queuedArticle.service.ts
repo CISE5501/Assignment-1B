@@ -34,6 +34,14 @@ export class QueuedArticleService {
   }
 
   async getAllQueuedArticles(): Promise<IQueuedArticle[]> {
+    const articleData = await this.articleModel.find();
+    if (!articleData || articleData.length == 0) {
+      throw new NotFoundException('Articles data not found!');
+    }
+    return articleData;
+  }
+
+  async getAllUnmoderatedArticles(): Promise<IQueuedArticle[]> {
     const articleData = await this.articleModel
       .find()
       .where({ isModerated: false });

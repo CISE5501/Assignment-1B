@@ -5,9 +5,10 @@ import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
 import { PageProps, handleDelete } from '@/common/queueCommon';
+import { getServerData } from '@/common/queueCommon';
 
-export { getServerSideProps } from '@/common/queueCommon';
 export type IndexProps = PageProps;
+export const getServerSideProps = getServerData('moderator/index');
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates }: PageProps) => {
@@ -39,8 +40,9 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       <Link href="/">Return Home</Link>
       <br></br>
       <h1>Moderator View</h1>
-      <h2>Articles in Queue</h2>
+      <h2>Articles in Queue Pending Moderation</h2>
       <SortableTable headers={headersList} data={queueData.articleData} />
+      {queueData.articleData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
     </Container>
   );
 };

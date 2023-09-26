@@ -21,7 +21,7 @@ export class AnalystController {
       const articleData =
         await this.queuedArticleService.getAllModeratedArticles();
       return response.status(HttpStatus.OK).json({
-        message: 'All articles data found successfully',
+        message: 'All moderated articles data found successfully',
         articleData,
       });
     } catch (err) {

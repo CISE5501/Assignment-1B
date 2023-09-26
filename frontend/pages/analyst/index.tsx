@@ -5,9 +5,10 @@ import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
 import { handleDelete, PageProps } from '@/common/queueCommon';
+import { getServerData } from '@/common/queueCommon';
 
-export { getServerSideProps } from '@/common/queueCommon';
 export type IndexProps = PageProps;
+export const getServerSideProps = getServerData('analyst/index');
 
 const Index = ({ queueData, duplicates }: PageProps) => {
   const headersList: ((DataRow & { key: keyof QueuedArticle }) | ComputedRow)[] = [
@@ -38,8 +39,9 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       <Link href="/">Return Home</Link>
       <br></br>
       <h1>Analyst View</h1>
-      <h2>Articles in Queue</h2>
+      <h2>Articles in Queue Pending Analysis</h2>
       <SortableTable headers={headersList} data={queueData.articleData} />
+      {queueData.articleData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
     </Container>
   );
 };
