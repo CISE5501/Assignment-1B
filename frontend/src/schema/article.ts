@@ -8,7 +8,7 @@ export type Article = {
   journal: string;
   volume: number;
   issue: number;
-  pageRange: number[];
+  pageRange: [number, number];
   doi: string;
   keywords: string[];
   abstract: string;
