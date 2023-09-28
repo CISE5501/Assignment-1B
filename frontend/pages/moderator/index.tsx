@@ -23,16 +23,16 @@ const promote = async (id: string): Promise<void> => {
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates }: PageProps) => {
-  const headersList: ((DataRow & { key: keyof QueuedArticle }) | ComputedRow)[] = [
+  const headersList: ((DataRow<QueuedArticle> & { key: keyof QueuedArticle }) | ComputedRow<QueuedArticle>)[] = [
     { key: 'title', label: 'Title' },
-    { key: 'authors', label: 'Authors', displayAs: (authors) => authors.join('; ') },
+    { key: 'authors', label: 'Authors', displayAs: (authors: string[]) => authors.join('; ') },
     { key: 'date', label: 'Date' },
     { key: 'journal', label: 'Journal' },
     { key: 'volume', label: 'Volume' },
     { key: 'issue', label: 'Issue' },
-    { key: 'pageRange', label: 'Page Range', displayAs: ([start, end]) => (start + '-' + end) },
+    { key: 'pageRange', label: 'Page Range', displayAs: ([start, end]: [number, number]) => (start + '-' + end) },
     { key: 'doi', label: 'DOI' },
-    { key: 'keywords', label: 'Keywords', displayAs: (keywords) => keywords.join(', ') },
+    { key: 'keywords', label: 'Keywords', displayAs: (keywords: string[]) => keywords.join(', ') },
     { key: 'abstract', label: 'Abstract' },
     { computed: true, label: 'Warnings', content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '') },
     {
