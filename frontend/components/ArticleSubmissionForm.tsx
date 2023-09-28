@@ -7,7 +7,7 @@ type Props = {
 }
 
 const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
-  const [formData, setFormData] = useState<Article>( {
+  const [formData, setFormData] = useState<Article>({
     title: '',
     authors: [],
     date: '',
@@ -43,6 +43,10 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
       errorValidation.issue = 'Issue must be a number';
     }
 
+    if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
+      errorValidation.pageRange = 'Page Range must be an array of two numbers';
+    }
+
     if(Object.keys(errorValidation).length > 0) {
       setErrors(errorValidation);
       return;
@@ -53,73 +57,92 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
 
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
-    setFormData({
-      ...formData,
-      [e.currentTarget.id]: e.currentTarget.value,
-    });
+    const index = e.currentTarget.dataset.index;
+    const name = e.currentTarget.dataset.key as keyof Article;
+    const type = e.currentTarget.type;
+    const rawValue = e.currentTarget.value;
+    const value = type === 'number' ? parseInt(rawValue) : rawValue;
+    const formKeys: Record<'single'|'array', Array<keyof Article>> = {
+      single: ['title','date','journal','volume','issue','doi','abstract'],
+      array: ['authors','keywords','pageRange'],
+    };
+
+    if (!name)
+      throw `Form item ${name} has no name parameter!`;
+    if (formKeys.single.includes(name)) {
+      const newData = {[name]: value};
+      setFormData({...formData, ...newData});
+    } else if (formKeys.array.includes(name)) {
+      if (!index)
+        throw `Form item ${name} has no index parameter!`;
+      const newArray = formData[name] as Array<string|number>;
+      newArray[+index] = value;
+      setFormData({...formData, [name]: newArray});
+    }
   }
 
+  // TODO change onChange to on deselect
   return (
     <form className={styles.Form} onSubmit={handleSubmit}>
       <div className={styles.FormContent}>
         <div className={styles.LeftColumn}>
           <label> Article Title:
-            <input className={styles.Input} onChange={handleForm} type="text" id="title" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br/>
           <label> Author:
-            <input className={styles.Input} onChange={handleForm} type="text" id="authors" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="authors" data-index="0" />
             <button type="button">+</button>
-            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+            {errors['authors.0'] && <p className={styles.Error}>{errors['authors.0']}</p>}
           </label>
           <br/>
           <label> Keywords:
-            <input className={styles.Input} onChange={handleForm} type="text" id="keywords" />
-            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="keywords" data-index="0" />
+            {errors['keywords.0'] && <p className={styles.Error}>{errors['keywords.0']}</p>}
           </label>
           <br/>
           <label> Abstract:
-           <input className={styles.Input} onChange={handleForm} type="text" id="abstract" />
+           <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </label>
         </div>
         <div className={styles.RightColumn}>
           <label> Journal:
-            <input className={styles.Input} onChange={handleForm} type="text" id="journal" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br/>
           <div className={styles.RightColumnRow}>
           <label> Date:
-            <input className={styles.Input} onChange={handleForm} type="date" id="date" />
+            <input className={styles.Input} onChange={handleForm} type="date" data-key="date" />
             {errors.date && <p className={styles.Error}>{errors.date}</p>}
           </label>
           <br/>
           <label> DOI:
-            <input className={styles.Input} onChange={handleForm} type="text" id="doi" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" />
             {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
           </label>
           <br/>
           </div>
           <div className={styles.RightColumnRow}>
           <label> Volume:
-            <input className={styles.Input} onChange={handleForm} type="number" id="volume" />
+            <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" />
             {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
           </label>
           <br/>
           <label> Issue:
-            <input className={styles.Input} onChange={handleForm} type="number" id="issue" />
+            <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
             {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
           </label>
           <br/>
           </div>
           <div className={styles.RightColumnRow}>
-          <label> Page Range 1:
-            <input className={styles.Input} onChange={handleForm} type="number" id="pageRange[0]" />
-          </label>
-          <label> Page Range 2:
-            <input className={styles.Input} onChange={handleForm} type="number" id="pageRange[1]" />
+          <label> Page Range:
+            <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="0" />
+            <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="1" />
+            {errors['pageRange.0'] && <p className={styles.Error}>{errors['pageRange.0']}</p>}
+            {errors['pageRange.1'] && <p className={styles.Error}>{errors['pageRange.1']}</p>}
           </label>
           </div>
         </div>
