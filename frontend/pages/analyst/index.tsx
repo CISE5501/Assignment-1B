@@ -6,12 +6,23 @@ import { QueuedArticle } from '@/src/schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
 import { handleDelete, PageProps } from '@/common/queueCommon';
 import { getServerData } from '@/common/queueCommon';
+import DOMAIN from '@/DOMAIN';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('analyst/index');
 
+const promote = async (id: string): Promise<void> => {
+  const response = await fetch(DOMAIN + 'analyst/promote/' + id, { method: 'POST' });
+  if (response.ok) {
+    alert('Successfully promoted article.')
+    window.location.reload();
+  } else {
+    alert('Failed to promote article.');
+  }
+}
+
 const Index = ({ queueData, duplicates }: PageProps) => {
-  const headersList: ((DataRow & { key: keyof QueuedArticle }) | ComputedRow)[] = [
+  const headersList: ((DataRow<QueuedArticle> & { key: keyof QueuedArticle }) | ComputedRow<QueuedArticle>)[] = [
     { key: 'title', label: 'Title' },
     { key: 'authors', label: 'Authors', displayAs: (authors) => authors.join('; ') },
     { key: 'date', label: 'Date' },
@@ -28,7 +39,7 @@ const Index = ({ queueData, duplicates }: PageProps) => {
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>Delete</button>
           <br />
-          <button type="button" onClick={() => alert('TODO')}>Mark Analysed</button>
+          <button type="button" onClick={() => promote(data._id)}>Mark Analysed</button>
         </div>
       )
     }

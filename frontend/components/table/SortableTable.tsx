@@ -36,7 +36,7 @@ const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
           {headers.map((header, j) => (
             'computed' in header
               ? <td key={'computed' + j}>{header.content(row)}</td>
-              : <td key={header.key.toString()}>{header.displayAs ? header.displayAs(row[header.key]) : <span>row[header.key]</span>}</td>
+              : <td key={header.key.toString()}>{header.displayAs ? header.displayAs(row[header.key]) : <span>{row[header.key]}</span>}</td>
           ))}
         </tr>
       ))}
