@@ -31,7 +31,6 @@ const Index = ({ data }: IndexProps) => {
 
   return (
     <Container>
-
       <strong>Nav</strong>
       <br />
       <Link href="/addArticle">Add new Article</Link>
@@ -42,14 +41,13 @@ const Index = ({ data }: IndexProps) => {
       <br />
       <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
-
     </Container>
   );
 };
 
 //calls data from backend- connected to /articles
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await fetch(DOMAIN + 'articles').then(data => data.json());
+  const data = await fetch(DOMAIN + 'articles').then((data) => data.json());
   return {
     props: {
       data,
