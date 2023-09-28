@@ -38,7 +38,6 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
           formData[field].length === 0
       )) {
         errorValidation[field] = `${field} must not be empty`;
-        console.log(errorValidation, formData);
       }
     }
 
@@ -145,9 +144,14 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
           <br/>
           </div>
           <div className={styles.RightColumnRow}>
-          <label> Page Range:
+          <label> Page Range 1:
             <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="0" />
+          </label>
+          <label> Page Range 2:
             <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="1" />
+          </label>
+          <label>
+            <br/>
             {errors.pageRange && <p className={styles.Error}>{errors.pageRange}</p>}
           </label>
           </div>
