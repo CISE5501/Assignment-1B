@@ -9,11 +9,16 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
+import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { Article } from 'src/models/articles/article.schema';
 
 @Controller('analyst')
 export class AnalystController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly queuedArticleService: QueuedArticleService,
+  ) {}
 
   @Get('/index')
   async getArticles(@Res() response) {
@@ -75,6 +80,28 @@ export class AnalystController {
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Post('/promote/:id')
+  async promoteArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      // Get article
+      const article = await this.queuedArticleService.getArticle(articleId);
+      // Add article to accepted database
+      await this.articleService.createArticle(article);
+      // Delete article from queue
+      await this.queuedArticleService.deleteArticle(articleId);
+      // Return response
+      return response.status(HttpStatus.OK).json({
+        message: 'Article promoted to database successfully',
+        newArticle: article,
+      });
+    } catch (err) {
+      console.log(err);
+      const status =
+        err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      return response.status(status).json(err.response);
     }
   }
 }
