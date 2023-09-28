@@ -10,6 +10,7 @@ import SortableTable, {
 import { PageProps, handleDelete } from '@/common/queueCommon';
 import { getServerData } from '@/common/queueCommon';
 
+
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
