@@ -29,8 +29,15 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
 
     for (const field in formData) {
       const value = formData[field as keyof Article];
-      if (!value || (typeof value === 'object' && !value.length)) {
-        errorValidation[field] = `${field} is a required field`;
+      errorValidation[field] = '';
+      if (!value || (
+        field === 'pageRange' &&
+          (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)
+      ) || (
+        (field === 'authors' || field === 'keywords') &&
+          formData[field].length === 0
+      )) {
+        errorValidation[field] = `${field} must not be empty`;
         console.log(errorValidation, formData);
       }
     }
@@ -94,12 +101,12 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
           <label> Author:
             <input className={styles.Input} onChange={handleForm} type="text" data-key="authors" data-index="0" />
             <button type="button">+</button>
-            {errors['authors.0'] && <p className={styles.Error}>{errors['authors.0']}</p>}
+            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </label>
           <br/>
           <label> Keywords:
             <input className={styles.Input} onChange={handleForm} type="text" data-key="keywords" data-index="0" />
-            {errors['keywords.0'] && <p className={styles.Error}>{errors['keywords.0']}</p>}
+            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
           <br/>
           <label> Abstract:
@@ -141,8 +148,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({ saveArticle }) => {
           <label> Page Range:
             <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="0" />
             <input className={styles.Input} onChange={handleForm} type="number" data-key="pageRange" data-index="1" />
-            {errors['pageRange.0'] && <p className={styles.Error}>{errors['pageRange.0']}</p>}
-            {errors['pageRange.1'] && <p className={styles.Error}>{errors['pageRange.1']}</p>}
+            {errors.pageRange && <p className={styles.Error}>{errors.pageRange}</p>}
           </label>
           </div>
         </div>
