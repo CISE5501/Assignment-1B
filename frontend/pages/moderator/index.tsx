@@ -12,7 +12,7 @@ export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
 const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'moderator/promote/' + id, { method: 'POST' });
+  const response = await fetch(DOMAIN + 'moderator/promote/' + id, { method: 'PUT' });
   if (response.ok) {
     alert('Successfully marked article as moderated.')
     window.location.reload();

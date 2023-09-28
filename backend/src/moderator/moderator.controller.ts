@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Param,
   Put,
-  Post,
   Res,
 } from '@nestjs/common';
 import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
@@ -80,7 +79,7 @@ export class ModeratorController {
     }
   }
 
-  @Post('/promote/:id')
+  @Put('/promote/:id')
   async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.updateArticle(

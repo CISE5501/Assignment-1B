@@ -4,14 +4,14 @@ import {
   Get,
   HttpStatus,
   Param,
+  Put,
   Post,
   Res,
   Delete,
 } from '@nestjs/common';
-import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
+import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
-import { Article } from 'src/models/articles/article.schema';
 
 @Controller('analyst')
 export class AnalystController {
@@ -37,11 +37,11 @@ export class AnalystController {
   @Post()
   async createArticle(
     @Res() response,
-    @Body() createArticleDto: CreateQueuedArticleDto,
+    @Body() createArticleDto: CreateArticleDto,
   ) {
     try {
       const newArticle =
-        await this.queuedArticleService.createArticle(createArticleDto);
+        await this.articleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
         newArticle,
@@ -83,13 +83,16 @@ export class AnalystController {
     }
   }
 
-  @Post('/promote/:id')
+  @Put('/promote/:id')
   async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       // Get article
       const article = await this.queuedArticleService.getArticle(articleId);
+      // Match scema
+      const { _doc: intermediaryArticle }: any = { ...article };
+      delete intermediaryArticle.isModerated;
       // Add article to accepted database
-      await this.articleService.createArticle(article);
+      await this.articleService.createArticle(intermediaryArticle);
       // Delete article from queue
       await this.queuedArticleService.deleteArticle(articleId);
       // Return response
