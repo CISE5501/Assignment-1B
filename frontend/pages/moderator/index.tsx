@@ -6,9 +6,20 @@ import { QueuedArticle } from '@/src/schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
 import { PageProps, handleDelete } from '@/common/queueCommon';
 import { getServerData } from '@/common/queueCommon';
+import DOMAIN from '@/DOMAIN';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
+
+const promote = async (id: string): Promise<void> => {
+  try {
+    await fetch(DOMAIN + 'moderator/promote/' + id, { method: 'POST' });
+    alert('Successfully marked article as moderated.')
+    window.location.reload();
+  } catch {
+    alert('Failed to mark article as moderated.');
+  }
+}
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates }: PageProps) => {
@@ -29,7 +40,7 @@ const Index = ({ queueData, duplicates }: PageProps) => {
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>Delete</button>
           <br />
-          <button type="button" onClick={() => alert('TODO')}>Mark Moderated</button>
+          <button type="button" onClick={() => promote(data._id)}>Mark Moderated</button>
         </div>
       )
     }

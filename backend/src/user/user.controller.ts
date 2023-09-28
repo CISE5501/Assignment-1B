@@ -7,7 +7,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
+import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
@@ -65,7 +65,7 @@ export class UserController {
   @Post('/new')
   async createArticle(
     @Res() response,
-    @Body() createArticleDto: CreateArticleDto,
+    @Body() createArticleDto: CreateQueuedArticleDto,
   ) {
     try {
       const newArticle =
