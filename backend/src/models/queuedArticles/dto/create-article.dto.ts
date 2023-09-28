@@ -28,4 +28,6 @@ export class CreateArticleDto {
   readonly abstract: string;
   @IsBoolean()
   readonly isModerated: boolean;
+  @IsBoolean()
+  readonly isDuplicate: boolean;
 }

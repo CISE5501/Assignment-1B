@@ -13,6 +13,7 @@ export class QueuedArticle {
   @Prop() keywords: string[];
   @Prop() abstract: string;
   @Prop() isModerated: boolean;
+  @Prop() isDuplicate: boolean;
 }
 
 export const QueuedArticleSchema = SchemaFactory.createForClass(QueuedArticle);
