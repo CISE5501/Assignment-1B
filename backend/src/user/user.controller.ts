@@ -15,12 +15,14 @@ import { ArticleService } from 'src/models/articles/article.service';
 
 @Controller('articles')
 export class UserController {
-  constructor(private readonly queuedArticleService: QueuedArticleService, private readonly articleService: ArticleService) {}
+  constructor(
+    private readonly queuedArticleService: QueuedArticleService,
+    private readonly articleService: ArticleService,
+  ) {}
   @Get('')
   async getArticles(@Res() response) {
     try {
-      const articleData =
-        await this.articleService.getAllArticles();
+      const articleData = await this.articleService.getAllArticles();
       return response.status(HttpStatus.OK).json({
         message: 'All articles data found successfully',
         articleData,
@@ -29,7 +31,7 @@ export class UserController {
       return response.status(err.status).json(err.response);
     }
   }
-  
+
   @Get('/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {

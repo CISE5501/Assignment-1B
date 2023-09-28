@@ -13,7 +13,6 @@ export interface IndexProps {
   };
 }
 
-
 //returns table using data from VALIDATED articles
 const Index = ({ data }: IndexProps) => {
   const headersList: { key: keyof Article; label: string }[] = [

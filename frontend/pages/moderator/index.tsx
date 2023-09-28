@@ -13,8 +13,7 @@ export interface IndexProps {
   };
 }
 
-
-//returns table using data from queuedArticles where isModerated = false 
+//returns table using data from queuedArticles where isModerated = false
 const Index = ({ data }: IndexProps) => {
   const headersList: { key: keyof QueuedArticle; label: string }[] = [
     { key: 'title', label: 'Title' },
@@ -39,7 +38,7 @@ const Index = ({ data }: IndexProps) => {
   );
 };
 
-//calls data from backend- connected to /moderator/index 
+//calls data from backend- connected to /moderator/index
 export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(
     'https://backend-mocha-ten.vercel.app/moderator/index',
