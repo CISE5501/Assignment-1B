@@ -1,2 +1,2 @@
-const DOMAIN = 'https://nest-backend-janenotjung-hue.vercel.app/';
+const DOMAIN = 'https://nest-backend-smoky.vercel.app/';
 export default DOMAIN;
