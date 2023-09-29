@@ -35,7 +35,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
     // Show error for input fields with empty values
     for (const field in formData) {
-      const value = formData[field as keyof QueuedArticleSubmission];
+      const value = formData[field as keyof typeof formData];
       if (
         // TODO clean up this check
         field !== 'isModerated' &&
@@ -47,13 +47,10 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
 
-    // Show warning when fields contain URLs
-    for (const field in formData) {
-      const data = formData[field as keyof QueuedArticleSubmission];
-      if (typeof data !== 'string')
-        continue;
-      if (data.includes('http') || data.includes('://'))
-        errorValidation[field].push(`${field} must not contain a URL`);
+    // Show warning when field contains URLs
+    if (/http|www/.test(formData.abstract)) {
+      errorValidation.abstract.push(`Abstract must not contain a URL`);
+      formData.abstract = formData.abstract.replace(/(http|www)\S+/g, '[URL removed]');
     }
 
     if (isNaN(formData.volume)) {
@@ -88,11 +85,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
-    const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
+    const name = e.currentTarget.dataset.key as keyof typeof formData;
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
+    const formKeys: Record<'single' | 'array', Array<keyof typeof formData>> = {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
       array: ['authors', 'keywords', 'pageRange'],
     };
