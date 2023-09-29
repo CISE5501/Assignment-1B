@@ -4,16 +4,21 @@ import {
   Get,
   HttpStatus,
   Param,
+  Put,
   Post,
   Res,
   Delete,
 } from '@nestjs/common';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
+import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
 @Controller('analyst')
 export class AnalystController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly queuedArticleService: QueuedArticleService,
+  ) {}
 
   @Get('/index')
   async getArticles(@Res() response) {
@@ -36,7 +41,7 @@ export class AnalystController {
   ) {
     try {
       const newArticle =
-        await this.queuedArticleService.createArticle(createArticleDto);
+        await this.articleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
         newArticle,
@@ -75,6 +80,31 @@ export class AnalystController {
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Put('/promote/:id')
+  async promoteArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      // Get article
+      const article = await this.queuedArticleService.getArticle(articleId);
+      // Match scema
+      const { _doc: intermediaryArticle }: any = { ...article };
+      delete intermediaryArticle.isModerated;
+      // Add article to accepted database
+      await this.articleService.createArticle(intermediaryArticle);
+      // Delete article from queue
+      await this.queuedArticleService.deleteArticle(articleId);
+      // Return response
+      return response.status(HttpStatus.OK).json({
+        message: 'Article promoted to database successfully',
+        newArticle: article,
+      });
+    } catch (err) {
+      console.log(err);
+      const status =
+        err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      return response.status(status).json(err.response);
     }
   }
 }

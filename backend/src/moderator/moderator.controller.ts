@@ -8,7 +8,7 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { UpdateArticleDto } from 'src/models/articles/dto/update-article.dto';
+import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
 //controller- routes articles to get/post methods
@@ -35,7 +35,7 @@ export class ModeratorController {
   async updateArticle(
     @Res() response,
     @Param('id') articleId: string,
-    @Body() updateArticleDto: UpdateArticleDto,
+    @Body() updateArticleDto: UpdateQueuedArticleDto,
   ) {
     try {
       const existingArticle = await this.queuedArticleService.updateArticle(
@@ -73,6 +73,22 @@ export class ModeratorController {
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Put('/promote/:id')
+  async promoteArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      const existingArticle = await this.queuedArticleService.updateArticle(
+        articleId,
+        { isModerated: true },
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Article marked as moderated successfully',
+        existingArticle,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);

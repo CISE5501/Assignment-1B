@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-export class CreateArticleDto {
+export class CreateQueuedArticleDto {
   @IsString()
   readonly title: string;
   @IsArray()
@@ -19,7 +19,7 @@ export class CreateArticleDto {
   @IsNumber()
   readonly issue: number;
   @IsArray()
-  readonly pageRange: number[];
+  readonly pageRange: [number, number];
   @IsString()
   readonly doi: string;
   @IsArray()
