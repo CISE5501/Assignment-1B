@@ -7,26 +7,17 @@ import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-art
 
 @Injectable()
 export class QueuedArticleService {
-  constructor(
-    @InjectModel('QueuedArticle') private articleModel: Model<IQueuedArticle>,
-  ) {}
+  constructor(@InjectModel('QueuedArticle') private articleModel: Model<IQueuedArticle>) {}
 
-  async createArticle(
-    createArticleDto: CreateQueuedArticleDto,
-  ): Promise<IQueuedArticle> {
+  async createArticle(createArticleDto: CreateQueuedArticleDto): Promise<IQueuedArticle> {
     const newArticle = await new this.articleModel(createArticleDto);
     return newArticle.save();
   }
 
-  async updateArticle(
-    articleId: string,
-    updateArticleDto: UpdateQueuedArticleDto,
-  ): Promise<IQueuedArticle> {
-    const existingArticle = await this.articleModel.findByIdAndUpdate(
-      articleId,
-      updateArticleDto,
-      { new: true },
-    );
+  async updateArticle(articleId: string, updateArticleDto: UpdateQueuedArticleDto): Promise<IQueuedArticle> {
+    const existingArticle = await this.articleModel.findByIdAndUpdate(articleId, updateArticleDto, {
+      new: true,
+    });
     if (!existingArticle) {
       throw new NotFoundException(`Article #${articleId} not found`);
     }
@@ -42,9 +33,7 @@ export class QueuedArticleService {
   }
 
   async getAllUnmoderatedArticles(): Promise<IQueuedArticle[]> {
-    const articleData = await this.articleModel
-      .find()
-      .where({ isModerated: false });
+    const articleData = await this.articleModel.find().where({ isModerated: false });
     if (!articleData || articleData.length == 0) {
       throw new NotFoundException('Articles data not found!');
     }
@@ -52,9 +41,7 @@ export class QueuedArticleService {
   }
 
   async getAllModeratedArticles(): Promise<IQueuedArticle[]> {
-    const articleData = await this.articleModel
-      .find()
-      .where({ isModerated: true });
+    const articleData = await this.articleModel.find().where({ isModerated: true });
     if (!articleData || articleData.length == 0) {
       throw new NotFoundException('Articles data not found!');
     }

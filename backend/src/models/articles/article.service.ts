@@ -30,15 +30,10 @@ export class ArticleService {
     return newArticle.save();
   }
 
-  async updateArticle(
-    articleId: string,
-    updateArticleDto: UpdateArticleDto,
-  ): Promise<IArticle> {
-    const existingArticle = await this.articleModel.findByIdAndUpdate(
-      articleId,
-      updateArticleDto,
-      { new: true },
-    );
+  async updateArticle(articleId: string, updateArticleDto: UpdateArticleDto): Promise<IArticle> {
+    const existingArticle = await this.articleModel.findByIdAndUpdate(articleId, updateArticleDto, {
+      new: true,
+    });
     if (!existingArticle) {
       throw new NotFoundException(`Article #${articleId} not found`);
     }

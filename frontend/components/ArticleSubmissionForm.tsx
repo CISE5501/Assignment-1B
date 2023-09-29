@@ -36,10 +36,8 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
         // TODO clean up this check
         field !== 'isModerated' &&
         (!value ||
-          (field === 'pageRange' &&
-            (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
-          ((field === 'authors' || field === 'keywords') &&
-            formData[field].length === 0))
+          (field === 'pageRange' && (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
+          ((field === 'authors' || field === 'keywords') && formData[field].length === 0))
       ) {
         errorValidation[field] = `${field} must not be empty`;
       }
@@ -70,9 +68,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) =>
-        alert(response.ok ? 'Successfully submitted article' : 'Unknown'),
-      )
+      .then((response) => alert(response.ok ? 'Successfully submitted article' : 'Unknown'))
       .catch((err) => {
         alert('Failed to submit article');
         console.log(err);
@@ -85,19 +81,8 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<
-      'single' | 'array',
-      Array<keyof QueuedArticleSubmission>
-    > = {
-      single: [
-        'title',
-        'date',
-        'journal',
-        'volume',
-        'issue',
-        'doi',
-        'abstract',
-      ],
+    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
       array: ['authors', 'keywords', 'pageRange'],
     };
 
@@ -121,12 +106,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
           <label>
             {' '}
             Article Title:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="title"
-            />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -154,35 +134,21 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
               data-key="keywords"
               data-index="0"
             />
-            {errors.keywords && (
-              <p className={styles.Error}>{errors.keywords}</p>
-            )}
+            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
           <br />
           <label>
             {' '}
             Abstract:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="abstract"
-            />
-            {errors.abstract && (
-              <p className={styles.Error}>{errors.abstract}</p>
-            )}
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
+            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </label>
         </div>
         <div className={styles.RightColumn}>
           <label>
             {' '}
             Journal:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="journal"
-            />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br />
@@ -190,24 +156,14 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             <label>
               {' '}
               Date:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="date"
-                data-key="date"
-              />
+              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" />
               {errors.date && <p className={styles.Error}>{errors.date}</p>}
             </label>
             <br />
             <label>
               {' '}
               DOI:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="text"
-                data-key="doi"
-              />
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
@@ -216,24 +172,14 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             <label>
               {' '}
               Volume:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="number"
-                data-key="volume"
-              />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" />
               {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
             </label>
             <br />
             <label>
               {' '}
               Issue:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="number"
-                data-key="issue"
-              />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
               {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
             </label>
             <br />
@@ -263,9 +209,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             </label>
             <label>
               <br />
-              {errors.pageRange && (
-                <p className={styles.Error}>{errors.pageRange}</p>
-              )}
+              {errors.pageRange && <p className={styles.Error}>{errors.pageRange}</p>}
             </label>
           </div>
         </div>

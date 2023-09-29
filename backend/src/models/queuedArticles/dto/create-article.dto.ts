@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateQueuedArticleDto {
   @IsString()
   readonly title: string;

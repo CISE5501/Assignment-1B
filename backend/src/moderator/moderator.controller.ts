@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpStatus,
-  Param,
-  Put,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Put, Res } from '@nestjs/common';
 import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
@@ -20,8 +11,7 @@ export class ModeratorController {
   @Get('/index')
   async getArticles(@Res() response) {
     try {
-      const articleData =
-        await this.queuedArticleService.getAllUnmoderatedArticles();
+      const articleData = await this.queuedArticleService.getAllUnmoderatedArticles();
       return response.status(HttpStatus.OK).json({
         message: 'All unmoderated articles data found successfully',
         articleData,
@@ -38,10 +28,7 @@ export class ModeratorController {
     @Body() updateArticleDto: UpdateQueuedArticleDto,
   ) {
     try {
-      const existingArticle = await this.queuedArticleService.updateArticle(
-        articleId,
-        updateArticleDto,
-      );
+      const existingArticle = await this.queuedArticleService.updateArticle(articleId, updateArticleDto);
       return response.status(HttpStatus.OK).json({
         message: 'Article has been successfully updated',
         existingArticle,
@@ -54,8 +41,7 @@ export class ModeratorController {
   @Get('/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle =
-        await this.queuedArticleService.getArticle(articleId);
+      const existingArticle = await this.queuedArticleService.getArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
@@ -68,8 +54,7 @@ export class ModeratorController {
   @Delete('/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle =
-        await this.queuedArticleService.deleteArticle(articleId);
+      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
@@ -82,10 +67,7 @@ export class ModeratorController {
   @Put('/promote/:id')
   async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle = await this.queuedArticleService.updateArticle(
-        articleId,
-        { isModerated: true },
-      );
+      const existingArticle = await this.queuedArticleService.updateArticle(articleId, { isModerated: true });
       return response.status(HttpStatus.OK).json({
         message: 'Article marked as moderated successfully',
         existingArticle,

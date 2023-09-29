@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
@@ -63,13 +55,9 @@ export class UserController {
   }
 
   @Post('/new')
-  async createArticle(
-    @Res() response,
-    @Body() createArticleDto: CreateQueuedArticleDto,
-  ) {
+  async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
-      const newArticle =
-        await this.queuedArticleService.createArticle(createArticleDto);
+      const newArticle = await this.queuedArticleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
         newArticle,

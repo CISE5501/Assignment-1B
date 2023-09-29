@@ -3,10 +3,7 @@ import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '@/src/schema/queuedArticle';
-import SortableTable, {
-  ComputedRow,
-  DataRow,
-} from '@/components/table/SortableTable';
+import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
 import { handleDelete, PageProps } from '@/common/queueCommon';
 import { getServerData } from '@/common/queueCommon';
 import DOMAIN from '@/DOMAIN';
@@ -56,8 +53,7 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     {
       computed: true,
       label: 'Warnings',
-      content: (data) =>
-        duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '',
+      content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''),
     },
     {
       computed: true,
@@ -83,11 +79,7 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       <h1>Analyst View</h1>
       <h2>Articles in Queue Pending Analysis</h2>
       <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? (
-        <strong>No Articles Needing Analysis</strong>
-      ) : (
-        ''
-      )}
+      {queueData.articleData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
     </Container>
   );
 };

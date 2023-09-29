@@ -23,17 +23,9 @@ import { ArticleService } from './models/articles/article.service';
       }),
     }),
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
-    MongooseModule.forFeature([
-      { name: 'QueuedArticle', schema: QueuedArticleSchema },
-    ]),
+    MongooseModule.forFeature([{ name: 'QueuedArticle', schema: QueuedArticleSchema }]),
   ],
-  controllers: [
-    AppController,
-    ModeratorController,
-    AnalystController,
-    QueueController,
-    UserController,
-  ],
+  controllers: [AppController, ModeratorController, AnalystController, QueueController, UserController],
   providers: [AppService, ArticleService, QueuedArticleService],
 })
 export class AppModule {}

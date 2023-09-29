@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Put,
-  Post,
-  Res,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Put, Post, Res, Delete } from '@nestjs/common';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
@@ -23,8 +13,7 @@ export class AnalystController {
   @Get('/index')
   async getArticles(@Res() response) {
     try {
-      const articleData =
-        await this.queuedArticleService.getAllModeratedArticles();
+      const articleData = await this.queuedArticleService.getAllModeratedArticles();
       return response.status(HttpStatus.OK).json({
         message: 'All moderated articles data found successfully',
         articleData,
@@ -35,13 +24,9 @@ export class AnalystController {
   }
 
   @Post()
-  async createArticle(
-    @Res() response,
-    @Body() createArticleDto: CreateArticleDto,
-  ) {
+  async createArticle(@Res() response, @Body() createArticleDto: CreateArticleDto) {
     try {
-      const newArticle =
-        await this.articleService.createArticle(createArticleDto);
+      const newArticle = await this.articleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
         newArticle,
@@ -58,8 +43,7 @@ export class AnalystController {
   @Get('/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle =
-        await this.queuedArticleService.getArticle(articleId);
+      const existingArticle = await this.queuedArticleService.getArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
@@ -72,8 +56,7 @@ export class AnalystController {
   @Delete('/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle =
-        await this.queuedArticleService.deleteArticle(articleId);
+      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
@@ -102,8 +85,7 @@ export class AnalystController {
       });
     } catch (err) {
       console.log(err);
-      const status =
-        err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      const status = err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
       return response.status(status).json(err.response);
     }
   }
