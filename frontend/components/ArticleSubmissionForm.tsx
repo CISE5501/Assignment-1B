@@ -1,11 +1,11 @@
 import React, { useState, FormEvent } from 'react';
-import { Article } from "../src/schema/article";
+import { QueuedArticle } from "../src/schema/queuedArticle";
 import styles from './SubmissionForm.module.css';
 
 type Props = {};
 
 const ArticleSubmissionForm: React.FC<Props> = () => {
-  const [formData, setFormData] = useState<Article>({
+  const [formData, setFormData] = useState<QueuedArticle>({
     title: '',
     authors: [],
     date: '',
@@ -16,6 +16,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     doi: '',
     keywords: [],
     abstract: '',
+    isModerated: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -26,7 +27,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const errorValidation: { [key: string]: string } = {};
 
     for (const field in formData) {
-      const value = formData[field as keyof Article];
+      const value = formData[field as keyof QueuedArticle];
       errorValidation[field] = '';
       if (!value || (
         field === 'pageRange' &&
@@ -72,11 +73,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
-    const name = e.currentTarget.dataset.key as keyof Article;
+    const name = e.currentTarget.dataset.key as keyof QueuedArticle;
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof Article>> = {
+    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticle>> = {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
       array: ['authors', 'keywords', 'pageRange'],
     };
