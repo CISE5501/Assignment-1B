@@ -6,6 +6,7 @@ import DOMAIN from '@/DOMAIN';
 type Props = object;
 
 type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
+type ErrorsMap = Record<string, string[]>;
 
 const ArticleSubmissionForm: React.FC<Props> = () => {
   const [formData, setFormData] = useState<QueuedArticleSubmission>({
@@ -22,16 +23,19 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<ErrorsMap>({});
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const errorValidation: { [key: string]: string } = {};
+    const errorValidation: ErrorsMap = {};
 
     for (const field in formData) {
+      errorValidation[field] = [];
+    }
+    // Show error for input fields with empty values
+    for (const field in formData) {
       const value = formData[field as keyof QueuedArticleSubmission];
-      errorValidation[field] = '';
       if (
         // TODO clean up this check
         field !== 'isModerated' &&
@@ -39,25 +43,32 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
           (field === 'pageRange' && (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
           ((field === 'authors' || field === 'keywords') && formData[field].length === 0))
       ) {
-        errorValidation[field] = `${field} must not be empty`;
+        errorValidation[field].push(`${field} must not be empty`);
       }
     }
 
-    if (isNaN(formData.volume)) {
-      errorValidation.volume = 'Volume must be a number';
+    // Show warning when fields contain URLs
+    for (const field in formData) {
+      const data = formData[field as keyof QueuedArticleSubmission];
+      if (typeof data !== 'string')
+        continue;
+      if (data.includes('http') || data.includes('://'))
+        errorValidation[field].push(`${field} must not contain a URL`);
     }
 
+    if (isNaN(formData.volume)) {
+      errorValidation.volume.push('Volume must be a number');
+    }
     if (isNaN(formData.issue)) {
-      errorValidation.issue = 'Issue must be a number';
+      errorValidation.issue.push('Issue must be a number');
     }
 
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
-      errorValidation.pageRange = 'Page Range must be an array of two numbers';
+      errorValidation.pageRange.push('Page Range must be an array of two numbers');
     }
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
     }
 
