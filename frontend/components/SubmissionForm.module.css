@@ -1,68 +1,67 @@
 .Form {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .FormContent {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-  }
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .LeftColumn {
-    flex: 1;
-    padding: 10px;
-    border-right: 1px solid #ccc;
-    box-sizing: border-box;
-  }
+.FormContent {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
 
-  .LeftColumn label {
-    flex: 1;
-    margin-right: 10px;
-    font-weight: bold;
-  }
-  
-  .RightColumn {
-    flex: 1;
-    padding: 10px;
-    box-sizing: border-box;
-  }
+.LeftColumn {
+  flex: 1;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  box-sizing: border-box;
+}
 
-  .RightColumnRow {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
+.LeftColumn label {
+  flex: 1;
+  margin-right: 10px;
+  font-weight: bold;
+}
 
-  .RightColumn label {
-    flex: 1;
-    margin-right: 10px;
-    font-weight: bold;
-  }
+.RightColumn {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
-  .RightColumnRow input {
-    flex: 1;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
+.RightColumnRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
 
-  .Input {
-    width: 150%;
-    max-width: 400px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 16px;
-  }
-  
+.RightColumn label {
+  flex: 1;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.RightColumnRow input {
+  flex: 1;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.Input {
+  width: 150%;
+  max-width: 400px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+}
