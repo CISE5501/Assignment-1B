@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
-import React from "react";
-import styles from "./Nav.module.scss";
+import { useRouter } from 'next/router';
+import React from 'react';
+import styles from './Nav.module.scss';
 
 type Props = {
   route?: string;
@@ -15,7 +15,7 @@ const NavItem = ({ children, route, end, dropdown, onClick, style }: Props) => {
   const router = useRouter();
 
   const navigate: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    if (typeof route === "string") {
+    if (typeof route === 'string') {
       router.push(route);
     }
 
@@ -26,9 +26,9 @@ const NavItem = ({ children, route, end, dropdown, onClick, style }: Props) => {
     <div
       style={style}
       className={`${route || onClick ? styles.clickable : styles.navitem}${
-        end ? ` ${styles.end}` : ""
-      }${dropdown ? ` ${styles.dropdown}` : ""}`}
-      onClick={typeof onClick === "function" ? onClick : navigate}
+        end ? ` ${styles.end}` : ''
+      }${dropdown ? ` ${styles.dropdown}` : ''}`}
+      onClick={typeof onClick === 'function' ? onClick : navigate}
     >
       {children}
     </div>
