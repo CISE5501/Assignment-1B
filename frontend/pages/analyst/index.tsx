@@ -31,50 +31,50 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
   )[] = [
-    { key: 'title', label: 'Title' },
-    {
-      key: 'authors',
-      label: 'Authors',
-      displayAs: (authors) => authors.join('; '),
-    },
-    { key: 'date', label: 'Date' },
-    { key: 'journal', label: 'Journal' },
-    { key: 'volume', label: 'Volume' },
-    { key: 'issue', label: 'Issue' },
-    {
-      key: 'pageRange',
-      label: 'Page Range',
-      displayAs: ([start, end]) => start + '-' + end,
-    },
-    { key: 'doi', label: 'DOI' },
-    {
-      key: 'keywords',
-      label: 'Keywords',
-      displayAs: (keywords) => keywords.join(', '),
-    },
-    { key: 'abstract', label: 'Abstract' },
-    {
-      computed: true,
-      label: 'Warnings',
-      content: (data) =>
-        duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '',
-    },
-    {
-      computed: true,
-      label: 'Actions',
-      content: (data) => (
-        <div>
-          <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
-          </button>
-          <br />
-          <button type="button" onClick={() => promote(data._id)}>
-            Mark Analysed
-          </button>
-        </div>
-      ),
-    },
-  ];
+      { key: 'title', label: 'Title' },
+      {
+        key: 'authors',
+        label: 'Authors',
+        displayAs: (authors) => authors.join('; '),
+      },
+      { key: 'date', label: 'Date' },
+      { key: 'journal', label: 'Journal' },
+      { key: 'volume', label: 'Volume' },
+      { key: 'issue', label: 'Issue' },
+      {
+        key: 'pageRange',
+        label: 'Page Range',
+        displayAs: ([start, end]) => start + '-' + end,
+      },
+      { key: 'doi', label: 'DOI' },
+      {
+        key: 'keywords',
+        label: 'Keywords',
+        displayAs: (keywords) => keywords.join(', '),
+      },
+      { key: 'abstract', label: 'Abstract' },
+      {
+        computed: true,
+        label: 'Warnings',
+        content: (data) =>
+          duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '',
+      },
+      {
+        computed: true,
+        label: 'Actions',
+        content: (data) => (
+          <div>
+            <button type="button" onClick={() => handleDelete('queue', data)}>
+              Delete
+            </button>
+            <br />
+            <button type="button" onClick={() => promote(data._id)}>
+              Mark Analysed
+            </button>
+          </div>
+        ),
+      },
+    ];
 
   return (
     <Container>

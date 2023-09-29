@@ -43,7 +43,7 @@ const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
                 {header.displayAs ? (
                   header.displayAs(row[header.key])
                 ) : (
-                  <span>{row[header.key]}</span>
+                  <span>{row[header.key] as any}</span>
                 )}
               </td>
             ),
