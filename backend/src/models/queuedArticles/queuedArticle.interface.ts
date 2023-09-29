@@ -7,7 +7,7 @@ export interface IQueuedArticle extends Document {
   journal: string;
   volume: number;
   issue: number;
-  pageRange: number[];
+  pageRange: [number, number];
   doi: string;
   keywords: string[];
   abstract: string;

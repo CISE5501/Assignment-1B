@@ -1,10 +1,11 @@
 import React from 'react';
 import { Article } from '@/src/schema/article';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import SortableTable from '@/components/table/SortableTable';
-import Link from 'next/link';
+import DOMAIN from '@/DOMAIN';
 
 export interface IndexProps {
   data: {
@@ -30,12 +31,15 @@ const Index = ({ data }: IndexProps) => {
 
   return (
     <Container>
+      <strong>Nav</strong>
+      <br />
       <Link href="/addArticle">Add new Article</Link>
-      <br></br>
+      <br />
       <Link href="/moderator">Moderator</Link>
-      <br></br>
+      <br />
       <Link href="/analyst">Analyst</Link>
-      <br></br>
+      <br />
+      <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
     </Container>
   );
@@ -43,9 +47,7 @@ const Index = ({ data }: IndexProps) => {
 
 //calls data from backend- connected to /articles
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch('https://backend-mocha-ten.vercel.app/articles');
-  const data = await res.json();
-  //console.log(data);
+  const data = await fetch(DOMAIN + 'articles').then((data) => data.json());
   return {
     props: {
       data,

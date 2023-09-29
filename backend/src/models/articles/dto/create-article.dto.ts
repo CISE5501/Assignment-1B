@@ -19,7 +19,7 @@ export class CreateArticleDto {
   @IsNumber()
   readonly issue: number;
   @IsArray()
-  readonly pageRange: number[];
+  readonly pageRange: [number, number];
   @IsString()
   readonly doi: string;
   @IsArray()

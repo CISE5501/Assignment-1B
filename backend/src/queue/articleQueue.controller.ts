@@ -4,29 +4,28 @@ import {
   Get,
   HttpStatus,
   Param,
-  Put,
   Post,
   Res,
   Delete,
 } from '@nestjs/common';
-import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
+import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
-@Controller('analyst')
-export class AnalystController {
+@Controller('queue')
+export class QueueController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
   ) {}
 
-  @Get('/index')
+  @Get()
   async getArticles(@Res() response) {
     try {
       const articleData =
-        await this.queuedArticleService.getAllModeratedArticles();
+        await this.queuedArticleService.getAllQueuedArticles();
       return response.status(HttpStatus.OK).json({
-        message: 'All moderated articles data found successfully',
+        message: 'All queued articles data found successfully',
         articleData,
       });
     } catch (err) {
@@ -37,21 +36,40 @@ export class AnalystController {
   @Post()
   async createArticle(
     @Res() response,
-    @Body() createArticleDto: CreateArticleDto,
+    @Body() createArticleDto: CreateQueuedArticleDto,
   ) {
     try {
       const newArticle =
-        await this.articleService.createArticle(createArticleDto);
+        await this.queuedArticleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
-        message: 'Article has been created successfully',
+        message: 'Queue article has been created successfully',
         newArticle,
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
-        message: 'Error: Article not created!',
+        message: 'Error: Queue article not created!',
         error: 'Bad Request',
       });
+    }
+  }
+
+  @Get('duplicates')
+  async listDuplicateArticleDOIs(@Res() response) {
+    try {
+      const accepted = await this.articleService.getAllArticles();
+      const acceptedDOIs = accepted.map((article) => article.doi);
+      const queued = await this.queuedArticleService.getAllQueuedArticles();
+      const duplicatesInQueue = queued.filter((queueArticle) =>
+        acceptedDOIs.includes(queueArticle.doi),
+      );
+      const duplicateDOIs = duplicatesInQueue.map((article) => article.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'All duplicate articles found successfully',
+        duplicateDOIs,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
     }
   }
 
@@ -83,28 +101,19 @@ export class AnalystController {
     }
   }
 
-  @Put('/promote/:id')
-  async promoteArticle(@Res() response, @Param('id') articleId: string) {
+  @Get('/includes/:id')
+  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
-      // Get article
-      const article = await this.queuedArticleService.getArticle(articleId);
-      // Match scema
-      const { _doc: intermediaryArticle }: any = { ...article };
-      delete intermediaryArticle.isModerated;
-      // Add article to accepted database
-      await this.articleService.createArticle(intermediaryArticle);
-      // Delete article from queue
-      await this.queuedArticleService.deleteArticle(articleId);
-      // Return response
+      await this.queuedArticleService.getArticle(articleId);
       return response.status(HttpStatus.OK).json({
-        message: 'Article promoted to database successfully',
-        newArticle: article,
+        message: 'Article found successfully',
+        exists: true,
       });
     } catch (err) {
-      console.log(err);
-      const status =
-        err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
-      return response.status(status).json(err.response);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article does not exist',
+        exists: false,
+      });
     }
   }
 }

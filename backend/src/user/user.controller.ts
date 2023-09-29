@@ -7,19 +7,20 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
-import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
+import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
 //controller- routes articles to get/post methods
 
 @Controller('articles')
 export class UserController {
   constructor(
-    private readonly queuedArticleService: QueuedArticleService,
     private readonly articleService: ArticleService,
+    private readonly queuedArticleService: QueuedArticleService,
   ) {}
-  @Get('')
+
+  @Get()
   async getArticles(@Res() response) {
     try {
       const articleData = await this.articleService.getAllArticles();
@@ -45,10 +46,26 @@ export class UserController {
     }
   }
 
+  @Get('/includes/:id')
+  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
+    try {
+      await this.articleService.getArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        exists: true,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Article does not exist',
+        exists: false,
+      });
+    }
+  }
+
   @Post('/new')
   async createArticle(
     @Res() response,
-    @Body() createArticleDto: CreateArticleDto,
+    @Body() createArticleDto: CreateQueuedArticleDto,
   ) {
     try {
       const newArticle =

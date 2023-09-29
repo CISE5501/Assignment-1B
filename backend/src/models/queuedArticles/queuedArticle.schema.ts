@@ -8,7 +8,7 @@ export class QueuedArticle {
   @Prop() journal: string;
   @Prop() volume: number;
   @Prop() issue: number;
-  @Prop() pageRange: number[];
+  @Prop() pageRange: [number, number];
   @Prop() doi: string;
   @Prop() keywords: string[];
   @Prop() abstract: string;

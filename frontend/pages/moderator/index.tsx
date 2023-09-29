@@ -1,55 +1,96 @@
 import React from 'react';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
-import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import SortableTable from '@/components/table/SortableTable';
-import Link from 'next/link';
+import { QueuedArticle } from '@/src/schema/queuedArticle';
+import SortableTable, {
+  ComputedRow,
+  DataRow,
+} from '@/components/table/SortableTable';
+import { PageProps, handleDelete } from '@/common/queueCommon';
+import { getServerData } from '@/common/queueCommon';
+import DOMAIN from '@/DOMAIN';
 
-export interface IndexProps {
-  data: {
-    message: string;
-    articleData: QueuedArticle[];
-  };
-}
+export type IndexProps = PageProps;
+export const getServerSideProps = getServerData('moderator/index');
+
+const promote = async (id: string): Promise<void> => {
+  const response = await fetch(DOMAIN + 'moderator/promote/' + id, {
+    method: 'PUT',
+  });
+  if (response.ok) {
+    alert('Successfully marked article as moderated.');
+    window.location.reload();
+  } else {
+    alert('Failed to mark article as moderated.');
+  }
+};
 
 //returns table using data from queuedArticles where isModerated = false
-const Index = ({ data }: IndexProps) => {
-  const headersList: { key: keyof QueuedArticle; label: string }[] = [
+const Index = ({ queueData, duplicates }: PageProps) => {
+  const headersList: (
+    | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
+    | ComputedRow<QueuedArticle>
+  )[] = [
     { key: 'title', label: 'Title' },
-    { key: 'authors', label: 'Authors' },
+    {
+      key: 'authors',
+      label: 'Authors',
+      displayAs: (authors: string[]) => authors.join('; '),
+    },
     { key: 'date', label: 'Date' },
     { key: 'journal', label: 'Journal' },
     { key: 'volume', label: 'Volume' },
     { key: 'issue', label: 'Issue' },
-    { key: 'pageRange', label: 'Page Range' },
+    {
+      key: 'pageRange',
+      label: 'Page Range',
+      displayAs: ([start, end]: [number, number]) => start + '-' + end,
+    },
     { key: 'doi', label: 'DOI' },
-    { key: 'keywords', label: 'Keywords' },
+    {
+      key: 'keywords',
+      label: 'Keywords',
+      displayAs: (keywords: string[]) => keywords.join(', '),
+    },
     { key: 'abstract', label: 'Abstract' },
-    { key: 'isModerated', label: 'Is Moderated' },
+    {
+      computed: true,
+      label: 'Warnings',
+      content: (data) =>
+        duplicates.includes(data.doi) ? <strong>Duplicate</strong> : '',
+    },
+    {
+      computed: true,
+      label: 'Actions',
+      content: (data) => (
+        <div>
+          <button type="button" onClick={() => handleDelete('queue', data)}>
+            Delete
+          </button>
+          <br />
+          <button type="button" onClick={() => promote(data._id)}>
+            Mark Moderated
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
     <Container>
       <Link href="/">Return Home</Link>
       <br></br>
-      <SortableTable headers={headersList} data={data.articleData} />
+      <h1>Moderator View</h1>
+      <h2>Articles in Queue Pending Moderation</h2>
+      <SortableTable headers={headersList} data={queueData.articleData} />
+      {queueData.articleData.length === 0 ? (
+        <strong>No Articles Needing Moderation</strong>
+      ) : (
+        ''
+      )}
     </Container>
   );
-};
-
-//calls data from backend- connected to /moderator/index
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(
-    'https://backend-mocha-ten.vercel.app/moderator/index',
-  );
-  const data = await res.json();
-  console.log(data);
-  return {
-    props: {
-      data,
-    },
-  };
 };
 
 export default Index;
