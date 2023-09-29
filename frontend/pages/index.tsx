@@ -31,12 +31,6 @@ const Index = ({ data }: IndexProps) => {
     <ArticleItem article={item} key={index} />
   ));
 
-  const saveArticle = (e: React.FormEvent<Element>, formData: unknown): void => {
-    e.preventDefault();
-    console.log('saveArticle function called');
-    console.log('Form Data:', formData);
-  }
-
   return (
     <Container>
       <h1>Articles in Database</h1>
@@ -59,7 +53,7 @@ const Index = ({ data }: IndexProps) => {
 
       <h2>Form</h2>
 
-      <ArticleSubmissionForm saveArticle={saveArticle} />
+      <ArticleSubmissionForm />
 
     </Container>
   );

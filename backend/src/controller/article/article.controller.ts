@@ -18,7 +18,7 @@ import { ArticleService } from 'src/service/article/article.service';
 @Controller('articles')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
-  @Post()
+  @Post('/new')
   async createArticle(
     @Res() response,
     @Body() createArticleDto: CreateArticleDto,
@@ -32,7 +32,6 @@ export class ArticleController {
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
         message: 'Error: Article not created!',
         error: 'Bad Request',
       });
