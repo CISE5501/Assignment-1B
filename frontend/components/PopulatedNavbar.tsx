@@ -1,3 +1,4 @@
+import React from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import NavBar from './nav/NavBar';
 import NavDropdown from './nav/NavDropdown';

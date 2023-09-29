@@ -3,10 +3,12 @@ import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.css';
 import DOMAIN from '@/DOMAIN';
 
-type Props = {};
+type Props = object;
+
+type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
 
 const ArticleSubmissionForm: React.FC<Props> = () => {
-  const [formData, setFormData] = useState<QueuedArticle>({
+  const [formData, setFormData] = useState<QueuedArticleSubmission>({
     title: '',
     authors: [],
     date: '',
@@ -28,7 +30,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const errorValidation: { [key: string]: string } = {};
 
     for (const field in formData) {
-      const value = formData[field as keyof QueuedArticle];
+      const value = formData[field as keyof QueuedArticleSubmission];
       errorValidation[field] = '';
       if (
         // TODO clean up this check
@@ -79,11 +81,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
-    const name = e.currentTarget.dataset.key as keyof QueuedArticle;
+    const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticle>> = {
+    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
       single: [
         'title',
         'date',

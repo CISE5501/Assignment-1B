@@ -10,6 +10,7 @@ export type ComputedRow<T> = {
 export type DataRow<T> = {
   label: string;
   key: keyof T;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   displayAs?: (data: any) => React.JSX.Element | string;
 };
 
@@ -43,6 +44,7 @@ const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
                 {header.displayAs ? (
                   header.displayAs(row[header.key])
                 ) : (
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   <span>{row[header.key] as any}</span>
                 )}
               </td>
