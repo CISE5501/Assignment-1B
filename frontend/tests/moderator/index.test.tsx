@@ -21,20 +21,22 @@ const tempArray = [
 
 function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
+    queueData: {
       message: '',
       articleData: [],
     },
+    duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
+    queueData: {
       message: '',
       articleData: tempArray,
     },
+    duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
@@ -46,11 +48,22 @@ test('should display 1 return link', async () => {
 
 test('should have empty table', async () => {
   renderHome();
-  expect(screen.getAllByTestId('data-table-body').length).toBe(1);
+  expect(screen.getByText('No Articles Needing Moderation')).toBeInTheDocument();
+});
+//TODO add checking for dupe
+test("should have table with an article entry and a 'Warnings' + 'Actions' column but no warnings if there are no duplicates", async () => {
+  renderHomeWithArticles().debug();
+  expect(screen.getByRole('table')).toBeInTheDocument();
+  expect(screen.getByText('Warnings')).toBeInTheDocument();
+  expect(screen.getByText('Actions')).toBeInTheDocument();
+  //expect(screen.getByText('Duplicate')).not.toBeInTheDocument();
 });
 
-test("should have table with an article entry and an 'Is Moderated' column", async () => {
-  renderHomeWithArticles();
+//TODO add checking for dupe
+test("should have table with an article entry and a 'Warnings' + 'Actions' column and a 'Duplicate' warning if it exists in the database", async () => {
+  renderHomeWithArticles().debug();
   expect(screen.getByRole('table')).toBeInTheDocument();
-  expect(screen.getByText('Is Moderated')).toBeInTheDocument();
+  expect(screen.getByText('Warnings')).toBeInTheDocument();
+  expect(screen.getByText('Actions')).toBeInTheDocument();
+  //expect(screen.getByText('Duplicate')).toBeInTheDocument();
 });
