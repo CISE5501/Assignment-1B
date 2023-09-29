@@ -51,7 +51,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange = 'Page Range must be an array of two numbers';
     }
 
-    if (Object.keys(errorValidation).length > 0) {
+    if (Object.values(errorValidation).filter(item => item).length > 0) {
       setErrors(errorValidation);
       return;
     }
