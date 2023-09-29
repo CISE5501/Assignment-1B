@@ -85,7 +85,10 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
+    const formKeys: Record<
+      'single' | 'array',
+      Array<keyof QueuedArticleSubmission>
+    > = {
       single: [
         'title',
         'date',

@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import SortableTable from '@/components/table/SortableTable';
+import SortableTable, { DataRow } from '@/components/table/SortableTable';
 import DOMAIN from '@/DOMAIN';
 
 export interface IndexProps {
@@ -16,16 +16,28 @@ export interface IndexProps {
 
 //returns table using data from VALIDATED articles
 const Index = ({ data }: IndexProps) => {
-  const headersList: { key: keyof Article; label: string }[] = [
+  const headersList: DataRow<Article>[] = [
     { key: 'title', label: 'Title' },
-    { key: 'authors', label: 'Authors' },
+    {
+      key: 'authors',
+      label: 'Authors',
+      displayAs: (authors: string[]) => authors.join('; '),
+    },
     { key: 'date', label: 'Date' },
     { key: 'journal', label: 'Journal' },
     { key: 'volume', label: 'Volume' },
     { key: 'issue', label: 'Issue' },
-    { key: 'pageRange', label: 'Page Range' },
+    {
+      key: 'pageRange',
+      label: 'Page Range',
+      displayAs: ([start, end]: [number, number]) => start + '-' + end,
+    },
     { key: 'doi', label: 'DOI' },
-    { key: 'keywords', label: 'Keywords' },
+    {
+      key: 'keywords',
+      label: 'Keywords',
+      displayAs: (keywords: string[]) => keywords.join(', '),
+    },
     { key: 'abstract', label: 'Abstract' },
   ];
 
