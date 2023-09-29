@@ -8,7 +8,7 @@
     "format": "prettier --write .",
     "lint": "next lint",
     "start": "next start",
-    "test": "jest ./tests --watchAll --passWithNoTests"
+    "test": "jest ./tests --passWithNoTests"
   },
   "dependencies": {
     "@types/node": "20.6.0",
