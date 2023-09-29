@@ -1,3 +1,5 @@
+//maps data retrieved from database to a type
+
 export type Article = {
   title: string;
   authors: string[];

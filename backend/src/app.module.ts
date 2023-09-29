@@ -2,10 +2,14 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ArticleController } from './controller/article/article.controller';
-import { ArticleSchema } from './schema/article.schema';
-import { ArticleService } from './service/article/article.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserController } from './user/user.controller';
+import { ModeratorController } from './moderator/moderator.controller';
+import { AnalystController } from './analyst/analyst.controller';
+import { QueuedArticleSchema } from './models/queuedArticles/queuedArticle.schema';
+import { QueuedArticleService } from './models/queuedArticles/queuedArticle.service';
+import { ArticleSchema } from './models/articles/article.schema';
+import { ArticleService } from './models/articles/article.service';
 
 @Module({
   imports: [
@@ -17,9 +21,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         uri: config.get<string>('MONGO_URI'),
       }),
     }),
+    MongooseModule.forFeature([
+      { name: 'QueuedArticle', schema: QueuedArticleSchema },
+    ]),
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
   ],
-  controllers: [AppController, ArticleController],
-  providers: [AppService, ArticleService],
+  controllers: [
+    AppController,
+    ModeratorController,
+    AnalystController,
+    UserController,
+  ],
+  providers: [AppService, QueuedArticleService, ArticleService],
 })
 export class AppModule {}
