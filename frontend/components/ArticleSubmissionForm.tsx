@@ -29,13 +29,23 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     for (const field in formData) {
       const value = formData[field as keyof QueuedArticle];
       errorValidation[field] = '';
-      if (!value || (
-        field === 'pageRange' &&
-        (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)
-      ) || (
-          (field === 'authors' || field === 'keywords') &&
-          formData[field].length === 0
-        )) {
+      if (
+        // TODO clean up this check
+        field !== 'isModerated'
+        &&
+        (
+          !value
+          || (
+            field === 'pageRange'
+            &&
+            (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)
+          ) || (
+            (field === 'authors' || field === 'keywords')
+            &&
+            formData[field].length === 0
+          )
+        )
+      ) {
         errorValidation[field] = `${field} must not be empty`;
       }
     }
@@ -54,6 +64,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     if (Object.values(errorValidation).filter(item => item).length > 0) {
       setErrors(errorValidation);
+      alert('ERR' + JSON.stringify(errorValidation))
       return;
     }
 
