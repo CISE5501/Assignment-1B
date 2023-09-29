@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { QueuedArticle } from "../src/schema/queuedArticle";
 import styles from './SubmissionForm.module.css';
+import DOMAIN from '@/DOMAIN';
 
 type Props = {};
 
@@ -68,7 +69,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       return;
     }
 
-    fetch('https://nest-backend-janenotjung-hue.vercel.app/articles/new', {
+    fetch(DOMAIN + 'articles/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
