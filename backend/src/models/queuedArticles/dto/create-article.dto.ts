@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-export class CreateArticleDto {
+export class CreateQueuedArticleDto {
   @IsString()
   readonly title: string;
   @IsArray()

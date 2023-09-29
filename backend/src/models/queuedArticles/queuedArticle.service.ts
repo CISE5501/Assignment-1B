@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IQueuedArticle } from 'src/models/queuedArticles/queuedArticle.interface';
-import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
-import { UpdateArticleDto } from 'src/models/articles/dto/update-article.dto';
+import { CreateQueuedArticleDto } from './dto/create-article.dto';
+import { UpdateQueuedArticleDto } from './dto/update-article.dto';
 
 @Injectable()
 export class QueuedArticleService {
@@ -12,7 +12,7 @@ export class QueuedArticleService {
   ) {}
 
   async createArticle(
-    createArticleDto: CreateArticleDto,
+    createArticleDto: CreateQueuedArticleDto,
   ): Promise<IQueuedArticle> {
     const newArticle = await new this.articleModel(createArticleDto);
     return newArticle.save();
@@ -20,7 +20,7 @@ export class QueuedArticleService {
 
   async updateArticle(
     articleId: string,
-    updateArticleDto: UpdateArticleDto,
+    updateArticleDto: UpdateQueuedArticleDto,
   ): Promise<IQueuedArticle> {
     const existingArticle = await this.articleModel.findByIdAndUpdate(
       articleId,

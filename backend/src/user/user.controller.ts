@@ -43,7 +43,7 @@ export class UserController {
     }
   }
 
-  @Post('/new')
+  @Post('')
   async createArticle(
     @Res() response,
     @Body() createArticleDto: CreateArticleDto,

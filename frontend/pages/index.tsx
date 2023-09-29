@@ -6,8 +6,6 @@ import { Container } from 'react-bootstrap';
 import SortableTable from '@/components/table/SortableTable';
 import Link from 'next/link';
 
-import ArticleSubmissionForm from '@/components/ArticleSubmissionForm';
-
 interface IndexProps {
   data: {
     message: string;
@@ -30,12 +28,6 @@ const Index = ({ data }: IndexProps) => {
     { key: 'keywords', label: 'Keywords' },
     { key: 'abstract', label: 'Abstract' },
   ];
-
-  const saveArticle = (e: React.FormEvent<Element>, formData: unknown): void => {
-    e.preventDefault();
-    console.log('saveArticle function called');
-    console.log('Form Data:', formData);
-  }
 
   return (
     <Container>
