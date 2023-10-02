@@ -59,6 +59,19 @@ export class UserController {
     }
   }
 
+  @Get('/doi/:doi')
+  async getArticleByDoi(@Res() response, @Param('doi') doi: string) {
+    try {
+      const existingArticle = await this.articleService.getArticleByDoi(doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        existingArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
   @Get('/includes/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {

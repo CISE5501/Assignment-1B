@@ -25,6 +25,14 @@ export class ArticleService {
     return existingArticle;
   }
 
+  async getArticleByDoi(doi: string): Promise<IArticle> {
+    const existingArticle = await this.articleModel.findOne({ doi }).exec();
+    if (!existingArticle) {
+      throw new NotFoundException(`Article ${doi} not found`);
+    }
+    return existingArticle;
+  }
+
   async createArticle(createArticleDto: CreateArticleDto): Promise<IArticle> {
     const newArticle = await new this.articleModel(createArticleDto);
     return newArticle.save();
