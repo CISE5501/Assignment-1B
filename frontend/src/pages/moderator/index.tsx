@@ -1,12 +1,10 @@
 import React from 'react';
-import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
-import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
-import { PageProps, handleDelete } from '@/common/queueCommon';
-import { getServerData } from '@/common/queueCommon';
-import DOMAIN from '@/DOMAIN';
+import { QueuedArticle } from '../../schema/queuedArticle';
+import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
+import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
+import DOMAIN from '../../../DOMAIN';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
@@ -75,8 +73,6 @@ const Index = ({ queueData, duplicates }: PageProps) => {
 
   return (
     <Container>
-      <Link href="/">Return Home</Link>
-      <br></br>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
       <SortableTable headers={headersList} data={queueData.articleData} />
