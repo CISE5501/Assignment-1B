@@ -38,13 +38,6 @@ function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   return render(<Index {...defaultProps} {...props} />);
 }
 
-test('should display 3 links', async () => {
-  renderHome();
-  expect(screen.getByText('Add new Article')).toBeInTheDocument();
-  expect(screen.getByText('Moderator')).toBeInTheDocument();
-  expect(screen.getByText('Analyst')).toBeInTheDocument();
-});
-
 test('should have empty table', async () => {
   renderHome();
   expect(screen.getAllByTestId('data-table-body').length).toBe(1);

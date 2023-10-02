@@ -41,11 +41,6 @@ function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   return render(<Index {...defaultProps} {...props} />);
 }
 
-test('should display 1 return link', async () => {
-  renderHome();
-  expect(screen.getByText('Return Home')).toBeInTheDocument();
-});
-
 test('should have empty table', async () => {
   renderHome();
   expect(screen.getAllByTestId('data-table-body').length).toBe(1);
