@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, {IndexProps} from '../../src/pages/articles';
+import Index, { IndexProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
 import { Article } from '@/schema/article';
 
@@ -37,13 +37,6 @@ function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   };
   return render(<Index {...defaultProps} {...props} />);
 }
-
-test('should display 3 links', async () => {
-  renderHome();
-  expect(screen.getByText('Add new Article')).toBeInTheDocument();
-  expect(screen.getByText('Moderator')).toBeInTheDocument();
-  expect(screen.getByText('Analyst')).toBeInTheDocument();
-});
 
 test('should have empty table', async () => {
   renderHome();

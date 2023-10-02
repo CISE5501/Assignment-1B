@@ -1,9 +1,8 @@
-import React from 'react';
 import { Article } from '@/schema/article';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import SortableTable, {DataRow} from '../../../components/table/SortableTable';
+import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 import DOMAIN from '../../../DOMAIN';
 
 export interface IndexProps {

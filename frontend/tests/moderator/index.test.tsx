@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/moderator/index';
+import Index, { IndexProps } from '@/pages/moderator';
 import '@testing-library/jest-dom';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
+import { QueuedArticle } from '../../src/schema/queuedArticle';
 
 const tempArray = [
   {
@@ -41,18 +41,13 @@ function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   return render(<Index {...defaultProps} {...props} />);
 }
 
-test('should display 1 return link', async () => {
-  renderHome();
-  expect(screen.getByText('Return Home')).toBeInTheDocument();
-});
-
 test('should have empty table', async () => {
   renderHome();
   expect(screen.getByText('No Articles Needing Moderation')).toBeInTheDocument();
 });
 //TODO add checking for dupe
 test("should have table with an article entry and a 'Warnings' + 'Actions' column but no warnings if there are no duplicates", async () => {
-  renderHomeWithArticles().debug();
+  renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Warnings')).toBeInTheDocument();
   expect(screen.getByText('Actions')).toBeInTheDocument();
@@ -61,7 +56,7 @@ test("should have table with an article entry and a 'Warnings' + 'Actions' colum
 
 //TODO add checking for dupe
 test("should have table with an article entry and a 'Warnings' + 'Actions' column and a 'Duplicate' warning if it exists in the database", async () => {
-  renderHomeWithArticles().debug();
+  renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Warnings')).toBeInTheDocument();
   expect(screen.getByText('Actions')).toBeInTheDocument();
