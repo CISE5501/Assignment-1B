@@ -29,9 +29,12 @@ export class UserController {
   async findArticlesByQuery(@Query('keywords') keywords: string, @Res() response) {
     try {
       const articleData = await this.articleService.getAllArticles();
-      const filteredArticles = articleData.filter((article) =>
-        keywords.split(',').forEach((keyword) => JSON.stringify(article).includes(keyword)),
-      );
+      const filteredArticles: typeof articleData = [];
+      for (const keyword of keywords.split(',')) {
+        filteredArticles.push(
+          ...articleData.filter((article) => JSON.stringify(Object.values(article)).includes(keyword)),
+        );
+      }
 
       return response.status(HttpStatus.OK).json({
         message: 'Filtered articles data found successfully',
