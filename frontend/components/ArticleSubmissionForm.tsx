@@ -24,8 +24,10 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Error checking
 
     const errorValidation: { [key: string]: string } = {};
 
@@ -57,10 +59,17 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
     }
 
+    // Check article is not a duplicate
+    const searchQuery = await fetch(DOMAIN + 'articles/doi/' + formData.doi).then(data => data.json());
+    if (searchQuery.filteredArticles.length > 0) {
+      alert(`Article with DOI ${formData.doi} already exists in the queue!`);
+      return;
+    }
+
+    // Submit the article
     fetch(DOMAIN + 'articles/new', {
       method: 'POST',
       headers: {
