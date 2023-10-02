@@ -1,11 +1,10 @@
 import React from 'react';
-import { Article } from '@/src/schema/article';
+import { Article } from '@/schema/article';
 import { GetServerSideProps } from 'next';
-import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import SortableTable, { DataRow } from '@/components/table/SortableTable';
-import DOMAIN from '@/DOMAIN';
+import SortableTable, {DataRow} from '../../../components/table/SortableTable';
+import DOMAIN from '../../../DOMAIN';
 
 export interface IndexProps {
   data: {
@@ -43,15 +42,6 @@ const Index = ({ data }: IndexProps) => {
 
   return (
     <Container>
-      <strong>Nav</strong>
-      <br />
-      <Link href="/addArticle">Add new Article</Link>
-      <br />
-      <Link href="/moderator">Moderator</Link>
-      <br />
-      <Link href="/analyst">Analyst</Link>
-      <br />
-      <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
     </Container>
   );

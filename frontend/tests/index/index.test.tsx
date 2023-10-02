@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages';
+import Index, {IndexProps} from '../../src/pages/articles';
 import '@testing-library/jest-dom';
-import { Article } from '@/src/schema/article';
+import { Article } from '@/schema/article';
 
 const tempArray = [
   {
