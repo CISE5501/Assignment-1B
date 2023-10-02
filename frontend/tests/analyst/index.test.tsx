@@ -51,7 +51,7 @@ test('should have empty table', async () => {
   expect(screen.getAllByTestId('data-table-body').length).toBe(1);
 });
 
-test("should have table with an article entry and buttons to delete/mark analysis as complete", async () => {
+test('should have table with an article entry and buttons to delete/mark analysis as complete', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Mark Analysed')).toBeInTheDocument();

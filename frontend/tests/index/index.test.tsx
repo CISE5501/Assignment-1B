@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, {IndexProps} from '../../src/pages/articles';
+import Index, { IndexProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
 import { Article } from '@/schema/article';
 

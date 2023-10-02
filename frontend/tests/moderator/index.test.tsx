@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, {IndexProps} from '@/pages/moderator';
+import Index, { IndexProps } from '@/pages/moderator';
 import '@testing-library/jest-dom';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 
