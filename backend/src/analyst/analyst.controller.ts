@@ -25,6 +25,19 @@ export class AnalystController {
 
   @Post()
   async createArticle(@Res() response, @Body() createArticleDto: CreateArticleDto) {
+    // Check article isn't a duplicate
+    try {
+      await this.articleService.getArticleByDoi(createArticleDto.doi);
+      // error is thrown if article is new / not a duplicate
+
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message:
+          "Error: Article not created! New article's DOI duplicates an existing article in the database.",
+      });
+    } catch (err) {
+      // not a duplicate; continue
+    }
+    // Create article
     try {
       const newArticle = await this.articleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
@@ -33,9 +46,7 @@ export class AnalystController {
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
         message: 'Error: Article not created!',
-        error: 'Bad Request',
       });
     }
   }
