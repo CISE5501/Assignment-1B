@@ -64,7 +64,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange.push('Page Range must be an array of two numbers');
     }
 
-    if (Object.values(errorValidation).filter((item) => item).length > 0) {
+    if (Object.values(errorValidation).filter((item) => item.length).length > 0) {
       setErrors(errorValidation);
       return;
     }
@@ -76,7 +76,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => alert(response.ok ? 'Successfully submitted article' : 'Unknown'))
+      .then(async (response) => alert(response.ok ? 'Successfully submitted article' : 'Rejected: ' + (await response.json()).message))
       .catch((err) => {
         alert('Failed to submit article');
         console.log(err);

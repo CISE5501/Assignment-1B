@@ -26,6 +26,13 @@ export class AnalystController {
   @Post()
   async createArticle(@Res() response, @Body() createArticleDto: CreateArticleDto) {
     try {
+      // Disallow creating articles with URLs
+      if (/http|www/.test(JSON.stringify(createArticleDto)))
+        return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+          message: 'Request body contains invalid content. Details: contains URL fragment part /http|www/.',
+          illegalSequence: JSON.stringify(createArticleDto).match(/\S*(?:http|www)\S*/),
+        });
+      // Add article to database
       const newArticle = await this.articleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',

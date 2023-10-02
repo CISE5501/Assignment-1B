@@ -57,6 +57,13 @@ export class UserController {
   @Post('/new')
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
+      // Disallow creating articles with URLs
+      if (/http|www/.test(JSON.stringify(createArticleDto)))
+        return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+          message: 'Request body contains invalid content. Details: contains URL fragment part /http|www/.',
+          illegalSequence: JSON.stringify(createArticleDto, null, 2).match(/.*(?:http|www).*/),
+        });
+      // Add new article in queue
       const newArticle = await this.queuedArticleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
