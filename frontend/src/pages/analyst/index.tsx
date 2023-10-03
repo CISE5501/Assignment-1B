@@ -4,6 +4,7 @@ import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
 import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
 import DOMAIN from '../../../DOMAIN';
+import Link from 'next/link';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('analyst/index');
@@ -64,6 +65,8 @@ const Index = ({ queueData, duplicates }: PageProps) => {
           <button type="button" onClick={() => promote(data._id)}>
             Mark Analysed
           </button>
+          <br />
+          <Link href={`analyst/${data._id}`}>Edit</Link>
         </div>
       ),
     },

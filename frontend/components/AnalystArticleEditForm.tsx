@@ -2,12 +2,20 @@ import React, { useState, FormEvent } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import DOMAIN from '..//DOMAIN';
+ 
+//TODO
+//check the date display format
+//check that the author creates new filled in input with every entry
+//check keywords
 
-type Props = object;
+export interface AnalystFormProps {
+  info: QueuedArticle
+}
 
-type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
+type QueuedArticleSubmission = Omit<QueuedArticle, '_id'|'isModerated'>;
 
-const ArticleSubmissionForm: React.FC<Props> = ({}) => {
+const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
+  const articleData = data.info;
   const [formData, setFormData] = useState<QueuedArticleSubmission>({
     title: '',
     authors: [],
@@ -19,7 +27,6 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
     doi: '',
     keywords: [],
     abstract: '',
-    isModerated: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -106,7 +113,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Article Title:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" defaultValue={articleData.title}/>
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -119,6 +126,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
               type="text"
               data-key="authors"
               data-index="0"
+              defaultValue={articleData.authors}
             />
             <button type="button">+</button>
             {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
@@ -133,6 +141,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
               type="text"
               data-key="keywords"
               data-index="0"
+              defaultValue={articleData.keywords}
             />
             {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
@@ -140,7 +149,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Abstract:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" defaultValue={articleData.abstract}/>
             {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </label>
         </div>
@@ -148,7 +157,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Journal:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" defaultValue={articleData.journal}/>
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br />
@@ -156,14 +165,14 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
             <label>
               {' '}
               Date:
-              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" />
+              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" defaultValue={articleData.date}/>
               {errors.date && <p className={styles.Error}>{errors.date}</p>}
             </label>
             <br />
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" />
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" defaultValue={articleData.doi}/>
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
@@ -172,14 +181,14 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
             <label>
               {' '}
               Volume:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" defaultValue={articleData.volume}/>
               {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
             </label>
             <br />
             <label>
               {' '}
               Issue:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" defaultValue={articleData.issue}/>
               {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
             </label>
             <br />
@@ -194,6 +203,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
                 type="number"
                 data-key="pageRange"
                 data-index="0"
+                defaultValue={articleData.pageRange[0]}
               />
             </label>
             <label>
@@ -205,6 +215,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
                 type="number"
                 data-key="pageRange"
                 data-index="1"
+                defaultValue={articleData.pageRange[1]}
               />
             </label>
             <label>
@@ -221,4 +232,4 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
   );
 };
 
-export default ArticleSubmissionForm;
+export default AnalystArticleSubmissionForm;
