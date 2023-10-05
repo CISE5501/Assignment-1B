@@ -59,6 +59,7 @@ export class ModeratorController {
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      await this.rejctedEntryService.addEntry({ doi: deletedArticle.doi });
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
