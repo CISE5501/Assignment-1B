@@ -74,8 +74,8 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     <Container>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
-      <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
+      <SortableTable headers={headersList} data={queueData} />
+      {queueData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
     </Container>
   );
 };
