@@ -14,6 +14,7 @@ export class AppService {
         <li>/articles</li>
         <li>/articles/:id</li>
         <li>/articles/includes/:id</li>
+        <li>/articles/rejected</li>
         <li>/moderator</li>
         <li>/moderator/:id</li>
         <li>/moderator/index</li>

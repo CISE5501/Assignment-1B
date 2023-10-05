@@ -26,6 +26,7 @@ function renderHome(props: Partial<IndexProps> = {}) {
       articleData: [],
     },
     duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
@@ -37,6 +38,7 @@ function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
       articleData: tempArray,
     },
     duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }

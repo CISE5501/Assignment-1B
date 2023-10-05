@@ -20,7 +20,7 @@ const promote = async (id: string): Promise<void> => {
   }
 };
 
-const Index = ({ queueData, duplicates }: PageProps) => {
+const Index = ({ queueData, duplicates, rejected }: PageProps) => {
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
@@ -50,7 +50,13 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     {
       computed: true,
       label: 'Warnings',
-      content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''),
+      content: (data) => (
+        <span>
+          {duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''}
+          <br />
+          {rejected.includes(data.doi) ? <strong>Previously Rejected</strong> : ''}
+        </span>
+      ),
     },
     {
       computed: true,

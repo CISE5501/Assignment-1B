@@ -5,10 +5,12 @@ import DOMAIN from '../../DOMAIN';
 export const getServerData: (url: string) => GetServerSideProps = (url) => async () => {
   const queueData = await fetch(DOMAIN + url).then((data) => data.json());
   const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'queue/duplicates').then((data) => data.json());
+  const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'articles/rejected').then((data) => data.json());
   return {
     props: {
       queueData,
       duplicates,
+      rejected,
     },
   };
 };
@@ -35,4 +37,5 @@ export interface PageProps {
     articleData: QueuedArticle[];
   };
   duplicates: string[];
+  rejected: string[];
 }
