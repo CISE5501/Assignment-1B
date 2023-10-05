@@ -8,17 +8,25 @@ import { CreateRejectedEntryDto } from 'src/models/rejected/dto/create-entry.dto
 export class RejectedEntryService {
   constructor(@InjectModel('RejectedEntry') private entryModel: Model<IRejectedEntry>) {}
 
+  async getAllEntries(): Promise<IRejectedEntry[]> {
+    const entries = await this.entryModel.find().exec();
+    if (!entries || entries.length === 0) {
+      throw new NotFoundException(`No entries found`);
+    }
+    return entries;
+  }
+
   async addEntry(createEntryDto: CreateRejectedEntryDto): Promise<IRejectedEntry> {
     const newEntry = await new this.entryModel(createEntryDto);
     return newEntry.save();
   }
 
   async getEntry(doi: string): Promise<IRejectedEntry> {
-    const existingEntry = await this.entryModel.find().where({ doi }).exec();
-    if (!existingEntry || existingEntry.length === 0) {
+    const entries = await this.entryModel.find().where({ doi }).exec();
+    if (!entries || entries.length === 0) {
       throw new NotFoundException(`Entry with DOI ${doi} not found`);
     }
-    return existingEntry[0];
+    return entries[0];
   }
 
   async deleteEntry(doi: string): Promise<IRejectedEntry> {

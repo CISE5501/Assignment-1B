@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/com
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 
 //controller- routes articles to get/post methods
 
@@ -10,6 +11,7 @@ export class UserController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
+    private readonly rejectedEntryService: RejectedEntryService,
   ) {}
 
   @Get()
@@ -50,6 +52,23 @@ export class UserController {
       return response.status(HttpStatus.OK).json({
         message: 'Article does not exist',
         exists: false,
+      });
+    }
+  }
+
+  @Get('/rejected')
+  async getRejectedDOIs(@Res() response) {
+    try {
+      const rejectedEntries = await this.rejectedEntryService.getAllEntries();
+      const rejectedDOIs = rejectedEntries.map((item) => item.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'Rejected entries found successfully',
+        rejectedDOIs,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Failed to fetch rejected entries',
+        rejectedDOIs: [],
       });
     }
   }
