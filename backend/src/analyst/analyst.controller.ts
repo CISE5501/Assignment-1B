@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, Param, Put, Post, Res, Delete } from
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { URL_REGEX } from 'src/common';
 
 @Controller('analyst')
 export class AnalystController {
@@ -27,10 +28,10 @@ export class AnalystController {
   async createArticle(@Res() response, @Body() createArticleDto: CreateArticleDto) {
     try {
       // Disallow creating articles with URLs
-      if (/http|www/.test(JSON.stringify(createArticleDto)))
+      if (URL_REGEX.test(JSON.stringify(createArticleDto)))
         return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          message: 'Request body contains invalid content. Details: contains URL fragment part /http|www/.',
-          illegalSequence: JSON.stringify(createArticleDto).match(/\S*(?:http|www)\S*/),
+          message: `Request body contains invalid content. Details: contains URL fragment part /${URL_REGEX.source}/.`,
+          illegalSequence: JSON.stringify(createArticleDto).match(URL_REGEX),
         });
       // Add article to database
       const newArticle = await this.articleService.createArticle(createArticleDto);

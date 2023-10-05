@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/com
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { URL_REGEX } from 'src/common';
 
 //controller- routes articles to get/post methods
 
@@ -58,10 +59,10 @@ export class UserController {
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
       // Disallow creating articles with URLs
-      if (/http|www/.test(JSON.stringify(createArticleDto)))
+      if (URL_REGEX.test(JSON.stringify(createArticleDto)))
         return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          message: 'Request body contains invalid content. Details: contains URL fragment part /http|www/.',
-          illegalSequence: JSON.stringify(createArticleDto, null, 2).match(/.*(?:http|www).*/),
+          message: `Request body contains invalid content. Details: contains URL fragment part /${URL_REGEX.source}/.`,
+          illegalSequence: JSON.stringify(createArticleDto, null, 2).match(URL_REGEX),
         });
       // Add new article in queue
       const newArticle = await this.queuedArticleService.createArticle(createArticleDto);

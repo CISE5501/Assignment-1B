@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.css';
 import DOMAIN from '@/DOMAIN';
+import { URL_REGEX } from '../../backend/src/common';
 
 type Props = object;
 
@@ -48,9 +49,9 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
 
     // Show warning when field contains URLs
-    if (/http|www/.test(formData.abstract)) {
+    if (URL_REGEX.test(formData.abstract)) {
       errorValidation.abstract.push(`Abstract must not contain a URL`);
-      formData.abstract = formData.abstract.replace(/(http|www)\S+/g, '[URL removed]');
+      formData.abstract = formData.abstract.replace(URL_REGEX, '[URL removed]');
     }
 
     if (isNaN(formData.volume)) {
