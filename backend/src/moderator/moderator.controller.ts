@@ -1,12 +1,16 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Put, Res } from '@nestjs/common';
 import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 
 //controller- routes articles to get/post methods
 
 @Controller('moderator')
 export class ModeratorController {
-  constructor(private readonly queuedArticleService: QueuedArticleService) {}
+  constructor(
+    private readonly queuedArticleService: QueuedArticleService,
+    private readonly rejctedEntryService: RejectedEntryService,
+  ) {}
 
   @Get('/index')
   async getArticles(@Res() response) {
@@ -21,7 +25,7 @@ export class ModeratorController {
     }
   }
 
-  @Put('/:id')
+  @Put('/id/:id')
   async updateArticle(
     @Res() response,
     @Param('id') articleId: string,
@@ -38,7 +42,7 @@ export class ModeratorController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.getArticle(articleId);
@@ -51,7 +55,7 @@ export class ModeratorController {
     }
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
