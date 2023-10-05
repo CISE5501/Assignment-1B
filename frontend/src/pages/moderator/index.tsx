@@ -8,8 +8,6 @@ import DOMAIN from '../../../DOMAIN';
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
-const boxedStyle = { border: '1px solid', display: 'inline-block' };
-
 const promote = async (id: string): Promise<void> => {
   const response = await fetch(DOMAIN + 'moderator/promote/' + id, {
     method: 'PUT',

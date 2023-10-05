@@ -17,8 +17,15 @@ export class RejectedEntryService {
   }
 
   async addEntry(createEntryDto: CreateRejectedEntryDto): Promise<IRejectedEntry> {
-    const newEntry = await new this.entryModel(createEntryDto);
-    return newEntry.save();
+    try {
+      this.getEntry(createEntryDto.doi);
+      // Throws if entry is not present
+      return null;
+    } catch {
+      // Create new entry
+      const newEntry = await new this.entryModel(createEntryDto);
+      return newEntry.save();
+    }
   }
 
   async getEntry(doi: string): Promise<IRejectedEntry> {
