@@ -27,7 +27,7 @@ export class UserController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.articleService.getArticle(articleId);
