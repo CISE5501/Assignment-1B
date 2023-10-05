@@ -3,16 +3,22 @@ import { QueuedArticle } from '../schema/queuedArticle';
 import DOMAIN from '../../DOMAIN';
 
 export const getServerData: (url: string) => GetServerSideProps = (url) => async () => {
-  const { articleData: queueData } = await fetch(DOMAIN + url).then((data) => data.json());
-  const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'queue/duplicates').then((data) => data.json());
-  const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'articles/rejected').then((data) => data.json());
-  return {
-    props: {
-      queueData,
-      duplicates,
-      rejected,
-    },
-  };
+  try {
+    const { articleData: queueData } = await fetch(DOMAIN + url).then((data) => data.json());
+    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'queue/duplicates').then((data) =>
+      data.json(),
+    );
+    const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'articles/rejected').then((data) => data.json());
+    return {
+      props: {
+        queueData,
+        duplicates,
+        rejected,
+      },
+    };
+  } catch {
+    throw 'Failed to fetch resources. Please reload the page.';
+  }
 };
 
 export const handleDelete = async (type: 'queue' | 'articles', data: QueuedArticle) => {
@@ -21,7 +27,7 @@ export const handleDelete = async (type: 'queue' | 'articles', data: QueuedArtic
       method: 'DELETE',
     });
     if (res.ok) {
-      console.log('Article deleted successfully');
+      alert('Article deleted successfully');
       window.location.reload();
     } else {
       console.error('Error deleting article:', res.statusText);
