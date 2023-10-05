@@ -8,6 +8,8 @@ import DOMAIN from '../../../DOMAIN';
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
+const boxedStyle = { border: '1px solid', display: 'inline-block' };
+
 const promote = async (id: string): Promise<void> => {
   const response = await fetch(DOMAIN + 'moderator/promote/' + id, {
     method: 'PUT',
@@ -22,6 +24,7 @@ const promote = async (id: string): Promise<void> => {
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates, rejected }: PageProps) => {
+  const warning = { fontWeight: 'bold' };
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
@@ -52,11 +55,10 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
       computed: true,
       label: 'Warnings',
       content: (data) => (
-        <span>
-          {duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''}
-          <br />
-          {rejected.includes(data.doi) ? <strong>Previously Rejected</strong> : ''}
-        </span>
+        <ul>
+          {duplicates.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
       ),
     },
     {
