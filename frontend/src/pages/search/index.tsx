@@ -58,7 +58,7 @@ const Search = () => {
 
   return (
     <div className="container">
-      <h1>Search Results for '{data.keywords}'</h1>
+      <h1>Search Results for &quot;{data.keywords}&quot;</h1>
       {data.filteredArticles.length === 0 ? (
         'No Results'
       ) : (
