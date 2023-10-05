@@ -5,7 +5,7 @@ export default function Home() {
       <h2>Search for Keywords</h2>
       <form action="/search">
         <input type="text" size={80} name="keywords" />
-        <button type="submit" style={{marginLeft:'2em'}}>
+        <button type="submit" style={{ marginLeft: '2em' }}>
           search
         </button>
       </form>
