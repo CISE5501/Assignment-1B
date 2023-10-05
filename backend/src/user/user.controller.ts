@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
@@ -19,6 +19,27 @@ export class UserController {
       return response.status(HttpStatus.OK).json({
         message: 'All articles data found successfully',
         articleData,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Get('/filter')
+  async findArticlesByQuery(@Query('keywords') keywords: string, @Res() response) {
+    try {
+      const articleData = await this.articleService.getAllArticles();
+      const filteredArticles: typeof articleData = [];
+      for (const keyword of keywords.split(',')) {
+        filteredArticles.push(
+          ...articleData.filter((article) => JSON.stringify(Object.values(article)).includes(keyword)),
+        );
+      }
+
+      return response.status(HttpStatus.OK).json({
+        message: 'Filtered articles data found successfully',
+        keywords: keywords.split(','),
+        filteredArticles,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
