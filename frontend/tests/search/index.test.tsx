@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import Search from '@/pages/search';
@@ -6,9 +6,11 @@ import Search from '@/pages/search';
 function renderSearch(keyword: string) {
   return render(
     <MemoryRouter initialEntries={['/search?keywords=' + keyword]}>
-      <Route path="/search">
-        <Search />
-      </Route>
+      <Routes>
+        <Route path="/search">
+          <Search />
+        </Route>
+      </Routes>
     </MemoryRouter>,
   );
 }
