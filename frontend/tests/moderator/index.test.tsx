@@ -48,7 +48,7 @@ test('should have empty table', async () => {
 });
 //TODO add checking for dupe
 test("should have table with an article entry and a 'Warnings' + 'Actions' column but no warnings if there are no duplicates", async () => {
-  renderHomeWithArticles();
+  renderWithoutDuplicate();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Warnings')).toBeInTheDocument();
   expect(screen.getByText('Actions')).toBeInTheDocument();
