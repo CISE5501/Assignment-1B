@@ -9,7 +9,7 @@ export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('analyst/index');
 
 const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'analyst/promote/' + id, {
+  const response = await fetch(DOMAIN + 'analyst/promote/id/' + id, {
     method: 'PUT',
   });
   if (response.ok) {

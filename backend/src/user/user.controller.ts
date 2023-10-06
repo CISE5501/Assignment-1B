@@ -46,7 +46,7 @@ export class UserController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.articleService.getArticle(articleId);
@@ -59,7 +59,7 @@ export class UserController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.articleService.getArticle(articleId);
