@@ -41,6 +41,7 @@ const Index = ({ data }: IndexProps) => {
 
   return (
     <Container>
+      <h1>Articles</h1>
       <SortableTable headers={headersList} data={data.articleData} />
     </Container>
   );

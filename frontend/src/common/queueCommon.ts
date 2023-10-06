@@ -15,7 +15,7 @@ export const getServerData: (url: string) => GetServerSideProps = (url) => async
 
 export const handleDelete = async (type: 'queue' | 'articles', data: QueuedArticle) => {
   try {
-    const res = await fetch(DOMAIN + `${type}/${data._id}`, {
+    const res = await fetch(DOMAIN + `${type}/id/${data._id}`, {
       method: 'DELETE',
     });
     if (res.ok) {

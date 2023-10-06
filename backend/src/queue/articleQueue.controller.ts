@@ -57,7 +57,7 @@ export class QueueController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.getArticle(articleId);
@@ -70,7 +70,7 @@ export class QueueController {
     }
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
@@ -83,7 +83,7 @@ export class QueueController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.queuedArticleService.getArticle(articleId);
