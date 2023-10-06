@@ -3,7 +3,7 @@ import { QueuedArticle } from '../schema/queuedArticle';
 import DOMAIN from '../../DOMAIN';
 
 export const getServerData: (url: string) => GetServerSideProps = (url) => async () => {
-  const queueData = await fetch(DOMAIN + url).then((data) => data.json());
+  const { articleData: queueData } = await fetch(DOMAIN + url).then((data) => data.json());
   const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'queue/duplicates').then((data) => data.json());
   return {
     props: {
@@ -15,7 +15,7 @@ export const getServerData: (url: string) => GetServerSideProps = (url) => async
 
 export const handleDelete = async (type: 'queue' | 'articles', data: QueuedArticle) => {
   try {
-    const res = await fetch(DOMAIN + `${type}/${data._id}`, {
+    const res = await fetch(DOMAIN + `${type}/id/${data._id}`, {
       method: 'DELETE',
     });
     if (res.ok) {
@@ -30,9 +30,6 @@ export const handleDelete = async (type: 'queue' | 'articles', data: QueuedArtic
 };
 
 export interface PageProps {
-  queueData: {
-    message: string;
-    articleData: QueuedArticle[];
-  };
+  queueData: QueuedArticle[];
   duplicates: string[];
 }

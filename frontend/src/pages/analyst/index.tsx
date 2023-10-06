@@ -9,7 +9,7 @@ export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('analyst/index');
 
 const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'analyst/promote/' + id, {
+  const response = await fetch(DOMAIN + 'analyst/promote/id/' + id, {
     method: 'PUT',
   });
   if (response.ok) {
@@ -58,11 +58,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       content: (data) => (
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
+            Reject
           </button>
           <br />
           <button type="button" onClick={() => promote(data._id)}>
-            Mark Analysed
+            Accept
           </button>
         </div>
       ),
@@ -73,8 +73,8 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     <Container>
       <h1>Analyst View</h1>
       <h2>Articles in Queue Pending Analysis</h2>
-      <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
+      <SortableTable headers={headersList} data={queueData} />
+      {queueData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
     </Container>
   );
 };

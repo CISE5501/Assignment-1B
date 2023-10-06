@@ -59,11 +59,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       content: (data) => (
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
+            Reject
           </button>
           <br />
           <button type="button" onClick={() => promote(data._id)}>
-            Mark Moderated
+            Accept
           </button>
         </div>
       ),
@@ -74,8 +74,8 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     <Container>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
-      <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
+      <SortableTable headers={headersList} data={queueData} />
+      {queueData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
     </Container>
   );
 };

@@ -68,7 +68,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      console.log(errorValidation);
       return;
     } else {
       setErrors({});

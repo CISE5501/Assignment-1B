@@ -32,7 +32,10 @@ export class UserController {
       const filteredArticles: typeof articleData = [];
       for (const keyword of keywords.split(',')) {
         filteredArticles.push(
-          ...articleData.filter((article) => JSON.stringify(Object.values(article)).includes(keyword)),
+          ...articleData.filter((article) => {
+            const searchString = JSON.stringify(Object.values(article)); // search through only the values of each item in the data
+            return searchString.toLowerCase().includes(keyword.toLowerCase());
+          }),
         );
       }
 
@@ -46,7 +49,7 @@ export class UserController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.articleService.getArticle(articleId);
@@ -59,7 +62,7 @@ export class UserController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.articleService.getArticle(articleId);
