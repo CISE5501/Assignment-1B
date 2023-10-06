@@ -6,11 +6,7 @@ import Search from '@/pages/search';
 function renderSearch(keyword: string) {
   return render(
     <MemoryRouter initialEntries={['/search?keywords=' + keyword]}>
-      <Routes>
-        <Route path="/search">
-          <Search />
-        </Route>
-      </Routes>
+      <Search />
     </MemoryRouter>,
   );
 }
