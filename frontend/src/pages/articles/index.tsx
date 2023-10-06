@@ -1,8 +1,10 @@
-import { Article } from '@/schema/article';
+import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import StarRatings from 'react-star-ratings';
+import Cookies from 'js-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 import DOMAIN from '../../../DOMAIN';
 
@@ -14,6 +16,34 @@ export interface ArticleProps {
 
 //returns table using data from VALIDATED articles
 const Index = ({ articleData }: ArticleProps) => {
+
+  useEffect(() => {
+    // Set user ID cookie on load
+    const userId = Cookies.get('userId');
+    if (!userId) {
+      const randomUserId = Math.random().toString(36).substring(7);
+      Cookies.set('userId', randomUserId, { expires: 365/*days*/ });
+    }
+  }, []);
+
+  const handleRatingChange = async (rating: number, doi: string) => {
+    try {
+      const userId = Cookies.get('userId');
+      const updatedRating = { userId, rating, doi };
+      const reqData = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedRating),
+      };
+      await fetch(DOMAIN + 'articles/rate', reqData);
+      alert('Updated star rating: ' + rating + '/5');
+      window.location.reload();
+    }
+    catch {
+      alert('Failed to update star rating');
+    }
+  };
+
   const headersList: DataRow<RatedArticle>[] = [
     { key: 'title', label: 'Title' },
     {
@@ -40,13 +70,14 @@ const Index = ({ articleData }: ArticleProps) => {
     {
       key: 'rating',
       label: 'Star Rating',
-      displayAs: (rating: number | null) => (
+      displayAs: (rating: number | null, data) => (
         <StarRatings
           name="rating"
           rating={Math.round(rating ?? 0)}
           numberOfStars={5}
-          changeRating={() => { alert('TODO') }}
+          changeRating={(newRating: number) => { handleRatingChange(newRating, data.doi); }}
           starRatedColor="blue"
+          starHoverColor="darkcyan"
           starDimension="20px"
           starSpacing="1px"
         />
