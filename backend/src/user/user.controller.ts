@@ -78,6 +78,22 @@ export class UserController {
     }
   }
 
+  @Get('/rating/doi/:doi')
+  async getArticleRating(@Res() response, @Param('doi') doi: string) {
+    try {
+      const rating = await this.starRatingService.getAverageRating(doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rating fetched successfully',
+        rating,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rating fetching failed',
+        rating: null,
+      });
+    }
+  }
+
   @Post('/new')
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
