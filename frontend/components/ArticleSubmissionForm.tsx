@@ -81,7 +81,12 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => alert(response.ok ? 'Successfully submitted article' : 'Unknown'))
+      .then((response) => {
+        if (response.ok) {
+          alert('Successfully submitted article')
+          window.location.reload();
+        }
+      })
       .catch((err) => {
         alert('Failed to submit article');
         console.log(err);
