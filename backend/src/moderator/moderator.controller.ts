@@ -51,7 +51,20 @@ export class ModeratorController {
     }
   }
 
-  @Put('/promote/:id')
+  @Delete('/id/:id')
+  async deleteArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article deleted successfully',
+        deletedArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Put('/promote/id/:id')
   async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.updateArticle(articleId, { isModerated: true });

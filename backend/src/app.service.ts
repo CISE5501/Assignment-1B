@@ -9,14 +9,14 @@ export class AppService {
       <b>GET:</b>
       <ul>
         <li>/analyst</li>
-        <li>/analyst/:id</li>
+        <li>/analyst/id/:id</li>
         <li>/analyst/index</li>
         <li>/articles</li>
-        <li>/articles/:id</li>
-        <li>/articles/includes/:id</li>
+        <li>/articles/id/:id</li>
+        <li>/articles/includes/id/:id</li>
         <li>/articles/rejected</li>
         <li>/moderator</li>
-        <li>/moderator/:id</li>
+        <li>/moderator/id/:id</li>
         <li>/moderator/index</li>
       </ul>
     `;

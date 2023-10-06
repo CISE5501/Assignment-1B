@@ -86,7 +86,7 @@ export class QueueController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.queuedArticleService.getArticle(articleId);
