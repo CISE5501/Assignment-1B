@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Index, { ArticleProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
-import { Article } from '@/schema/article';
+import { RatedArticle } from '../../src/pages/articles';
 
 const tempArray = [
   {
@@ -15,8 +15,9 @@ const tempArray = [
     doi: 'dsfsdfsdfsdf',
     keywords: ['sad', 'asd'],
     abstract: 'sfasd',
+    rating: 4,
   },
-] as Article[];
+] as RatedArticle[];
 
 function renderHome(props: Partial<ArticleProps> = {}) {
   const defaultProps: ArticleProps = {

@@ -8,7 +8,7 @@ import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 import DOMAIN from '../../../DOMAIN';
 
-type RatedArticle = Article & { rating: number | null };
+export type RatedArticle = Article & { rating: number | null };
 
 export interface ArticleProps {
   articleData: RatedArticle[];
