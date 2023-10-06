@@ -21,28 +21,25 @@ const tempArray = [
 
 function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
+    queueData: {
       message: '',
       articleData: [],
     },
+    duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
+    queueData: {
       message: '',
       articleData: tempArray,
     },
+    duplicates: ['dsfsdfsdfsdf']
   };
   return render(<Index {...defaultProps} {...props} />);
 }
-
-test('should display 1 return link', async () => {
-  renderHome();
-  expect(screen.getByText('Return Home')).toBeInTheDocument();
-});
 
 test('should have empty table', async () => {
   renderHome();
@@ -52,5 +49,5 @@ test('should have empty table', async () => {
 test("should have table with an article entry and an 'Is Moderated' column", async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
-  expect(screen.getByText('Is Moderated')).toBeInTheDocument();
+  expect(screen.getByText('Warnings')).toBeInTheDocument();
 });
