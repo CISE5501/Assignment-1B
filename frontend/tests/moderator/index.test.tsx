@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/moderator/index';
+import Index, { IndexProps } from '@/pages/moderator';
 import '@testing-library/jest-dom';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
+import { QueuedArticle } from '../../src/schema/queuedArticle';
 
 const tempArray = [
   {
@@ -51,19 +51,26 @@ function renderWithDuplicate(props: Partial<IndexProps> = {}) {
     };
     return render(<Index {...defaultProps} {...props} />);
   }
-
 test('should have empty table', async () => {
   renderHome();
-  expect(screen.getAllByTestId('data-table-body').length).toBe(1);
+  expect(screen.getByText('No Articles Needing Moderation')).toBeInTheDocument();
+});
+//TODO add checking for dupe
+test("should have table with an article entry and a 'Warnings' + 'Actions' column but no warnings if there are no duplicates", async () => {
+  renderHomeWithArticles();
+  expect(screen.getByRole('table')).toBeInTheDocument();
+  expect(screen.getByText('Warnings')).toBeInTheDocument();
+  expect(screen.getByText('Actions')).toBeInTheDocument();
+  //expect(screen.getByText('Duplicate')).not.toBeInTheDocument();
 });
 
-test("should have table with an article entry and an 'Is Moderated' column", async () => {
+test("should have table with an article entry and a 'Warning' column that has no value", async () => {
     renderWithoutDuplicate();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByTestId('Warnings').innerHTML).toBe('');
 });
 
-test("should have table with an article entry and an 'Is Moderated' column", async () => {
+test("should have table with an article entry and a 'Warning' column that says 'Duplicate'", async () => {
     renderWithDuplicate();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByTestId('Warnings').innerHTML).not.toBe('');

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/analyst/index';
+import Index, { IndexProps } from '@/pages/analyst';
 import '@testing-library/jest-dom';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
+import { QueuedArticle } from '../../src/schema/queuedArticle';
 
 const tempArray = [
   {
@@ -46,7 +46,7 @@ test('should have empty table', async () => {
   expect(screen.getAllByTestId('data-table-body').length).toBe(1);
 });
 
-test("should have table with an article entry and an 'Is Moderated' column", async () => {
+test('should have table with an article entry and buttons to delete/mark analysis as complete', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Warnings')).toBeInTheDocument();

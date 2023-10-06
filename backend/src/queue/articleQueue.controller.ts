@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Res, Delete } from '@nestjs/common';
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
@@ -22,8 +13,7 @@ export class QueueController {
   @Get()
   async getArticles(@Res() response) {
     try {
-      const articleData =
-        await this.queuedArticleService.getAllQueuedArticles();
+      const articleData = await this.queuedArticleService.getAllQueuedArticles();
       return response.status(HttpStatus.OK).json({
         message: 'All queued articles data found successfully',
         articleData,
@@ -34,13 +24,9 @@ export class QueueController {
   }
 
   @Post()
-  async createArticle(
-    @Res() response,
-    @Body() createArticleDto: CreateQueuedArticleDto,
-  ) {
+  async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
-      const newArticle =
-        await this.queuedArticleService.createArticle(createArticleDto);
+      const newArticle = await this.queuedArticleService.createArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Queue article has been created successfully',
         newArticle,
@@ -60,9 +46,7 @@ export class QueueController {
       const accepted = await this.articleService.getAllArticles();
       const acceptedDOIs = accepted.map((article) => article.doi);
       const queued = await this.queuedArticleService.getAllQueuedArticles();
-      const duplicatesInQueue = queued.filter((queueArticle) =>
-        acceptedDOIs.includes(queueArticle.doi),
-      );
+      const duplicatesInQueue = queued.filter((queueArticle) => acceptedDOIs.includes(queueArticle.doi));
       const duplicateDOIs = duplicatesInQueue.map((article) => article.doi);
       return response.status(HttpStatus.OK).json({
         message: 'All duplicate articles found successfully',
@@ -73,11 +57,10 @@ export class QueueController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle =
-        await this.queuedArticleService.getArticle(articleId);
+      const existingArticle = await this.queuedArticleService.getArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
@@ -87,11 +70,10 @@ export class QueueController {
     }
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle =
-        await this.queuedArticleService.deleteArticle(articleId);
+      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
@@ -101,7 +83,7 @@ export class QueueController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.queuedArticleService.getArticle(articleId);
