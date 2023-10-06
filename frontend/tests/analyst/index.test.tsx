@@ -30,7 +30,7 @@ function renderHome(props: Partial<IndexProps> = {}) {
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
     queueData: tempArray,
-    duplicates: [],
+    duplicates: ['dsfsdfsdfsdf']
   };
   return render(<Index {...defaultProps} {...props} />);
 }
@@ -43,6 +43,7 @@ test('should have empty table', async () => {
 test('should have table with an article entry and buttons to delete/mark analysis as complete', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
+  expect(screen.getByText('Warnings')).toBeInTheDocument();
   expect(screen.getByText('Accept')).toBeInTheDocument();
   expect(screen.getByText('Reject')).toBeInTheDocument();
 });
