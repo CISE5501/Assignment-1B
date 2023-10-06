@@ -54,8 +54,8 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
 
     for (const author of formData.authors) {
-      if (!author.includes(" ")) {
-        errorValidation.authors = 'Author first and last name is required!'
+      if (!author.includes(' ')) {
+        errorValidation.authors = 'Author first and last name is required!';
       }
     }
 
@@ -63,7 +63,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const validDOI = doiCheckRegex.test(formData.doi);
 
     if (!validDOI) {
-      errorValidation.doi = 'Not a valid DOI!'
+      errorValidation.doi = 'Not a valid DOI!';
     }
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
@@ -83,7 +83,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Successfully submitted article')
+          alert('Successfully submitted article');
           window.location.reload();
         }
       })
@@ -114,12 +114,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       newArray[+index] = value;
       setFormData({ ...formData, [name]: newArray });
     }
-
   };
 
   const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
     const updatedAuthorFields = authorFields.map((field) =>
-    field.id === id ? { ...field, value: e.target.value } : field
+      field.id === id ? { ...field, value: e.target.value } : field,
     );
     setAuthorFields(updatedAuthorFields);
     handleForm(e);
@@ -140,7 +139,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     const updatedAuthorFields = authorFields.filter((field) => field.id !== id);
     setAuthorFields(updatedAuthorFields);
-  }
+  };
 
   // TODO change onChange to on deselect
   return (
@@ -155,25 +154,29 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
           </label>
           <br />
           {authorFields.map((field) => (
-        <div key={field.id}>
-          <label>
-            {' '}
-            Author:
-            <input
-              required
-              className={styles.Input}
-              onChange={(e) => handleAuthorChange(e, field.id)}
-              type="text"
-              value={field.value}
-              data-key="authors"
-              data-index={field.id}
-            />
-          {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
-          <button type="button" onClick={addAuthor}>+</button>
-          <button type="button" onClick={() => deleteAuthor(field.id)}>-</button>
-          </label>
-        </div>
-      ))}
+            <div key={field.id}>
+              <label>
+                {' '}
+                Author:
+                <input
+                  required
+                  className={styles.Input}
+                  onChange={(e) => handleAuthorChange(e, field.id)}
+                  type="text"
+                  value={field.value}
+                  data-key="authors"
+                  data-index={field.id}
+                />
+                {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+                <button type="button" onClick={addAuthor}>
+                  +
+                </button>
+                <button type="button" onClick={() => deleteAuthor(field.id)}>
+                  -
+                </button>
+              </label>
+            </div>
+          ))}
           <br />
           <label>
             {' '}
