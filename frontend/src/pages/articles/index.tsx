@@ -5,13 +5,15 @@ import { Container } from 'react-bootstrap';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 import DOMAIN from '../../../DOMAIN';
 
+type RatedArticle = Article & { rating: number | null };
+
 export interface ArticleProps {
-  articleData: Article[];
+  articleData: RatedArticle[];
 }
 
 //returns table using data from VALIDATED articles
 const Index = ({ articleData }: ArticleProps) => {
-  const headersList: DataRow<Article>[] = [
+  const headersList: DataRow<RatedArticle>[] = [
     { key: 'title', label: 'Title' },
     {
       key: 'authors',
@@ -34,6 +36,7 @@ const Index = ({ articleData }: ArticleProps) => {
       displayAs: (keywords: string[]) => keywords.join(', '),
     },
     { key: 'abstract', label: 'Abstract' },
+    { key: 'rating', label: 'Star Rating', displayAs: (rating: number | null) => rating ?? '-' },
   ];
 
   return (
@@ -47,6 +50,10 @@ const Index = ({ articleData }: ArticleProps) => {
 //calls data from backend- connected to /articles
 export const getServerSideProps: GetServerSideProps = async () => {
   const { articleData } = await fetch(DOMAIN + 'articles').then((data) => data.json());
+  for (const article of articleData) {
+    const { rating } = await fetch(DOMAIN + 'articles/rating/doi/' + article.doi).then(data => data.json());
+    article.rating = rating;
+  }
   return {
     props: {
       articleData,
