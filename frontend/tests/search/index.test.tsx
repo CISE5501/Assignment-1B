@@ -14,7 +14,7 @@ function renderSearch(keyword: string) {
 test('should have search results', async () => {
   const keyword = 'asd';
   renderSearch(keyword);
-  expect(screen.getByText(`Results for '${keyword}'`)).toBeInTheDocument();
+  expect(screen.getByText(`Results for "${keyword}"`)).toBeInTheDocument();
   expect(screen.getByText('DOI')).toBeInTheDocument();
   expect(screen.getByText('No Results')).not.toBeInTheDocument();
 });
@@ -22,6 +22,6 @@ test('should have search results', async () => {
 test('should have no search results', async () => {
   const keyword = 'djugihdfgdfgd';
   renderSearch(keyword);
-  expect(screen.getByText(`Results for '${keyword}'`)).toBeInTheDocument();
+  expect(screen.getByText(`Results for "${keyword}"`)).toBeInTheDocument();
   expect(screen.getByText('No Results')).toBeInTheDocument();
 });
