@@ -30,7 +30,7 @@ function renderHome(props: Partial<IndexProps> = {}) {
 function renderWithoutDuplicate(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
     queueData: tempArray,
-    duplicates: []
+    duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
@@ -38,7 +38,7 @@ function renderWithoutDuplicate(props: Partial<IndexProps> = {}) {
 function renderWithDuplicate(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
     queueData: tempArray,
-    duplicates: ['dsfsdfsdfsdf']
+    duplicates: ['dsfsdfsdfsdf'],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
