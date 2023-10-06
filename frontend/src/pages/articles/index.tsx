@@ -36,7 +36,7 @@ const Index = ({ articleData }: ArticleProps) => {
         body: JSON.stringify(updatedRating),
       };
       await fetch(DOMAIN + 'articles/rate', reqData);
-      alert('Updated star rating: ' + rating + '/5');
+      console.log('Updated star rating: ' + rating + '/5');
       window.location.reload();
     }
     catch {
