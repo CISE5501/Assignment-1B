@@ -29,7 +29,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [index, setIndex] = useState<number[]>([]);
-  const [counter, setCounter] = useState<number>(0);
+  const [counter, setCounter] = useState<number>(1);
   const [authorFields, setAuthorFields] = useState<AuthorField[]>([{ id: 0, value: '' }]);
 
   const handleSubmit = (e: FormEvent) => {
@@ -107,9 +107,9 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
   };
 
   const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const updatedAuthorFields = [...authorFields];
-    const fieldIndex = updatedAuthorFields.findIndex((field) => field.id === id);
-    updatedAuthorFields[fieldIndex].value = e.target.value;
+    const updatedAuthorFields = authorFields.map((field) =>
+    field.id === id ? { ...field, value: e.target.value } : field
+    );
     setAuthorFields(updatedAuthorFields);
   };
 
