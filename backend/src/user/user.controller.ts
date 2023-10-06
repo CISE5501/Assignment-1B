@@ -112,7 +112,7 @@ export class UserController {
   @Post('/rate')
   async rateArticle(@Res() response, @Body() createRatingDto: CreateRatingDto) {
     try {
-      const newRating = await this.starRatingService.createRating(createRatingDto);
+      const newRating = await this.starRatingService.addRating(createRatingDto);
       return response.status(HttpStatus.OK).json({
         message: 'Article rated successfully',
         data: newRating,

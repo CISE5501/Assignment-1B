@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class StarRating {
-  @Prop() userId: string;
   @Prop() doi: string;
+  @Prop() userId: string;
   @Prop() rating: number;
 }
 

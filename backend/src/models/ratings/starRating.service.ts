@@ -20,6 +20,15 @@ export class StarRatingService {
     return newRating;
   }
 
+  async addRating(ratingDto: CreateRatingDto): Promise<IStarRating> {
+    const existingRating = await this.articleModel.findOne({ userId: ratingDto.userId }).exec();
+    if (existingRating) {
+      return this.updateRating(ratingDto);
+    } else {
+      return this.createRating(ratingDto);
+    }
+  }
+
   async getAllRatings(): Promise<IStarRating[]> {
     const allRatings = await this.articleModel.find();
     return allRatings;
