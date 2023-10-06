@@ -49,6 +49,10 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange = 'Page Range must be an array of two numbers';
     }
 
+    if (formData.pageRange[0] > formData.pageRange[1]) {
+      errorValidation.pageRange = 'First page range cannot be bigger than second!';
+    }
+
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
       return;
@@ -206,7 +210,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
               {' '}
               Page Range 1:
               <input
-                required
                 className={styles.Input}
                 onChange={handleForm}
                 type="number"
@@ -218,7 +221,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
               {' '}
               Page Range 2:
               <input
-                required
                 className={styles.Input}
                 onChange={handleForm}
                 type="number"
