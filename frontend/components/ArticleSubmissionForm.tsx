@@ -59,10 +59,19 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
 
+    const doiCheckRegex = /doi:\S+\/\S+/;
+    const validDOI = doiCheckRegex.test(formData.doi);
+
+    if (!validDOI) {
+      errorValidation.doi = 'Not a valid DOI!'
+    }
+
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
       console.log(errorValidation);
       return;
+    } else {
+      setErrors({});
     }
 
     fetch(DOMAIN + 'articles/new', {
@@ -119,6 +128,15 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     setCounter(counter + 1);
   };
 
+  const deleteAuthor = (id: number) => {
+    if (authorFields.length == 1) {
+      return;
+    }
+
+    const updatedAuthorFields = authorFields.filter((field) => field.id !== id);
+    setAuthorFields(updatedAuthorFields);
+  }
+
   // TODO change onChange to on deselect
   return (
     <form className={styles.Form} onSubmit={handleSubmit}>
@@ -146,10 +164,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
               data-index={field.id}
             />
           {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+          <button type="button" onClick={addAuthor}>+</button>
+          <button type="button" onClick={() => deleteAuthor(field.id)}>-</button>
           </label>
         </div>
       ))}
-      <button type="button" onClick={addAuthor}>+</button>
           <br />
           <label>
             {' '}
