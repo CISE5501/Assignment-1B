@@ -21,10 +21,7 @@ const tempArray = [
 
 function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    queueData: {
-      message: '',
-      articleData: [],
-    },
+    queueData: [],
     duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
@@ -32,25 +29,19 @@ function renderHome(props: Partial<IndexProps> = {}) {
 
 function renderWithoutDuplicate(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    queueData: {
-      message: '',
-      articleData: tempArray,
-    },
+    queueData: tempArray,
     duplicates: []
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
 function renderWithDuplicate(props: Partial<IndexProps> = {}) {
-    const defaultProps: IndexProps = {
-      queueData: {
-        message: '',
-        articleData: tempArray,
-      },
-      duplicates: ['dsfsdfsdfsdf']
-    };
-    return render(<Index {...defaultProps} {...props} />);
-  }
+  const defaultProps: IndexProps = {
+    queueData: tempArray,
+    duplicates: ['dsfsdfsdfsdf']
+  };
+  return render(<Index {...defaultProps} {...props} />);
+}
 test('should have empty table', async () => {
   renderHome();
   expect(screen.getByText('No Articles Needing Moderation')).toBeInTheDocument();
@@ -65,13 +56,13 @@ test("should have table with an article entry and a 'Warnings' + 'Actions' colum
 });
 
 test("should have table with an article entry and a 'Warning' column that has no value", async () => {
-    renderWithoutDuplicate();
+  renderWithoutDuplicate();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByTestId('Warnings').innerHTML).toBe('');
 });
 
 test("should have table with an article entry and a 'Warning' column that says 'Duplicate'", async () => {
-    renderWithDuplicate();
+  renderWithDuplicate();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByTestId('Warnings').innerHTML).not.toBe('');
 });

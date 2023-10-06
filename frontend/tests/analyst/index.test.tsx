@@ -21,10 +21,7 @@ const tempArray = [
 
 function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    queueData: {
-      message: '',
-      articleData: [],
-    },
+    queueData: [],
     duplicates: [],
   };
   return render(<Index {...defaultProps} {...props} />);
@@ -32,10 +29,7 @@ function renderHome(props: Partial<IndexProps> = {}) {
 
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    queueData: {
-      message: '',
-      articleData: tempArray,
-    },
+    queueData: tempArray,
     duplicates: ['dsfsdfsdfsdf']
   };
   return render(<Index {...defaultProps} {...props} />);
