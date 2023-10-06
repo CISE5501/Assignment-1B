@@ -22,7 +22,15 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
+  interface AuthorField {
+    id: number;
+    value: string;
+  }
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [index, setIndex] = useState<number[]>([]);
+  const [counter, setCounter] = useState<number>(0);
+  const [authorFields, setAuthorFields] = useState<AuthorField[]>([{ id: 0, value: '' }]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -57,7 +65,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
     }
 
@@ -75,7 +82,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       });
   };
 
-  const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
     const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
     const type = e.currentTarget.type;
@@ -96,6 +103,22 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       newArray[+index] = value;
       setFormData({ ...formData, [name]: newArray });
     }
+
+  };
+
+  const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const updatedAuthorFields = [...authorFields];
+    const fieldIndex = updatedAuthorFields.findIndex((field) => field.id === id);
+    updatedAuthorFields[fieldIndex].value = e.target.value;
+    setAuthorFields(updatedAuthorFields);
+  };
+
+  const addAuthor = () => {
+    const newIndex = [...index, counter];
+    setIndex(newIndex);
+
+    setAuthorFields([...authorFields, { id: counter, value: '' }]);
+    setCounter(counter + 1);
   };
 
   // TODO change onChange to on deselect
@@ -110,19 +133,24 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
+          {authorFields.map((field) => (
+        <div key={field.id}>
           <label>
             {' '}
             Author:
             <input
               className={styles.Input}
-              onChange={handleForm}
+              onChange={(e) => handleAuthorChange(e, field.id)}
               type="text"
+              value={field.value}
               data-key="authors"
-              data-index="0"
+              data-index={field.id}
             />
-            <button type="button">+</button>
-            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+          {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </label>
+        </div>
+      ))}
+      <button type="button" onClick={addAuthor}>+</button>
           <br />
           <label>
             {' '}
