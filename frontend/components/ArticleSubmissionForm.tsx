@@ -57,7 +57,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
     }
 
