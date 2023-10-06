@@ -1,10 +1,11 @@
 import React, { useState, FormEvent } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
-import DOMAIN from '..//DOMAIN';
- 
+import DOMAIN from '../DOMAIN';
+import KeywordsInput from './KeywordsInput';
+
 //TODO
-//check the date display format
+//check the date display format- DONE
 //check that the author creates new filled in input with every entry
 //check keywords
 
@@ -12,7 +13,7 @@ export interface AnalystFormProps {
   info: QueuedArticle
 }
 
-type QueuedArticleSubmission = Omit<QueuedArticle, '_id'|'isModerated'>;
+type QueuedArticleSubmission = Omit<QueuedArticle, '_id' | 'isModerated'>;
 
 const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
   const articleData = data.info;
@@ -31,9 +32,14 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const preventEnterKeySubmission = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    const target = e.target;
+    if (e.key === "Enter" && target instanceof HTMLInputElement) {
+      e.preventDefault();
+    }
+  };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const errorValidation: { [key: string]: string } = {};
 
     for (const field in formData) {
@@ -82,6 +88,17 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
       });
   };
 
+  const keywordList = ["SCRUM", "Software Development Life Cycle (SDLC)", "Kanban", "Lean", "Agile Methodolgies", "Waterfall"];
+
+  const formatDate = (dateText: string) => {
+    let sArray = dateText.split("-");
+    let year = sArray[0];
+    let month = sArray[1].padStart(2, '0');
+    let day = sArray[2].padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
     const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
@@ -107,13 +124,13 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
 
   // TODO change onChange to on deselect
   return (
-    <form className={styles.Form} onSubmit={handleSubmit}>
+    <form className={styles.Form} onSubmit={handleSubmit} onKeyDown={preventEnterKeySubmission}>
       <div className={styles.FormContent}>
         <div className={styles.LeftColumn}>
           <label>
             {' '}
             Article Title:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" defaultValue={articleData.title}/>
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" defaultValue={articleData.title} />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -132,24 +149,19 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
             {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </label>
           <br />
+          <div>
+
+          </div>
           <label>
             {' '}
-            Keywords:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="keywords"
-              data-index="0"
-              defaultValue={articleData.keywords}
-            />
+            <KeywordsInput dataKey={"keywords"} defaultValue={articleData.keywords}/>
             {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
           <br />
           <label>
             {' '}
             Abstract:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" defaultValue={articleData.abstract}/>
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" defaultValue={articleData.abstract} />
             {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </label>
         </div>
@@ -157,7 +169,7 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
           <label>
             {' '}
             Journal:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" defaultValue={articleData.journal}/>
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" defaultValue={articleData.journal} />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br />
@@ -165,14 +177,14 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
             <label>
               {' '}
               Date:
-              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" defaultValue={articleData.date}/>
+              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" defaultValue={formatDate(articleData.date)} />
               {errors.date && <p className={styles.Error}>{errors.date}</p>}
             </label>
             <br />
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" defaultValue={articleData.doi}/>
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" defaultValue={articleData.doi} />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
@@ -181,14 +193,14 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
             <label>
               {' '}
               Volume:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" defaultValue={articleData.volume}/>
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" defaultValue={articleData.volume} />
               {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
             </label>
             <br />
             <label>
               {' '}
               Issue:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" defaultValue={articleData.issue}/>
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" defaultValue={articleData.issue} />
               {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
             </label>
             <br />

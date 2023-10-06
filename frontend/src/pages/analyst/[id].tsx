@@ -25,10 +25,6 @@ export const getServerSideProps: GetServerSideProps = async({params}) => {
   };
 };
 
-export const handleData = () => {
-
-}
-
 export const Page = ({articleInfo}: QueuedArticleProps) => {
   console.log(articleInfo);
   return (
