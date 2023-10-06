@@ -53,8 +53,15 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange = 'First page range cannot be bigger than second!';
     }
 
+    for (const author of formData.authors) {
+      if (!author.includes(" ")) {
+        errorValidation.authors = 'Author first and last name is required!'
+      }
+    }
+
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
+      console.log(errorValidation);
       return;
     }
 
