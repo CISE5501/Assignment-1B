@@ -59,11 +59,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       content: (data) => (
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
+            Reject
           </button>
           <br />
           <button type="button" onClick={() => promote(data._id)}>
-            Mark Moderated
+            Accept
           </button>
         </div>
       ),

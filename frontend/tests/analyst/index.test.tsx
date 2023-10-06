@@ -44,4 +44,6 @@ test('should have table with an article entry and buttons to delete/mark analysi
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
   expect(screen.getByText('Warnings')).toBeInTheDocument();
+  expect(screen.getByText('Accept')).toBeInTheDocument();
+  expect(screen.getByText('Reject')).toBeInTheDocument();
 });

@@ -32,7 +32,10 @@ export class UserController {
       const filteredArticles: typeof articleData = [];
       for (const keyword of keywords.split(',')) {
         filteredArticles.push(
-          ...articleData.filter((article) => JSON.stringify(Object.values(article)).includes(keyword)),
+          ...articleData.filter((article) => {
+            const searchString = JSON.stringify(Object.values(article)); // search through only the values of each item in the data
+            return searchString.toLowerCase().includes(keyword.toLowerCase());
+          }),
         );
       }
 
