@@ -2,6 +2,7 @@ import { Article } from '@/schema/article';
 import { GetServerSideProps } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
+import StarRatings from 'react-star-ratings';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 import DOMAIN from '../../../DOMAIN';
 
@@ -36,7 +37,21 @@ const Index = ({ articleData }: ArticleProps) => {
       displayAs: (keywords: string[]) => keywords.join(', '),
     },
     { key: 'abstract', label: 'Abstract' },
-    { key: 'rating', label: 'Star Rating', displayAs: (rating: number | null) => rating ?? '-' },
+    {
+      key: 'rating',
+      label: 'Star Rating',
+      displayAs: (rating: number | null) => (
+        <StarRatings
+          name="rating"
+          rating={Math.round(rating ?? 0)}
+          numberOfStars={5}
+          changeRating={() => { alert('TODO') }}
+          starRatedColor="blue"
+          starDimension="20px"
+          starSpacing="1px"
+        />
+      ),
+    },
   ];
 
   return (
