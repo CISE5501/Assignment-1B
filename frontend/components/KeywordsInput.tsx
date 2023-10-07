@@ -4,27 +4,34 @@ import styles from './KeywordsInput.module.scss';
 interface KeywordsInputProps {
   defaultValue: string[];
   dataKey: string;
+  updateFormData: (newArray: string[]) => void;
 }
 
-const KeywordsInput = ({ defaultValue, dataKey }: KeywordsInputProps) => {
+const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputProps) => {
   const [keywords, setKeywords] = useState(defaultValue);
 
-  function handleKeyDown(e: any) {
+  function handleKeyDown(e: React.KeyboardEvent) {
     // If user did not press enter key, return
-    if (e.key !== 'Enter') return
-    // Get the value of the input
-    const value = e.target.value
-    // If the value is empty, return
-    if (!value.trim()) return
-    // Add the value to the tags array
-    setKeywords([...keywords, value])
-    // Clear the input
-    e.target.value = ''
+    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+      e.preventDefault();
+      // Get the value of the input
+      const value = e.target.value
+      // If the value is empty, return
+      if (!value.trim()) return
+      // Add the value to the tags array
+      setKeywords([...keywords, value])
+      updateFormData(keywords);
+      // Clear the input
+      e.target.value = ''
+    }
   }
 
   function removeKeyword(index: number) {
     setKeywords(keywords.filter((element, i) => i !== index))
+    updateFormData(keywords);
   }
+
+  const keywordList = ["SCRUM", "Software Development Life Cycle (SDLC)", "Kanban", "Lean", "Agile Methodolgies", "Waterfall"];
 
   return (
     <div>
@@ -36,13 +43,22 @@ const KeywordsInput = ({ defaultValue, dataKey }: KeywordsInputProps) => {
       ))}
       <div>
         <input
+        list="keywordList"
           type="text"
           className='keywords-input'
-          placeholder="Type something"
+          placeholder="Enter a new keyword: "
           data-key={dataKey}
           onKeyDown={handleKeyDown}
         />
+        <datalist id="keywordList" style={{display: 'block'}}>
+          {keywordList.map(keyword => {
+            return (
+              <option value={keyword}/>
+            );
+          })}
+        </datalist>
       </div>
+
     </div>
   )
 }

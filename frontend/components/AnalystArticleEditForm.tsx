@@ -3,6 +3,9 @@ import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import DOMAIN from '../DOMAIN';
 import KeywordsInput from './KeywordsInput';
+import { Article } from '@/schema/article';
+import { useRouter } from 'next/navigation'
+import { NextResponse } from 'next/server';
 
 //TODO
 //check the date display format- DONE
@@ -13,82 +16,80 @@ export interface AnalystFormProps {
   info: QueuedArticle
 }
 
-type QueuedArticleSubmission = Omit<QueuedArticle, '_id' | 'isModerated'>;
+//type QueuedArticleSubmission = Omit<QueuedArticle, '_id' | 'isModerated'>;
+type ArticleSubmission = Omit<Article, '_id'>;
 
-const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
-  const articleData = data.info;
-  const [formData, setFormData] = useState<QueuedArticleSubmission>({
-    title: '',
-    authors: [],
-    date: '',
-    journal: '',
-    volume: 0,
-    issue: 0,
-    pageRange: [0, 0],
-    doi: '',
-    keywords: [],
-    abstract: '',
+const deleteOldArticle = async (id: string): Promise<any> => {
+  const response = await fetch(DOMAIN + 'analyst/id/' + id, {
+    method: 'DELETE',
+  });
+  if (response.ok) {
+    alert('Successfully deleted.');
+    window.location.replace('/analyst');
+  } else {
+    alert('Failed to delete.');
+  }
+};
+
+const sendArticle = async (data: string, id: string): Promise<void> => {
+  console.log(data);
+  const response = await fetch(DOMAIN + 'analyst', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data
+  });
+  if (response.ok) {
+    alert(response.status + ' Successfully sent article');
+    console.log(response.status);
+    deleteOldArticle(id);
+  } else {
+    alert('Failed');
+  }
+};
+
+const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
+  let articleData = data.info;
+  const [formData, setFormData] = useState<ArticleSubmission>({
+    title: articleData.title,
+    authors: articleData.authors,
+    date: articleData.date,
+    journal: articleData.journal,
+    volume: articleData.volume,
+    issue: articleData.issue,
+    pageRange: [articleData.pageRange[0], articleData.pageRange[1]],
+    doi: articleData.doi,
+    keywords: articleData.keywords,
+    abstract: articleData.abstract,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const preventEnterKeySubmission = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    const target = e.target;
-    if (e.key === "Enter" && target instanceof HTMLInputElement) {
-      e.preventDefault();
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const errorValidation: { [key: string]: string } = {};
-
     for (const field in formData) {
-      const value = formData[field as keyof QueuedArticleSubmission];
+      const value = formData[field as keyof ArticleSubmission];
       errorValidation[field] = '';
       if (
         // TODO clean up this check
         field !== 'isModerated' &&
         (!value ||
           (field === 'pageRange' && (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
-          ((field === 'authors' || field === 'keywords') && formData[field].length === 0))
+          ((field === 'authors') && formData[field].length === 0))
       ) {
         errorValidation[field] = `${field} must not be empty`;
       }
     }
-
-    if (isNaN(formData.volume)) {
-      errorValidation.volume = 'Volume must be a number';
-    }
-
-    if (isNaN(formData.issue)) {
-      errorValidation.issue = 'Issue must be a number';
-    }
-
-    if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
-      errorValidation.pageRange = 'Page Range must be an array of two numbers';
-    }
-
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
       alert('ERR' + JSON.stringify(errorValidation));
       return;
+    } else {
+      sendArticle(JSON.stringify(formData,), articleData._id);
     }
-
-    fetch(DOMAIN + 'articles/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => alert(response.ok ? 'Successfully submitted article' : 'Unknown'))
-      .catch((err) => {
-        alert('Failed to submit article');
-        console.log(err);
-      });
   };
-
-  const keywordList = ["SCRUM", "Software Development Life Cycle (SDLC)", "Kanban", "Lean", "Agile Methodolgies", "Waterfall"];
 
   const formatDate = (dateText: string) => {
     let sArray = dateText.split("-");
@@ -98,14 +99,13 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
     return `${year}-${month}-${day}`;
   }
 
-
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
-    const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
+    const name = e.currentTarget.dataset.key as keyof ArticleSubmission;
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
+    const formKeys: Record<'single' | 'array', Array<keyof ArticleSubmission>> = {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
       array: ['authors', 'keywords', 'pageRange'],
     };
@@ -122,15 +122,19 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
     }
   };
 
+  const handleKeywordChange = (newArray: string[]) => {
+    setFormData({ ...formData, ["keywords"]: newArray });
+  }
+
   // TODO change onChange to on deselect
   return (
-    <form className={styles.Form} onSubmit={handleSubmit} onKeyDown={preventEnterKeySubmission}>
+    <form className={styles.Form} onSubmit={handleSubmit}>
       <div className={styles.FormContent}>
         <div className={styles.LeftColumn}>
           <label>
             {' '}
             Article Title:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" defaultValue={articleData.title} />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" defaultValue={articleData.title} required />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -144,6 +148,7 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
               data-key="authors"
               data-index="0"
               defaultValue={articleData.authors}
+              required
             />
             <button type="button">+</button>
             {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
@@ -154,7 +159,7 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
           </div>
           <label>
             {' '}
-            <KeywordsInput dataKey={"keywords"} defaultValue={articleData.keywords}/>
+            <KeywordsInput updateFormData={handleKeywordChange} dataKey={"keywords"} defaultValue={articleData.keywords} />
             {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
           <br />
@@ -169,7 +174,7 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
           <label>
             {' '}
             Journal:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" defaultValue={articleData.journal} />
+            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" defaultValue={articleData.journal} required />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br />
@@ -177,14 +182,14 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
             <label>
               {' '}
               Date:
-              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" defaultValue={formatDate(articleData.date)} />
+              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" defaultValue={formatDate(articleData.date)} required />
               {errors.date && <p className={styles.Error}>{errors.date}</p>}
             </label>
             <br />
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" defaultValue={articleData.doi} />
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" defaultValue={articleData.doi} required />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
@@ -193,14 +198,14 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
             <label>
               {' '}
               Volume:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" defaultValue={articleData.volume} />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" defaultValue={articleData.volume} required />
               {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
             </label>
             <br />
             <label>
               {' '}
               Issue:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" defaultValue={articleData.issue} />
+              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" defaultValue={articleData.issue} required />
               {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
             </label>
             <br />
@@ -237,6 +242,9 @@ const AnalystArticleSubmissionForm = (data: AnalystFormProps) => {
           </div>
         </div>
       </div>
+      <button disabled={formData === undefined ? true : false}>
+        Save & Exit
+      </button>
       <button disabled={formData === undefined ? true : false} type="submit">
         Submit
       </button>

@@ -9,7 +9,7 @@ export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
 const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'moderator/promote/' + id, {
+  const response = await fetch(DOMAIN + 'moderator/promote/id/' + id, {
     method: 'PUT',
   });
   if (response.ok) {

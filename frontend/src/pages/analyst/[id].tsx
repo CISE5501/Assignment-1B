@@ -3,7 +3,7 @@ import React from 'react';
 import DOMAIN from '../../../DOMAIN';
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/schema/queuedArticle';
-import { Container } from 'react-bootstrap';
+import { Container, NavLink } from 'react-bootstrap';
 import AnalystArticleSubmissionForm from '../../../components/AnalystArticleEditForm';
 
 export interface QueuedArticleProps {
@@ -15,9 +15,8 @@ export interface QueuedArticleProps {
 
 export const getServerSideProps: GetServerSideProps = async({params}) => {
   if(params && params.id) {
-    console.log(params.id);
-    const response =  await fetch(DOMAIN + `analyst/${params.id}`);
-    const articleInfo = await response.json();
+    //console.log(params.id);
+    const articleInfo =  await fetch(`${DOMAIN}analyst/id/${params.id}`).then((data) => data.json());
     return {props: {articleInfo}}
   }
   return {
@@ -26,9 +25,12 @@ export const getServerSideProps: GetServerSideProps = async({params}) => {
 };
 
 export const Page = ({articleInfo}: QueuedArticleProps) => {
-  console.log(articleInfo);
+  //console.log(articleInfo);
   return (
     <Container>
+      <div>
+        <NavLink href='/analyst'>Back</NavLink>
+      </div>
       <AnalystArticleSubmissionForm info={articleInfo.existingArticle}/>
     </Container>
   )
