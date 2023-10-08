@@ -11,6 +11,8 @@ import { QueuedArticleSchema } from './models/queuedArticles/queuedArticle.schem
 import { QueuedArticleService } from './models/queuedArticles/queuedArticle.service';
 import { ArticleSchema } from './models/articles/article.schema';
 import { ArticleService } from './models/articles/article.service';
+import { RejectedEntrySchema } from './models/rejected/rejected.schema';
+import { RejectedEntryService } from './models/rejected/rejected.service';
 
 @Module({
   imports: [
@@ -24,8 +26,9 @@ import { ArticleService } from './models/articles/article.service';
     }),
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
     MongooseModule.forFeature([{ name: 'QueuedArticle', schema: QueuedArticleSchema }]),
+    MongooseModule.forFeature([{ name: 'RejectedEntry', schema: RejectedEntrySchema }]),
   ],
   controllers: [AppController, ModeratorController, AnalystController, QueueController, UserController],
-  providers: [AppService, ArticleService, QueuedArticleService],
+  providers: [AppService, ArticleService, QueuedArticleService, RejectedEntryService],
 })
 export class AppModule {}
