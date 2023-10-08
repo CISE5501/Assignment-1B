@@ -21,7 +21,8 @@ export class StarRatingService {
   }
 
   async addRating(ratingDto: CreateRatingDto): Promise<IStarRating> {
-    const existingRating = await this.articleModel.findOne({ userId: ratingDto.userId }).exec();
+    const { doi, userId } = ratingDto;
+    const existingRating = await this.articleModel.findOne({ doi, userId }).exec();
     if (existingRating) {
       return this.updateRating(ratingDto);
     } else {
