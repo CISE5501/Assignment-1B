@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async({params}) => {
 };
 
 export const Page = ({articleInfo}: QueuedArticleProps) => {
-  //console.log(articleInfo);
+  console.log(articleInfo);
   return (
     <Container>
       <div>

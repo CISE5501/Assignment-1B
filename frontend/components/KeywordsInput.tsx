@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './KeywordsInput.module.scss';
+import styles from './SubmissionForm.module.scss';
 
 interface KeywordsInputProps {
   defaultValue: string[];
@@ -36,7 +36,7 @@ const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputP
   return (
     <div>
       {keywords.map((keyword, index) => (
-        <div className={styles.keywordItem} key={index}>
+        <div className={styles.KeywordItem} key={index}>
           <span className="text">{keyword}</span>
           <span className={styles.close} onClick={() => removeKeyword(index)}>&times;</span>
         </div>
@@ -45,7 +45,7 @@ const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputP
         <input
         list="keywordList"
           type="text"
-          className='keywords-input'
+          className={styles.KeywordInput}
           placeholder="Enter a new keyword: "
           data-key={dataKey}
           onKeyDown={handleKeyDown}

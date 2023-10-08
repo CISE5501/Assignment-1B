@@ -1,23 +1,26 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import DOMAIN from '../DOMAIN';
 import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
-import { useRouter } from 'next/navigation'
-import { NextResponse } from 'next/server';
-
-//TODO
-//check the date display format- DONE
-//check that the author creates new filled in input with every entry
-//check keywords
+import AuthorInput from './AuthorInput';
+import { useForm } from 'react-hook-form'
+import { Form, Col, Row, InputGroup, Button } from 'react-bootstrap';
 
 export interface AnalystFormProps {
   info: QueuedArticle
 }
 
-//type QueuedArticleSubmission = Omit<QueuedArticle, '_id' | 'isModerated'>;
 type ArticleSubmission = Omit<Article, '_id'>;
+
+const formatDate = (dateText: string) => {
+  let sArray = dateText.split("-");
+  let year = sArray[0];
+  let month = sArray[1].padStart(2, '0');
+  let day = sArray[2].padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 const deleteOldArticle = async (id: string): Promise<any> => {
   const response = await fetch(DOMAIN + 'analyst/id/' + id, {
@@ -65,39 +68,40 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const errorValidation: { [key: string]: string } = {};
-    for (const field in formData) {
-      const value = formData[field as keyof ArticleSubmission];
-      errorValidation[field] = '';
-      if (
-        // TODO clean up this check
-        field !== 'isModerated' &&
-        (!value ||
-          (field === 'pageRange' && (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
-          ((field === 'authors') && formData[field].length === 0))
-      ) {
-        errorValidation[field] = `${field} must not be empty`;
+    if (isNaN(formData.volume)) {
+      errorValidation.volume = 'Volume must be a number';
+    }
+    if (isNaN(formData.issue)) {
+      errorValidation.issue = 'Issue must be a number';
+    }
+    if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
+      errorValidation.pageRange = 'Page Range must be an array of two numbers';
+    }
+    if (formData.pageRange[0] > formData.pageRange[1]) {
+      errorValidation.pageRange = 'First page range cannot be bigger than second!';
+    }
+    for (const author of formData.authors) {
+      if (!author.includes(' ')) {
+        errorValidation.authors = 'Author first and last name is required!';
       }
+    }
+    const doiCheckRegex = /doi:\S+\/\S+/;
+    const validDOI = doiCheckRegex.test(formData.doi);
+    if (!validDOI) {
+      errorValidation.doi = 'Not a valid DOI!';
     }
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
     } else {
       sendArticle(JSON.stringify(formData,), articleData._id);
     }
   };
-
-  const formatDate = (dateText: string) => {
-    let sArray = dateText.split("-");
-    let year = sArray[0];
-    let month = sArray[1].padStart(2, '0');
-    let day = sArray[2].padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
@@ -126,6 +130,10 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     setFormData({ ...formData, ["keywords"]: newArray });
   }
 
+  const handleAuthorChange = (newArray: string[]) => {
+    setFormData({ ...formData, ["authors"]: newArray });
+  }
+
   // TODO change onChange to on deselect
   return (
     <form className={styles.Form} onSubmit={handleSubmit}>
@@ -140,23 +148,10 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
           <br />
           <label>
             {' '}
-            Author:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="authors"
-              data-index="0"
-              defaultValue={articleData.authors}
-              required
-            />
-            <button type="button">+</button>
-            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+            <AuthorInput updateFormData={handleAuthorChange} dataKey={"authors"} defaultValue={articleData.authors} />
+            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
           </label>
           <br />
-          <div>
-
-          </div>
           <label>
             {' '}
             <KeywordsInput updateFormData={handleKeywordChange} dataKey={"keywords"} defaultValue={articleData.keywords} />
