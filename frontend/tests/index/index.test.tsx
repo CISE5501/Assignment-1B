@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '../../src/pages/articles';
+import Index, { ArticleProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
 import { Article } from '@/schema/article';
 
@@ -18,22 +18,16 @@ const tempArray = [
   },
 ] as Article[];
 
-function renderHome(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: [],
-    },
+function renderHome(props: Partial<ArticleProps> = {}) {
+  const defaultProps: ArticleProps = {
+    articleData: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
-function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: tempArray,
-    },
+function renderHomeWithArticles(props: Partial<ArticleProps> = {}) {
+  const defaultProps: ArticleProps = {
+    articleData: tempArray,
   };
   return render(<Index {...defaultProps} {...props} />);
 }

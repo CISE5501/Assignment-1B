@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import DOMAIN from '..//DOMAIN';
@@ -22,26 +22,20 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
     isModerated: false,
   });
 
+  interface AuthorField {
+    id: number;
+    value: string;
+  }
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [index, setIndex] = useState<number[]>([]);
+  const [counter, setCounter] = useState<number>(1);
+  const [authorFields, setAuthorFields] = useState<AuthorField[]>([{ id: 0, value: '' }]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const errorValidation: { [key: string]: string } = {};
-
-    for (const field in formData) {
-      const value = formData[field as keyof QueuedArticleSubmission];
-      errorValidation[field] = '';
-      if (
-        // TODO clean up this check
-        field !== 'isModerated' &&
-        (!value ||
-          (field === 'pageRange' && (formData.pageRange[0] === 0 || formData.pageRange[1] === 0)) ||
-          ((field === 'authors' || field === 'keywords') && formData[field].length === 0))
-      ) {
-        errorValidation[field] = `${field} must not be empty`;
-      }
-    }
 
     if (isNaN(formData.volume)) {
       errorValidation.volume = 'Volume must be a number';
@@ -55,10 +49,28 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
       errorValidation.pageRange = 'Page Range must be an array of two numbers';
     }
 
+    if (formData.pageRange[0] > formData.pageRange[1]) {
+      errorValidation.pageRange = 'First page range cannot be bigger than second!';
+    }
+
+    for (const author of formData.authors) {
+      if (!author.includes(' ')) {
+        errorValidation.authors = 'Author first and last name is required!';
+      }
+    }
+
+    const doiCheckRegex = /doi:\S+\/\S+/;
+    const validDOI = doiCheckRegex.test(formData.doi);
+
+    if (!validDOI) {
+      errorValidation.doi = 'Not a valid DOI!';
+    }
+
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      alert('ERR' + JSON.stringify(errorValidation));
       return;
+    } else {
+      setErrors({});
     }
 
     fetch(DOMAIN + 'articles/new', {
@@ -68,14 +80,19 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => alert(response.ok ? 'Successfully submitted article' : 'Unknown'))
+      .then((response) => {
+        if (response.ok) {
+          alert('Successfully submitted article');
+          window.location.reload();
+        }
+      })
       .catch((err) => {
         alert('Failed to submit article');
         console.log(err);
       });
   };
 
-  const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
+  const handleForm = (e: ChangeEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
     const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
     const type = e.currentTarget.type;
@@ -98,6 +115,31 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
     }
   };
 
+  const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const updatedAuthorFields = authorFields.map((field) =>
+      field.id === id ? { ...field, value: e.target.value } : field,
+    );
+    setAuthorFields(updatedAuthorFields);
+    handleForm(e);
+  };
+
+  const addAuthor = () => {
+    const newIndex = [...index, counter];
+    setIndex(newIndex);
+
+    setAuthorFields([...authorFields, { id: counter, value: '' }]);
+    setCounter(counter + 1);
+  };
+
+  const deleteAuthor = (id: number) => {
+    if (authorFields.length == 1) {
+      return;
+    }
+
+    const updatedAuthorFields = authorFields.filter((field) => field.id !== id);
+    setAuthorFields(updatedAuthorFields);
+  };
+
   // TODO change onChange to on deselect
   return (
     <form className={styles.Form} onSubmit={handleSubmit}>
@@ -106,28 +148,40 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Article Title:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="title" />
+            <input required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
-          <label>
-            {' '}
-            Author:
-            <input
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="authors"
-              data-index="0"
-            />
-            <button type="button">+</button>
-            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
-          </label>
+          {authorFields.map((field) => (
+            <div key={field.id}>
+              <label>
+                {' '}
+                Author:
+                <input
+                  required
+                  className={styles.Input}
+                  onChange={(e) => handleAuthorChange(e, field.id)}
+                  type="text"
+                  value={field.value}
+                  data-key="authors"
+                  data-index={field.id}
+                />
+                {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+                <button type="button" onClick={addAuthor}>
+                  +
+                </button>
+                <button type="button" onClick={() => deleteAuthor(field.id)}>
+                  -
+                </button>
+              </label>
+            </div>
+          ))}
           <br />
           <label>
             {' '}
             Keywords:
             <input
+              required
               className={styles.Input}
               onChange={handleForm}
               type="text"
@@ -140,7 +194,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Abstract:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
+            <input required className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
             {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </label>
         </div>
@@ -148,7 +202,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
           <label>
             {' '}
             Journal:
-            <input className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
+            <input required className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </label>
           <br />
@@ -156,7 +210,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
             <label>
               {' '}
               Date:
-              <input className={styles.Input} onChange={handleForm} type="date" data-key="date" />
+              <input required className={styles.Input} onChange={handleForm} type="date" data-key="date" />
               {errors.date && <p className={styles.Error}>{errors.date}</p>}
             </label>
             <br />
@@ -179,7 +233,7 @@ const ArticleSubmissionForm: React.FC<Props> = ({}) => {
             <label>
               {' '}
               Issue:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
+              <input required className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
               {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
             </label>
             <br />

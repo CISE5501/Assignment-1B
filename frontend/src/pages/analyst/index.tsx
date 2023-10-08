@@ -51,7 +51,8 @@ const Index = ({ queueData }: PageProps) => {
     <Container>
       <h1>Analyst View</h1>
       <h2>Articles in Queue Pending Analysis</h2>
-      {queueData.articleData ? <SortableTable headers={headersList} data={queueData.articleData} /> : <strong>No Articles Needing Analysis</strong>}
+      <SortableTable headers={headersList} data={queueData} />
+      {queueData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
     </Container>
   );
 };
