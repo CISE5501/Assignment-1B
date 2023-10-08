@@ -21,7 +21,8 @@ const promote = async (id: string): Promise<void> => {
 };
 
 //returns table using data from queuedArticles where isModerated = false
-const Index = ({ queueData, duplicates }: PageProps) => {
+const Index = ({ queueData, duplicates, rejected }: PageProps) => {
+  const warning = { fontWeight: 'bold' };
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
@@ -51,7 +52,12 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     {
       computed: true,
       label: 'Warnings',
-      content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''),
+      content: (data) => (
+        <ul>
+          {duplicates.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
+      ),
     },
     {
       computed: true,
@@ -74,8 +80,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     <Container>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
-      <SortableTable headers={headersList} data={queueData} />
-      {queueData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
+      {queueData.length === 0 ? (
+        <strong>No Articles Needing Moderation</strong>
+      ) : (
+        <SortableTable headers={headersList} data={queueData} />
+      )}
     </Container>
   );
 };

@@ -11,6 +11,8 @@ import { QueuedArticleSchema } from './models/queuedArticles/queuedArticle.schem
 import { QueuedArticleService } from './models/queuedArticles/queuedArticle.service';
 import { ArticleSchema } from './models/articles/article.schema';
 import { ArticleService } from './models/articles/article.service';
+import { RejectedEntrySchema } from './models/rejected/rejected.schema';
+import { RejectedEntryService } from './models/rejected/rejected.service';
 import { StarRatingSchema } from './models/ratings/starRating.schema';
 import { StarRatingService } from './models/ratings/starRating.service';
 
@@ -26,9 +28,10 @@ import { StarRatingService } from './models/ratings/starRating.service';
     }),
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
     MongooseModule.forFeature([{ name: 'QueuedArticle', schema: QueuedArticleSchema }]),
+    MongooseModule.forFeature([{ name: 'RejectedEntry', schema: RejectedEntrySchema }]),
     MongooseModule.forFeature([{ name: 'StarRating', schema: StarRatingSchema }]),
   ],
   controllers: [AppController, ModeratorController, AnalystController, QueueController, UserController],
-  providers: [AppService, ArticleService, QueuedArticleService, StarRatingService],
+  providers: [AppService, ArticleService, QueuedArticleService, RejectedEntryService, StarRatingService],
 })
 export class AppModule {}
