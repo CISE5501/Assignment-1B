@@ -26,14 +26,19 @@ export class UserController {
   }
 
   @Get('/filter')
-  async findArticlesByQuery(@Query('keywords') keywords: string, @Res() response) {
+  async findArticlesByQuery(
+    @Query('keywords') keywords: string,
+    @Query('field') field = 'all',
+    @Res() response,
+  ) {
     try {
       const articleData = await this.articleService.getAllArticles();
       const filteredArticles: typeof articleData = [];
       for (const keyword of keywords.split(',')) {
         filteredArticles.push(
           ...articleData.filter((article) => {
-            const searchString = JSON.stringify(Object.values(article)); // search through only the values of each item in the data
+            const searchItems = field === 'all' ? Object.values(article) : article[field];
+            const searchString = JSON.stringify(searchItems);
             return searchString.toLowerCase().includes(keyword.toLowerCase());
           }),
         );
