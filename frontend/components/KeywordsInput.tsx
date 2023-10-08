@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Form, Col, Row } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './SubmissionForm.module.scss';
 
 interface KeywordsInputProps {
@@ -8,59 +10,65 @@ interface KeywordsInputProps {
 }
 
 const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputProps) => {
-  const [keywords, setKeywords] = useState(defaultValue);
-
-  function handleKeyDown(e: React.KeyboardEvent) {
+  const [keywords, setKeywords] = useState<string[]>(defaultValue);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     // If user did not press enter key, return
     if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
       e.preventDefault();
       // Get the value of the input
-      const value = e.target.value
+      const value = e.target.value;
       // If the value is empty, return
-      if (!value.trim()) return
+      if (!value.trim()) return;
       // Add the value to the tags array
-      setKeywords([...keywords, value])
-      updateFormData(keywords);
+      const temp = keywords.concat(value);
+      setKeywords(temp);
+      updateFormData(temp);
       // Clear the input
-      e.target.value = ''
+      e.target.value = '';
     }
-  }
+  };
 
-  function removeKeyword(index: number) {
-    setKeywords(keywords.filter((element, i) => i !== index))
-    updateFormData(keywords);
-  }
+  const removeKeyword = (index: number) => {
+    const temp = keywords.filter((element, i) => i !== index);
+    setKeywords(temp);
+    updateFormData(temp);
+  };
 
-  const keywordList = ["SCRUM", "Software Development Life Cycle (SDLC)", "Kanban", "Lean", "Agile Methodolgies", "Waterfall"];
+  const keywordList = [
+    'SCRUM',
+    'Software Development Life Cycle (SDLC)',
+    'Kanban',
+    'Lean',
+    'Agile Methodolgies',
+    'Waterfall',
+  ];
 
   return (
-    <div>
+    <Form.Group as={Col} controlId={dataKey} data-key={dataKey}>
+      <Form.Label>Keywords</Form.Label>
+      <br />
       {keywords.map((keyword, index) => (
-        <div className={styles.KeywordItem} key={index}>
+        <div className={styles.keywordItem} key={index}>
           <span className="text">{keyword}</span>
-          <span className={styles.close} onClick={() => removeKeyword(index)}>&times;</span>
+          <span className={styles.close} onClick={() => removeKeyword(index)}>
+            &times;
+          </span>
         </div>
       ))}
-      <div>
-        <input
+      <Form.Control
         list="keywordList"
-          type="text"
-          className={styles.KeywordInput}
-          placeholder="Enter a new keyword: "
-          data-key={dataKey}
-          onKeyDown={handleKeyDown}
-        />
-        <datalist id="keywordList" style={{display: 'block'}}>
-          {keywordList.map(keyword => {
-            return (
-              <option value={keyword}/>
-            );
-          })}
-        </datalist>
-      </div>
-
-    </div>
-  )
-}
+        type="text"
+        placeholder="Enter a new keyword: "
+        data-key={dataKey}
+        onKeyDown={handleKeyDown}
+      />
+      <datalist id="keywordList" style={{ display: 'block' }}>
+        {keywordList.map((keyword) => {
+          return <option key={keyword} value={keyword} hidden />;
+        })}
+      </datalist>
+    </Form.Group>
+  );
+};
 
 export default KeywordsInput;
