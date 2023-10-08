@@ -142,7 +142,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   // TODO change onChange to on deselect
   return (
-    <form className={styles.Form} onSubmit={handleSubmit}>
+    <form aria-label="form" className={styles.Form} onSubmit={handleSubmit}>
       <div className={styles.FormContent}>
         <div className={styles.LeftColumn}>
           <label>
