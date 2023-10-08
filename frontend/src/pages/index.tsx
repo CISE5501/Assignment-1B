@@ -6,7 +6,7 @@ export default function Home() {
       <form action="/search">
         <input type="text" size={80} name="keywords" />
         <select name="field">
-          <option value="all">Any</option>
+          <option value="all">Any Field</option>
           <option value="keywords">SE Methods</option>
         </select>
         <button type="submit" style={{ marginLeft: '2em' }}>
