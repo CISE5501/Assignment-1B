@@ -148,7 +148,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
           <label>
             {' '}
             Article Title:
-            <input required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
+            <input data-testid="title" required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
