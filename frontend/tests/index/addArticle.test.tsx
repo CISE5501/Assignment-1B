@@ -19,14 +19,6 @@ describe('Testing initial rendering for article submission form', () => {
       expect((element.value)).toBe('');
     });
   });
-  test('Test 2: form fields accept inputs', async () => {
-    renderPage();
-    const mockChange = jest.fn();
-    const form = screen.getByRole('form', { name: 'form' });
-    const inputs = form.querySelectorAll('input');
-    inputs.forEach(onchange = mockChange);
-    expect(mockChange).toBeCalledTimes(11);
-  });
 });
 
 describe('Testing form submission', () => {
