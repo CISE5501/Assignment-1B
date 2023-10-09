@@ -21,6 +21,17 @@ interface SortableTableProps<T> {
   data: T[];
 }
 
+type sortKeys  = typeof headers;
+type SortOrder = 'asc' | 'desc';
+
+function sortData(){
+
+}
+
+//const [sortKey, setSortKey] = useState();
+  //const [sortOrder, setSortOrder] = useState<SortOrder>('asc'); //either going to sort by asc or desc
+
+
 //retrieves data sorted as a table
 const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
   <Table className="md-5">
