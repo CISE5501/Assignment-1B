@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 
 export type ComputedRow<T> = {
@@ -14,6 +14,11 @@ export type DataRow<T> = {
   displayAs?: (data: any) => React.JSX.Element | string;
 };
 
+export type row<T> = {
+  label: string;
+  
+}
+
 export type SortableTableHeader<T> = ComputedRow<T> | DataRow<T>;
 
 interface SortableTableProps<T> {
@@ -21,20 +26,19 @@ interface SortableTableProps<T> {
   data: T[];
 }
 
-type sortKeys  = typeof headers;
-type SortOrder = 'asc' | 'desc';
-
-function sortData(){
-
-}
-
-//const [sortKey, setSortKey] = useState();
-  //const [sortOrder, setSortOrder] = useState<SortOrder>('asc'); //either going to sort by asc or desc
-
+//type sortKeys  = typeof headers;
+//type SortOrder = 'asc' | 'desc';
 
 //retrieves data sorted as a table
-const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
-  <Table className="md-5">
+function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
+
+  type SortKeys = typeof headers[0]
+  type SortOrder = 'asc' | 'desc';
+
+  const [sortKey, setSortKey] = useState<SortKeys>(); 
+  const [SortOrder, setSortOrder] = useState<'asc'>(); 
+
+  return (<Table className="md-5">
     <thead>
       <tr>
         {headers.map((header, j) => (
@@ -62,7 +66,8 @@ const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
         </tr>
       ))}
     </tbody>
-  </Table>
-);
+  </Table>)
+}
+
 
 export default SortableTable;
