@@ -39,7 +39,11 @@ const Index = ({ articleData }: ArticleProps) => {
   return (
     <Container>
       <h1>Articles</h1>
-      <SortableTable headers={headersList} data={articleData} />
+      {articleData.length === 0 ? (
+        'No Results'
+      ) : (
+        <SortableTable headers={headersList} data={articleData} />
+      )}
     </Container>
   );
 };

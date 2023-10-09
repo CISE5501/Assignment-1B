@@ -1,5 +1,5 @@
 import DOMAIN from "../../DOMAIN";
-import Search from "../../components/search/SearchDisplay";
+import SearchDisplay from "../../components/search/SearchDisplay";
 
 const deleteAll = async (): Promise<void> => {
   const response = await fetch(DOMAIN + 'articles/deleteAll', {
@@ -29,7 +29,7 @@ export default function Home() {
       <h1>Software Practice Empirical Evidence Database (SPEED)</h1>
       <button onClick={deleteAll}>delete all</button>
       <button onClick={addExamples}>add examples</button>
-      <Search/>
+      <SearchDisplay/>
     </div>
   );
 }

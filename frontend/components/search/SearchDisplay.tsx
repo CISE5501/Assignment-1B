@@ -10,7 +10,7 @@ export interface SearchProps {
     filteredArticles: Article[];
 }
 
-const headersList: DataRow<Article>[] = [
+export const headersList: DataRow<Article>[] = [
     { key: 'title', label: 'Title' },
     {
         key: 'authors',
@@ -35,7 +35,7 @@ const headersList: DataRow<Article>[] = [
     { key: 'abstract', label: 'Abstract' },
 ];
 
-const searchKeywords = async (input: string) => {
+export const searchKeywords = async (input: string) => {
     try {
         const response = await fetch(DOMAIN + 'articles/filter?keywords=' + input);
         const result: SearchProps = await response.json();
@@ -46,7 +46,7 @@ const searchKeywords = async (input: string) => {
     }
 }
 
-const Search = () => {
+const SearchDisplay = () => {
     const [data, setData] = useState<SearchProps>({
         message: "",
         filteredArticles: [],
@@ -66,12 +66,12 @@ const Search = () => {
         <div className="container">
             <h2>Search for Keywords</h2>
             <form onSubmit={handleSubmit}>
-                <input type="text" size={80} name="keywords" />
-                <button type="submit" style={{ marginLeft: '2em' }}>
+                <input data-testid="searchInput" type="text" size={80} name="keywords" />
+                <button data-testid="searchButton" type="submit" style={{ marginLeft: '2em' }}>
                     search
                 </button>
             </form>
-            <div id="result" hidden>
+            <div data-testid="result" id="result" hidden>
             <h3>Search Results for &quot;{data.keywords}&quot;</h3>
             {data.filteredArticles.length === 0 ? (
                 'No Results'
@@ -84,4 +84,4 @@ const Search = () => {
     );
 };
 
-export default Search;
+export default SearchDisplay;

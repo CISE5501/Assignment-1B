@@ -1,14 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import Search from '@/pages/search';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import SearchDisplay, {SearchProps} from '../../components/search/SearchDisplay';
+import { Article } from '@/schema/article';
 
-
-const useStateMock = jest.spyOn(React, 'useState');
-
-function renderSearch(keyword: string) {
-  const exampleArticle = {
+const tempArray = [
+  {
     title: 'sdf',
     authors: ['sdasd'],
     date: '0004-03-31',
@@ -17,38 +14,43 @@ function renderSearch(keyword: string) {
     issue: 2,
     pageRange: [3, 5],
     doi: 'dsfsdfsdfsdf',
-    keywords: ['sda'],
+    keywords: ['sad', 'asd'],
     abstract: 'sfasd',
-    isModerated: true,
-  }
-  const initialState = {
-    message: '',
-    keywords: [],
-    filteredArticles: [exampleArticle],
-  };
+  },
+] as Article[];
 
-  const setDataMock = jest.fn();
-  useStateMock.mockReturnValue([initialState, setDataMock]);
-
+function renderSearch() {
   return render(
-    <MemoryRouter initialEntries={['/search?keywords=' + keyword]}>
-      <Search />
-    </MemoryRouter>
+    <SearchDisplay/>
   );
 }
 
-test('should have search results', async () => {
-  const keyword = 'sda';
-  renderSearch(keyword);
-  expect(screen.getByText(keyword)).toBeInTheDocument();
-  expect(screen.getByText('DOI')).toBeInTheDocument();
-  expect(screen.getByText('No Results')).not.toBeInTheDocument();
-  expect(screen.getByRole('table')).toBeInTheDocument();
-});
+afterEach(cleanup);
 
-test('should have no search results', async () => {
-  const keyword = 'asdhsd';
-  renderSearch(keyword);
-  expect(screen.getByText(keyword)).toBeInTheDocument();
-  expect(screen.getByText('No Results')).toBeInTheDocument();
+describe("Testing initial rendering", () => {
+  test("Test 1: should have an input field and submit button on load", () => {
+    renderSearch();
+    expect(screen.getByTestId('searchInput')).toBeInTheDocument();
+    expect(screen.getByTestId('searchButton')).toBeInTheDocument();
+    expect(screen.getByTestId('result')).not.toBeVisible();
+  });
+
+  test("Test 2: clicking on the submit button calls the handleSubmit function", () => {
+    renderSearch();
+    const mockSearch = jest.fn();
+    const form = screen.getByTestId('searchInput').onsubmit=mockSearch;
+    fireEvent.change(screen.getByTestId('searchInput'), {target: {value: "t1"}})
+    fireEvent.submit(screen.getByTestId('searchInput'));
+    expect(mockSearch).toHaveBeenCalled();
+  });
+  test("Test 3: clicking on search will call fetch", () => {
+    global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({tempArray}),
+    }),
+  ) as jest.Mock; 
+  renderSearch();
+    expect(screen.getByTestId('result')).not.toBeVisible();
+    fireEvent.click(screen.getByTestId('searchButton'));
+  })
 });
