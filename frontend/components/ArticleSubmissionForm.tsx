@@ -37,12 +37,12 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     const errorValidation: { [key: string]: string } = {};
 
-    if (isNaN(formData.volume)) {
-      errorValidation.volume = 'Volume must be a number';
+    if (isNaN(formData.volume) || formData.volume < 0) {
+      errorValidation.volume = 'Volume must be a valid number';
     }
 
-    if (isNaN(formData.issue)) {
-      errorValidation.issue = 'Issue must be a number';
+    if (isNaN(formData.issue) || formData.issue < 0) {
+      errorValidation.issue = 'Issue must be a valid number';
     }
 
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
@@ -53,17 +53,21 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange = 'First page range cannot be bigger than second!';
     }
 
+    if (formData.pageRange[0] < 0 || formData.pageRange[1] < 0) {
+      errorValidation.pageRange = 'Page Ranges must be a valid number';
+    }
+
     for (const author of formData.authors) {
       if (!author.includes(' ')) {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
 
-    const doiCheckRegex = /doi:\S+\/\S+/;
+    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
     const validDOI = doiCheckRegex.test(formData.doi);
 
     if (!validDOI) {
-      errorValidation.doi = 'Not a valid DOI!';
+      errorValidation.doi = 'Not a valid DOI! (e.g. doi:10.1000/182)';
     }
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
@@ -217,7 +221,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" />
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" placeholder='doi:10.1000/182' />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
