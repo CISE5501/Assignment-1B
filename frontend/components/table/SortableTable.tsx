@@ -14,11 +14,6 @@ export type DataRow<T> = {
   displayAs?: (data: any) => React.JSX.Element | string;
 };
 
-export type row<T> = {
-  label: string;
-  
-}
-
 export type SortableTableHeader<T> = ComputedRow<T> | DataRow<T>;
 
 interface SortableTableProps<T> {
@@ -32,7 +27,16 @@ interface SortableTableProps<T> {
 //retrieves data sorted as a table
 function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
 
-  type SortKeys = typeof headers[0]
+  let heads: string[] = []
+
+  for(var i = 0; i < headers.map.length; i++)
+  {
+    heads[i] = headers[i].label;
+  }
+
+  //I am well aware this code won't, this was not the only thing I tried and was getting desperate
+
+  type SortKeys = typeof heads[0]
   type SortOrder = 'asc' | 'desc';
 
   const [sortKey, setSortKey] = useState<SortKeys>(); 
