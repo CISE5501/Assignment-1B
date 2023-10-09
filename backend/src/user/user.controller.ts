@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res, Delete } from '@nestjs/common';
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
@@ -89,6 +89,49 @@ export class UserController {
         message: 'Error: Article not created!',
         error: 'Bad Request',
       });
+    }
+  }
+
+  @Post('/example')
+  async createArticleExamples(@Res() response) {
+    try {
+      const newArticle = await this.articleService.createArticleExamples();
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Article has been created successfully',
+        newArticle,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Error: Article not created!',
+        error: 'Bad Request',
+      });
+    }
+  }
+
+  @Delete('/id/:id')
+  async deleteArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      const deletedArticle = await this.articleService.deleteArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article deleted successfully',
+        deletedArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Delete('/deleteAll')
+  async deleteAllArticles(@Res() response) {
+    try {
+      const deletedArticle = await this.articleService.deleteArticles();
+      return response.status(HttpStatus.OK).json({
+        message: 'Article deleted successfully',
+        deletedArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
     }
   }
 }

@@ -33,7 +33,7 @@ function renderSearch(keyword: string) {
   return render(
     <MemoryRouter initialEntries={['/search?keywords=' + keyword]}>
       <Search />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 
