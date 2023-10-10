@@ -37,12 +37,12 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     const errorValidation: { [key: string]: string } = {};
 
-    if (isNaN(formData.volume)) {
-      errorValidation.volume = 'Volume must be a number';
+    if (isNaN(formData.volume) || formData.volume < 0) {
+      errorValidation.volume = 'Volume must be a valid positive number';
     }
 
-    if (isNaN(formData.issue)) {
-      errorValidation.issue = 'Issue must be a number';
+    if (isNaN(formData.issue) || formData.issue < 0) {
+      errorValidation.issue = 'Issue must be a valid positive number';
     }
 
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
@@ -52,6 +52,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     if (formData.pageRange[0] > formData.pageRange[1]) {
       errorValidation.pageRange = 'First page range cannot be bigger than second!';
     }
+
+    if (formData.pageRange[0] < 0 || formData.pageRange[1] < 0) {
+      errorValidation.pageRange = 'Page Ranges must be a valid positive number';
+    }
+
 
     for (const author of formData.authors) {
       if (!author.includes(' ')) {
@@ -142,13 +147,13 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
   // TODO change onChange to on deselect
   return (
-    <form className={styles.Form} onSubmit={handleSubmit}>
+    <form aria-label="form" className={styles.Form} onSubmit={handleSubmit}>
       <div className={styles.FormContent}>
         <div className={styles.LeftColumn}>
           <label>
             {' '}
             Article Title:
-            <input required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
+            <input data-testid="title" required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -217,7 +222,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" />
+              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" placeholder='doi:10.1000/182' />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />
