@@ -1,20 +1,36 @@
+import DOMAIN from '@/common/DOMAIN';
+import SearchDisplay from '../../components/search/SearchDisplay';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const deleteAll = async (): Promise<void> => {
+  const response = await fetch(DOMAIN + 'articles/deleteAll', {
+    method: 'DELETE',
+  });
+  if (response.ok) {
+    alert('Successfully deleted all articles.');
+  } else {
+    alert('Failed to delete all articles.');
+  }
+};
+
+const addExamples = async (): Promise<void> => {
+  const response = await fetch(DOMAIN + 'articles/example', {
+    method: 'POST',
+  });
+  if (response.ok) {
+    alert('Successfully added all articles.');
+  } else {
+    alert('Failed to add all articles.');
+  }
+};
 
 export default function Home() {
   return (
     <div className="container">
       <h1>Software Practice Empirical Evidence Database (SPEED)</h1>
-      <h2>Search for Keywords</h2>
-      <form action="/search">
-        <input type="text" size={80} name="keywords" />
-        <select name="field">
-          <option value="all">Any Field</option>
-          <option value="keywords">SE Methods</option>
-        </select>
-        <button type="submit" style={{ marginLeft: '2em' }}>
-          search
-        </button>
-      </form>
+      <button onClick={deleteAll}>delete all</button>
+      <button onClick={addExamples}>add examples</button>
+      <SearchDisplay />
     </div>
   );
 }
