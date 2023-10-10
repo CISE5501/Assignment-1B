@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DOMAIN from '../../../DOMAIN';
+import DOMAIN from '@/common/DOMAIN';
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/schema/queuedArticle';
 import { Container, NavLink } from 'react-bootstrap';

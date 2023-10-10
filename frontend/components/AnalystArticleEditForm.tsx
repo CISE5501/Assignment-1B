@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { QueuedArticle } from '../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
-import DOMAIN from '../DOMAIN';
+import DOMAIN from '@/common/DOMAIN';
 import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
 import AuthorInput from './AuthorInput';
