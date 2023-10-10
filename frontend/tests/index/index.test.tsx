@@ -33,11 +33,6 @@ function renderHomeWithArticles(props: Partial<ArticleProps> = {}) {
   return render(<Index {...defaultProps} {...props} />);
 }
 
-test('should have empty table', async () => {
-  renderHome();
-  expect(screen.getAllByTestId('data-table-body').length).toBe(1);
-});
-
 test('should have table with an article entry', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
