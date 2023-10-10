@@ -35,9 +35,9 @@ export const headersList: DataRow<Article>[] = [
     { key: 'abstract', label: 'Abstract' },
 ];
 
-export const searchKeywords = async (input: string) => {
+export const searchKeywords = async (field: string, input: string) => {
     try {
-        const response = await fetch(DOMAIN + 'articles/filter?keywords=' + input);
+        const response = await fetch(DOMAIN + `articles/filter?field=${field}&keywords=${input}`);
         const result: SearchProps = await response.json();
         console.log(result);
         return result;
@@ -54,33 +54,38 @@ const SearchDisplay = () => {
     });
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const field = document.querySelector('select')?.value;
         const query = document.querySelector('input')?.value;
-        if (!query) return (<p>gg</p>);
-        const obj = await searchKeywords(query);
+        if (!field || !query) return (<p>gg</p>);
+        const obj = await searchKeywords(field, query);
         if (!obj) return (<p>error fetching</p>);
         setData(obj);
         (document.getElementById('result') as HTMLImageElement).hidden = false;
     }
 
     return (
-        <div data-testid= "container" className="container">
+        <div data-testid="container" className="container">
             <h2>Search for Keywords</h2>
             <form onSubmit={handleSubmit}>
                 <input data-testid="searchInput" type="text" size={80} name="keywords" />
+                <select name="field">
+                    <option value="all">Any Field</option>
+                    <option value="keywords">SE Methods</option>
+                </select>
                 <button data-testid="searchButton" type="submit" style={{ marginLeft: '2em' }}>
                     search
                 </button>
             </form>
             <div data-testid="result" id="result" hidden>
-            <h3>Search Results for &quot;{data.keywords}&quot;</h3>
-            {data.filteredArticles.length === 0 ? (
-                'No Results'
-            ) : (
-                <SortableTable headers={headersList} data={data.filteredArticles} />
-            )}
+                <h3>Search Results for &quot;{data.keywords}&quot;</h3>
+                {data.filteredArticles.length === 0 ? (
+                    'No Results'
+                ) : (
+                    <SortableTable headers={headersList} data={data.filteredArticles} />
+                )}
+            </div>
         </div>
-        </div>
-        
+
     );
 };
 

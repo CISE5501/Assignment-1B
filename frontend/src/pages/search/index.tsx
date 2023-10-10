@@ -18,7 +18,7 @@ const Search = () => {
     // Fetch data based on the query
     const fetchData = async () => {
       try {
-        const response = await fetch(DOMAIN + 'articles/filter?field=keywords&keywords=' + query);
+        const response = await fetch(DOMAIN + 'articles/filter?keywords=' + query);
         const jsonData = await response.json();
         setData(jsonData);
       } catch (error) {

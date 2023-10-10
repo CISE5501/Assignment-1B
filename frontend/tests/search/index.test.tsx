@@ -60,7 +60,7 @@ describe("Testing initial rendering", () => {
     renderSearch();
     const responseMock = () => JSON.stringify({});
     fetchMock.mockResponseOnce(responseMock());
-    await searchKeywords('success');
+    await searchKeywords('field', 'success');
     await waitFor(() => {
       expect(screen.getByText('No Results')).toBeInTheDocument();
     })
@@ -70,7 +70,7 @@ describe("Testing initial rendering", () => {
     renderSearch();
     const responseMock = () => JSON.stringify({message: "", filteredArticles: tempArray, keywords: ["sdf"]} as SearchProps);
     fetchMock.mockResponseOnce(responseMock());
-    const result = await searchKeywords('sdf');
+    const result = await searchKeywords('field', 'sdf');
     await waitFor(() => {
       expect(result?.filteredArticles).toStrictEqual(tempArray);
     })
