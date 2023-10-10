@@ -1,20 +1,48 @@
-import { Article } from '@/schema/article';
+import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
+import StarRatings from 'react-star-ratings';
+import Cookies from 'js-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
-import DOMAIN from '../../../DOMAIN';
+import DOMAIN from '@/common/DOMAIN';
 
-export interface IndexProps {
-  data: {
-    message: string;
-    articleData: Article[];
-  };
+export type RatedArticle = Article & { rating: number | null };
+
+export interface ArticleProps {
+  articleData: RatedArticle[];
 }
 
 //returns table using data from VALIDATED articles
-const Index = ({ data }: IndexProps) => {
-  const headersList: DataRow<Article>[] = [
+const Index = ({ articleData }: ArticleProps) => {
+  useEffect(() => {
+    // Set user ID cookie on load
+    const userId = Cookies.get('userId');
+    if (!userId) {
+      const randomUserId = Math.random().toString(36).substring(7);
+      Cookies.set('userId', randomUserId, { expires: 365 /*days*/ });
+    }
+  }, []);
+
+  const handleRatingChange = async (rating: number, doi: string) => {
+    try {
+      const userId = Cookies.get('userId');
+      const updatedRating = { userId, rating, doi };
+      const reqData = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedRating),
+      };
+      await fetch(DOMAIN + 'articles/rate', reqData);
+      console.log('Updated star rating: ' + rating + '/5');
+      window.location.reload();
+    } catch {
+      alert('Failed to update star rating');
+    }
+  };
+
+  const headersList: DataRow<RatedArticle>[] = [
     { key: 'title', label: 'Title' },
     {
       key: 'authors',
@@ -37,21 +65,44 @@ const Index = ({ data }: IndexProps) => {
       displayAs: (keywords: string[]) => keywords.join(', '),
     },
     { key: 'abstract', label: 'Abstract' },
+    {
+      key: 'rating',
+      label: 'Star Rating',
+      displayAs: (rating: number | null, data) => (
+        <StarRatings
+          name="rating"
+          rating={Math.round(rating ?? 0)}
+          numberOfStars={5}
+          changeRating={(newRating: number) => {
+            handleRatingChange(newRating, data.doi);
+          }}
+          starRatedColor="blue"
+          starHoverColor="darkcyan"
+          starDimension="20px"
+          starSpacing="1px"
+        />
+      ),
+    },
   ];
 
   return (
     <Container>
-      <SortableTable headers={headersList} data={data.articleData} />
+      <h1>Articles</h1>
+      <SortableTable headers={headersList} data={articleData} />
     </Container>
   );
 };
 
 //calls data from backend- connected to /articles
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await fetch(DOMAIN + 'articles').then((data) => data.json());
+  const { articleData } = await fetch(DOMAIN + 'articles').then((data) => data.json());
+  for (const article of articleData) {
+    const { rating } = await fetch(DOMAIN + 'articles/rating?doi=' + article.doi).then((data) => data.json());
+    article.rating = rating ?? null;
+  }
   return {
     props: {
-      data,
+      articleData,
     },
   };
 };

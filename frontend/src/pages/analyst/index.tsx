@@ -2,25 +2,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
-import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
-import DOMAIN from '../../../DOMAIN';
+import { PageProps, getServerData } from '../../common/queueCommon';
+import Link from 'next/link';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('analyst/index');
 
-const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'analyst/promote/' + id, {
-    method: 'PUT',
-  });
-  if (response.ok) {
-    alert('Successfully promoted article.');
-    window.location.reload();
-  } else {
-    alert('Failed to promote article.');
-  }
-};
-
-const Index = ({ queueData, duplicates }: PageProps) => {
+const Index = ({ queueData }: PageProps) => {
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
@@ -49,21 +37,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     { key: 'abstract', label: 'Abstract' },
     {
       computed: true,
-      label: 'Warnings',
-      content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''),
-    },
-    {
-      computed: true,
       label: 'Actions',
       content: (data) => (
         <div>
-          <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
-          </button>
           <br />
-          <button type="button" onClick={() => promote(data._id)}>
-            Mark Analysed
-          </button>
+          <Link href={`analyst/${data._id}`}>Edit</Link>
         </div>
       ),
     },
@@ -73,8 +51,8 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     <Container>
       <h1>Analyst View</h1>
       <h2>Articles in Queue Pending Analysis</h2>
-      <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
+      <SortableTable headers={headersList} data={queueData} />
+      {queueData.length === 0 ? <strong>No Articles Needing Analysis</strong> : ''}
     </Container>
   );
 };
