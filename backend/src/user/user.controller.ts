@@ -70,7 +70,7 @@ export class UserController {
   @Get('/doi/:doi')
   async getArticleByDoi(@Res() response, @Param('doi') doi: string) {
     try {
-      const existingArticle = await this.articleService.getArticleByDoi(doi);
+      const existingArticle = await this.articleService.getArticleByDoi(decodeURIComponent(doi));
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
