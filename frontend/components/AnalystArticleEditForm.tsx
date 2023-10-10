@@ -152,7 +152,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               defaultValue={articleData.journal}
               onChange={handleForm}
             />
-            {errors.journal && <p className={styles.Error}>{errors.keywords}</p>}
+            {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </Form.Group>
         </Row>
         <Row className={styles.RightColumn}>
@@ -163,7 +163,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               dataKey={'authors'}
               defaultValue={articleData.authors}
             />
-            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </Form.Group>
           <Form.Group as={Col}>
             <Row>
@@ -177,13 +177,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                   onChange={handleForm}
                   type="date"
                 />
-                {errors.date && <p className={styles.Error}>{errors.keywords}</p>}
+                {errors.date && <p className={styles.Error}>{errors.date}</p>}
               </Form.Group>
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
                 <Form.Control required data-key="doi" defaultValue={articleData.doi} onChange={handleForm} />
-                {errors.doi && <p className={styles.Error}>{errors.keywords}</p>}
+                {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>
             <Row>
@@ -197,7 +197,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                   onChange={handleForm}
                   type="number"
                 />
-                {errors.volume && <p className={styles.Error}>{errors.keywords}</p>}
+                {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
               </Form.Group>
               {/*issue*/}
               <Form.Group as={Col} controlId="issue">
@@ -209,7 +209,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                   onChange={handleForm}
                   type="number"
                 />
-                {errors.issue && <p className={styles.Error}>{errors.keywords}</p>}
+                {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
               </Form.Group>
             </Row>
             <Row>
@@ -238,7 +238,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                       type="number"
                     />
                   </Form.Group>
-                  {errors.pagerange && <p className={styles.Error}>{errors.keywords}</p>}
+                  {errors.pagerange && <p className={styles.Error}>{errors.pagerange}</p>}
                 </Row>
               </Form.Group>
             </Row>
@@ -257,7 +257,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
           <Form.Group as={Col} controlId="abstract">
             <Form.Label>Abstract</Form.Label>
             <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.keywords}</p>}
+            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>
