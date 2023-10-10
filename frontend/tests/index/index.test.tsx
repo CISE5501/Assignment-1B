@@ -42,3 +42,8 @@ test('should have table with an article entry', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
 });
+
+test('should have star rating', async () => {
+  renderHomeWithArticles();
+  expect(screen.getByTitle('4 Stars')).toBeInTheDocument();
+})
