@@ -136,7 +136,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   return (
     <div>
       <Form role="form" onSubmit={handleSubmit}>
-        <Row>
+        <Row className={styles.LeftColumn}>
           {/*title*/}
           <Form.Group as={Col} controlId="title">
             <Form.Label>Article Title</Form.Label>
@@ -155,7 +155,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
             {errors.journal && <p className={styles.Error}>{errors.keywords}</p>}
           </Form.Group>
         </Row>
-        <Row>
+        <Row className={styles.RightColumn}>
           <Form.Group as={Col} controlId="authors">
             {/*authors*/}
             <AuthorInput
@@ -253,7 +253,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
             </Row>
           </Form.Group>
         </Row>
-        <Row>
+        <Row className={styles.LeftColumn}>
           <Form.Group as={Col} controlId="abstract">
             <Form.Label>Abstract</Form.Label>
             <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />

@@ -22,9 +22,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 export const Page = ({ existingArticle }: QueuedArticleProps) => {
   return (
     <Container>
-      <div>
+      <button>
         <NavLink href="/analyst">Back</NavLink>
-      </div>
+      </button>
       <AnalystArticleSubmissionForm info={existingArticle} />
     </Container>
   );
