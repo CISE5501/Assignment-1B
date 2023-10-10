@@ -57,7 +57,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       errorValidation.pageRange = 'Page Ranges must be a valid positive number';
     }
 
-
     for (const author of formData.authors) {
       if (!author.includes(' ')) {
         errorValidation.authors = 'Author first and last name is required!';
@@ -153,7 +152,14 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
           <label>
             {' '}
             Article Title:
-            <input data-testid="title" required className={styles.Input} onChange={handleForm} type="text" data-key="title" />
+            <input
+              data-testid="title"
+              required
+              className={styles.Input}
+              onChange={handleForm}
+              type="text"
+              data-key="title"
+            />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </label>
           <br />
@@ -222,7 +228,13 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
             <label>
               {' '}
               DOI:
-              <input className={styles.Input} onChange={handleForm} type="text" data-key="doi" placeholder='doi:10.1000/182' />
+              <input
+                className={styles.Input}
+                onChange={handleForm}
+                type="text"
+                data-key="doi"
+                placeholder="doi:10.1000/182"
+              />
               {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
             </label>
             <br />

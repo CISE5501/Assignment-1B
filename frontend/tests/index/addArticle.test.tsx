@@ -13,10 +13,10 @@ describe('Testing initial rendering for article submission form', () => {
     renderPage();
     const form = screen.getByRole('form', { name: 'form' });
     const inputs = form.querySelectorAll('input');
-    expect((inputs.length)).toBe(11);
-    inputs.forEach(element => {
+    expect(inputs.length).toBe(11);
+    inputs.forEach((element) => {
       //console.log(element.dataset.key);
-      expect((element.value)).toBe('');
+      expect(element.value).toBe('');
     });
   });
 });

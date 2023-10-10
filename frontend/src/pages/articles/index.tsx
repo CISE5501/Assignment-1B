@@ -16,13 +16,12 @@ export interface ArticleProps {
 
 //returns table using data from VALIDATED articles
 const Index = ({ articleData }: ArticleProps) => {
-
   useEffect(() => {
     // Set user ID cookie on load
     const userId = Cookies.get('userId');
     if (!userId) {
       const randomUserId = Math.random().toString(36).substring(7);
-      Cookies.set('userId', randomUserId, { expires: 365/*days*/ });
+      Cookies.set('userId', randomUserId, { expires: 365 /*days*/ });
     }
   }, []);
 
@@ -38,8 +37,7 @@ const Index = ({ articleData }: ArticleProps) => {
       await fetch(DOMAIN + 'articles/rate', reqData);
       console.log('Updated star rating: ' + rating + '/5');
       window.location.reload();
-    }
-    catch {
+    } catch {
       alert('Failed to update star rating');
     }
   };
@@ -75,7 +73,9 @@ const Index = ({ articleData }: ArticleProps) => {
           name="rating"
           rating={Math.round(rating ?? 0)}
           numberOfStars={5}
-          changeRating={(newRating: number) => { handleRatingChange(newRating, data.doi); }}
+          changeRating={(newRating: number) => {
+            handleRatingChange(newRating, data.doi);
+          }}
           starRatedColor="blue"
           starHoverColor="darkcyan"
           starDimension="20px"
@@ -97,7 +97,7 @@ const Index = ({ articleData }: ArticleProps) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   const { articleData } = await fetch(DOMAIN + 'articles').then((data) => data.json());
   for (const article of articleData) {
-    const { rating } = await fetch(DOMAIN + 'articles/rating?doi=' + article.doi).then(data => data.json());
+    const { rating } = await fetch(DOMAIN + 'articles/rating?doi=' + article.doi).then((data) => data.json());
     article.rating = rating ?? null;
   }
   return {
