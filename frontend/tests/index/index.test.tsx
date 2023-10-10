@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages';
+import Index, { ArticleProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
-import { Article } from '@/src/schema/article';
+import { RatedArticle } from '../../src/pages/articles';
 
 const tempArray = [
   {
@@ -15,35 +15,23 @@ const tempArray = [
     doi: 'dsfsdfsdfsdf',
     keywords: ['sad', 'asd'],
     abstract: 'sfasd',
+    rating: 4,
   },
-] as Article[];
+] as RatedArticle[];
 
-function renderHome(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: [],
-    },
+function renderHome(props: Partial<ArticleProps> = {}) {
+  const defaultProps: ArticleProps = {
+    articleData: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
-function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: tempArray,
-    },
+function renderHomeWithArticles(props: Partial<ArticleProps> = {}) {
+  const defaultProps: ArticleProps = {
+    articleData: tempArray,
   };
   return render(<Index {...defaultProps} {...props} />);
 }
-
-test('should display 3 links', async () => {
-  renderHome();
-  expect(screen.getByText('Add new Article')).toBeInTheDocument();
-  expect(screen.getByText('Moderator')).toBeInTheDocument();
-  expect(screen.getByText('Analyst')).toBeInTheDocument();
-});
 
 test('should have empty table', async () => {
   renderHome();
@@ -53,4 +41,9 @@ test('should have empty table', async () => {
 test('should have table with an article entry', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
+});
+
+test('should have star rating', async () => {
+  renderHomeWithArticles();
+  expect(screen.getByTitle('4 Stars')).toBeInTheDocument();
 });

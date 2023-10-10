@@ -19,7 +19,7 @@ export type DataRow<T> = {
   label: string;
   key: keyof T;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  displayAs?: (data: any) => React.JSX.Element | string;
+  displayAs?: (data: any, row: T) => React.JSX.Element | string;
 };
 
 export type SortableTableHeader<T> = ComputedRow<T> | DataRow<T>;
@@ -71,11 +71,13 @@ function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
         <tr key={i}>
           {headers.map((header, j) =>
             'computed' in header ? (
-              <td key={'computed' + j}>{header.content(row)}</td>
+              <td data-testid={header.label.toString()} key={'computed' + j}>
+                {header.content(row)}
+              </td>
             ) : (
-              <td key={header.key.toString()}>
+              <td data-testid={header.label.toString()} key={header.key.toString()}>
                 {header.displayAs ? (
-                  header.displayAs(row[header.key])
+                  header.displayAs(row[header.key], row)
                 ) : (
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   <span>{row[header.key] as any}</span>
