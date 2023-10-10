@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
+import fieldnames from '../table/fieldNames.json';
+import {useCallback} from 'react';
+
+//not a fan of this code either, I was just getting desperate
+type SortKeys = keyof fields
+type SortOrder = 'asc' | 'desc';
+
+type fields = typeof fieldnames
 
 export type ComputedRow<T> = {
   computed: true;
@@ -21,26 +29,34 @@ interface SortableTableProps<T> {
   data: T[];
 }
 
-//type sortKeys  = typeof headers;
-//type SortOrder = 'asc' | 'desc';
+//for sorting the table, using any for table data to get rid of an error
+//not good code, was getting desperate
+function SortData({tableData, sortKey, reverse}: {tableData: any, sortKey: SortKeys, reverse: boolean})
+{
+  if(!sortKey) return tableData
+
+  const sortedData = tableData.sort((a, b) =>{
+    return a[sortKey] > b[sortKey] ? 1 : -1
+  }) 
+
+  if(reverse)
+  {
+    return sortedData.reverse()
+  }
+
+  return tableData
+}
 
 //retrieves data sorted as a table
 function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
 
-  let heads: string[] = []
+  const [sortKey, setSortKey] = useState<SortKeys>('Title'); 
+  const [SortOrder, setSortOrder] = useState<SortOrder>('asc'); 
 
-  for(var i = 0; i < headers.map.length; i++)
-  {
-    heads[i] = headers[i].label;
-  }
-
-  //I am well aware this code won't, this was not the only thing I tried and was getting desperate
-
-  type SortKeys = typeof heads[0]
-  type SortOrder = 'asc' | 'desc';
-
-  const [sortKey, setSortKey] = useState<SortKeys>(); 
-  const [SortOrder, setSortOrder] = useState<'asc'>(); 
+  const sortedData = useCallback(() => 
+    SortData({tableData: data, sortKey, reverse: SortOrder === 'desc'}), 
+    [data, sortKey, SortOrder]
+    );
 
   return (<Table className="md-5">
     <thead>
