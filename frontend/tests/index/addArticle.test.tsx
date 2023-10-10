@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, getAllByRole, render, screen } from '@testing-library/react';
-import ArticleSubmissionForm from '../../components/ArticleSubmissionForm';
+import ArticleSubmissionForm from '../../components/form/ArticleSubmissionForm';
 import '@testing-library/jest-dom';
 
 function renderPage() {

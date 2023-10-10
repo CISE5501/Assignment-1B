@@ -3,7 +3,7 @@ import DOMAIN from '@/common/DOMAIN';
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/schema/queuedArticle';
 import { Container, NavLink } from 'react-bootstrap';
-import AnalystArticleSubmissionForm from '../../../components/AnalystArticleEditForm';
+import AnalystArticleSubmissionForm from '../../../components/form/AnalystArticleEditForm';
 
 export interface QueuedArticleProps {
   existingArticle: QueuedArticle;
