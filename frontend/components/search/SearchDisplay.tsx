@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../components/table/SortableTable';
@@ -56,14 +56,14 @@ const SearchDisplay = () => {
         event.preventDefault();
         const query = document.querySelector('input')?.value;
         if (!query) return (<p>gg</p>);
-        let obj = await searchKeywords(query);
+        const obj = await searchKeywords(query);
         if (!obj) return (<p>error fetching</p>);
         setData(obj);
         (document.getElementById('result') as HTMLImageElement).hidden = false;
     }
 
     return (
-        <div className="container">
+        <div data-testid= "container" className="container">
             <h2>Search for Keywords</h2>
             <form onSubmit={handleSubmit}>
                 <input data-testid="searchInput" type="text" size={80} name="keywords" />

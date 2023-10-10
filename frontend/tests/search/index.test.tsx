@@ -1,8 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import SearchDisplay, {SearchProps} from '../../components/search/SearchDisplay';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import SearchDisplay, {SearchProps, searchKeywords} from '../../components/search/SearchDisplay';
 import { Article } from '@/schema/article';
+import { enableFetchMocks } from 'jest-fetch-mock'
 
 const tempArray = [
   {
@@ -25,9 +26,14 @@ function renderSearch() {
   );
 }
 
+beforeEach(() => {
+  fetchMock.resetMocks();
+})
+
 afterEach(cleanup);
 
 describe("Testing initial rendering", () => {
+  enableFetchMocks();
   test("Test 1: should have an input field and submit button on load", () => {
     renderSearch();
     expect(screen.getByTestId('searchInput')).toBeInTheDocument();
@@ -35,22 +41,38 @@ describe("Testing initial rendering", () => {
     expect(screen.getByTestId('result')).not.toBeVisible();
   });
 
-  test("Test 2: clicking on the submit button calls the handleSubmit function", () => {
+  test("Test 2: typing in form input changes its value", () => {
+    renderSearch();
+    const container = screen.getByTestId('container');
+    const form = container.querySelector('input');
+    fireEvent.change(screen.getByTestId('searchInput'), {target: {value: "t1"}});
+    expect(form?.value).toBe('t1');
+  });
+
+  test("Test 3: submitting the form calls the handleSubmit function", () => {
     renderSearch();
     const mockSearch = jest.fn();
     const form = screen.getByTestId('searchInput').onsubmit=mockSearch;
-    fireEvent.change(screen.getByTestId('searchInput'), {target: {value: "t1"}})
     fireEvent.submit(screen.getByTestId('searchInput'));
     expect(mockSearch).toHaveBeenCalled();
   });
-  test("Test 3: clicking on search will call fetch", () => {
-    global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () => Promise.resolve({tempArray}),
-    }),
-  ) as jest.Mock; 
-  renderSearch();
-    expect(screen.getByTestId('result')).not.toBeVisible();
-    fireEvent.click(screen.getByTestId('searchButton'));
+  test("Test 4: submitting the form will say no matches found if the keyword entered isn't stored in the database", async () => {
+    renderSearch();
+    const responseMock = () => JSON.stringify({});
+    fetchMock.mockResponseOnce(responseMock());
+    await searchKeywords('success');
+    await waitFor(() => {
+      expect(screen.getByText('No Results')).toBeInTheDocument();
+    })
+  })
+
+  test("Test 5: submitting the form will return data if the keyword entered is stored in the database", async () => {
+    renderSearch();
+    const responseMock = () => JSON.stringify({message: "", filteredArticles: tempArray, keywords: ["sdf"]} as SearchProps);
+    fetchMock.mockResponseOnce(responseMock());
+    const result = await searchKeywords('sdf');
+    await waitFor(() => {
+      expect(result?.filteredArticles).toStrictEqual(tempArray);
+    })
   })
 });
