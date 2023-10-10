@@ -23,6 +23,7 @@ function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
     queueData: [],
     duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
@@ -30,7 +31,8 @@ function renderHome(props: Partial<IndexProps> = {}) {
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
     queueData: tempArray,
-    duplicates: ['dsfsdfsdfsdf'],
+    duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }

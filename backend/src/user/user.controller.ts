@@ -2,6 +2,9 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nes
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { RejectedEntryService } from 'src/models/rejected/rejected.service';
+import { CreateRatingDto } from 'src/models/ratings/dto/create-rating.dto';
+import { StarRatingService } from 'src/models/ratings/starRating.service';
 
 //controller- routes articles to get/post methods
 
@@ -10,6 +13,8 @@ export class UserController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
+    private readonly rejectedEntryService: RejectedEntryService,
+    private readonly starRatingService: StarRatingService,
   ) {}
 
   @Get()
@@ -78,6 +83,39 @@ export class UserController {
     }
   }
 
+  @Get('/rating')
+  async getArticleRating(@Res() response, @Query('doi') doi: string) {
+    try {
+      const rating = await this.starRatingService.getAverageRating(decodeURIComponent(doi));
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rating fetched successfully',
+        rating,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rating fetching failed',
+        rating: null,
+      });
+    }
+  }
+
+  @Get('/rejected')
+  async getRejectedDOIs(@Res() response) {
+    try {
+      const rejectedEntries = await this.rejectedEntryService.getAllEntries();
+      const rejectedDOIs = rejectedEntries.map((item) => item.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'Rejected entries found successfully',
+        rejectedDOIs,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Failed to fetch rejected entries',
+        rejectedDOIs: [],
+      });
+    }
+  }
+
   @Post('/new')
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
@@ -88,9 +126,23 @@ export class UserController {
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
         message: 'Error: Article not created!',
-        error: 'Bad Request',
+      });
+    }
+  }
+
+  @Post('/rate')
+  async rateArticle(@Res() response, @Body() createRatingDto: CreateRatingDto) {
+    try {
+      const newRating = await this.starRatingService.addRating(createRatingDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rated successfully',
+        data: newRating,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: Article not rated',
+        data: {},
       });
     }
   }

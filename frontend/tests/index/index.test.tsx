@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Index, { ArticleProps } from '../../src/pages/articles';
 import '@testing-library/jest-dom';
-import { Article } from '@/schema/article';
+import { RatedArticle } from '../../src/pages/articles';
 
 const tempArray = [
   {
@@ -15,8 +15,9 @@ const tempArray = [
     doi: 'dsfsdfsdfsdf',
     keywords: ['sad', 'asd'],
     abstract: 'sfasd',
+    rating: 4,
   },
-] as Article[];
+] as RatedArticle[];
 
 function renderHome(props: Partial<ArticleProps> = {}) {
   const defaultProps: ArticleProps = {
@@ -41,3 +42,8 @@ test('should have table with an article entry', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
 });
+
+test('should have star rating', async () => {
+  renderHomeWithArticles();
+  expect(screen.getByTitle('4 Stars')).toBeInTheDocument();
+})
