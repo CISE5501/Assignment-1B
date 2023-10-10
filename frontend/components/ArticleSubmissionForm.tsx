@@ -7,7 +7,12 @@ import { URL_REGEX } from '../../backend/src/common';
 type Props = object;
 
 type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
-type ErrorsMap = Record<string, string[]>;
+type ErrorsMap = { [key: string]: string };
+
+interface AuthorField {
+  id: number;
+  value: string;
+}
 
 const ArticleSubmissionForm: React.FC<Props> = () => {
   const [formData, setFormData] = useState<QueuedArticleSubmission>({
@@ -25,12 +30,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
   });
 
   const [errors, setErrors] = useState<ErrorsMap>({});
-
-  interface AuthorField {
-    id: number;
-    value: string;
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [index, setIndex] = useState<number[]>([]);
   const [counter, setCounter] = useState<number>(1);
   const [authorFields, setAuthorFields] = useState<AuthorField[]>([{ id: 0, value: '' }]);
@@ -42,7 +41,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
 
     // Show warning when field contains URLs
     if (URL_REGEX.test(formData.abstract)) {
-      errorValidation.abstract.push(`Abstract must not contain a URL`);
+      errorValidation.abstract = `Abstract must not contain a URL`;
       formData.abstract = formData.abstract.replace(URL_REGEX, '[URL removed]');
     }
 
@@ -55,7 +54,7 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
 
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
-      errorValidation.pageRange.push('Page Range must be an array of two numbers');
+      errorValidation.pageRange = 'Page Range must be an array of two numbers';
     }
 
     if (formData.pageRange[0] > formData.pageRange[1]) {
