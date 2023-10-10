@@ -2,7 +2,7 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../components/table/SortableTable';
-import DOMAIN from '@/common/DOMAIN';
+import DOMAIN from '../../DOMAIN';
 
 export interface SearchProps {
   message: string;
