@@ -1,4 +1,4 @@
-import DOMAIN from '../../DOMAIN';
+import DOMAIN from '@/common/DOMAIN';
 import SearchDisplay from '../../components/search/SearchDisplay';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
