@@ -46,4 +46,4 @@ test('should have table with an article entry', async () => {
 test('should have star rating', async () => {
   renderHomeWithArticles();
   expect(screen.getByTitle('4 Stars')).toBeInTheDocument();
-})
+});
