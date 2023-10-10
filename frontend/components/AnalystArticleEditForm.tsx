@@ -136,7 +136,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   // TODO change onChange to on deselect
   return (
     <div>
-      <Form onSubmit={handleSubmit}>
+      <Form role="form" onSubmit={handleSubmit}>
         <Row>
           {/*title*/}
           <Form.Group as={Col} controlId="title">
