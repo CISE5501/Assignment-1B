@@ -83,10 +83,10 @@ export class UserController {
     }
   }
 
-  @Get('/rating/doi/:doi')
-  async getArticleRating(@Res() response, @Param('doi') doi: string) {
+  @Get('/rating')
+  async getArticleRating(@Res() response, @Query('doi') doi: string) {
     try {
-      const rating = await this.starRatingService.getAverageRating(doi);
+      const rating = await this.starRatingService.getAverageRating(decodeURIComponent(doi));
       return response.status(HttpStatus.OK).json({
         message: 'Article rating fetched successfully',
         rating,

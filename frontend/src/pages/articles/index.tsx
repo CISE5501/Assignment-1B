@@ -97,7 +97,7 @@ const Index = ({ articleData }: ArticleProps) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   const { articleData } = await fetch(DOMAIN + 'articles').then((data) => data.json());
   for (const article of articleData) {
-    const { rating } = await fetch(DOMAIN + 'articles/rating/doi/' + article.doi).then(data => data.json());
+    const { rating } = await fetch(DOMAIN + 'articles/rating?doi=' + article.doi).then(data => data.json());
     article.rating = rating ?? null;
   }
   return {
