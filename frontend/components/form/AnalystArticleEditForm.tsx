@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import DOMAIN from '@/common/DOMAIN';
-import KeywordsInput from '../KeywordsInput';
+import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
-import AuthorInput from '../AuthorInput';
+import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 
 export interface AnalystFormProps {
