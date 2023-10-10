@@ -38,11 +38,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     const errorValidation: { [key: string]: string } = {};
 
     if (isNaN(formData.volume) || formData.volume < 0) {
-      errorValidation.volume = 'Volume must be a valid number';
+      errorValidation.volume = 'Volume must be a valid positive number';
     }
 
     if (isNaN(formData.issue) || formData.issue < 0) {
-      errorValidation.issue = 'Issue must be a valid number';
+      errorValidation.issue = 'Issue must be a valid positive number';
     }
 
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
@@ -54,8 +54,9 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
 
     if (formData.pageRange[0] < 0 || formData.pageRange[1] < 0) {
-      errorValidation.pageRange = 'Page Ranges must be a valid number';
+      errorValidation.pageRange = 'Page Ranges must be a valid positive number';
     }
+
 
     for (const author of formData.authors) {
       if (!author.includes(' ')) {
@@ -63,11 +64,11 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
 
-    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
+    const doiCheckRegex = /doi:\S+\/\S+/;
     const validDOI = doiCheckRegex.test(formData.doi);
 
     if (!validDOI) {
-      errorValidation.doi = 'Not a valid DOI! (e.g. doi:10.1000/182)';
+      errorValidation.doi = 'Not a valid DOI!';
     }
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
