@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Col, Row } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './SubmissionForm.module.scss';
 

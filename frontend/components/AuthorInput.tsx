@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Form, Col, InputGroup, Button } from 'react-bootstrap';
 
 interface AuthorInputProps {
@@ -20,7 +20,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
   const [authorFields, setAuthorFields] = useState<AuthorField[]>(
     defaultValue.map((value, index) => ({ id: index, value: value })),
   );
-  const [index, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
+  const [, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
   const [counter, setCounter] = useState<number>(authorFields.length);
   const [tempIndex, setTempIndex] = useState<number>(0);
 
@@ -71,7 +71,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
             <Form.Label>Author</Form.Label>
             <InputGroup>
               <Form.Control
-                onChange={(e) => handleAuthorChange(e as any, index.id)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleAuthorChange(e, index.id)}
                 defaultValue={index.value}
               />
               <Button type="button" onClick={() => deleteAuthor(index.id)}>

@@ -7,7 +7,7 @@ type Props = object;
 
 type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
 
-const ArticleSubmissionForm: React.FC<Props> = ({}) => {
+const ArticleSubmissionForm: React.FC<Props> = () => {
   const [formData, setFormData] = useState<QueuedArticleSubmission>({
     title: '',
     authors: [],

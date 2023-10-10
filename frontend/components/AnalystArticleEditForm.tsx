@@ -5,8 +5,7 @@ import DOMAIN from '../DOMAIN';
 import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
 import AuthorInput from './AuthorInput';
-import { useForm } from 'react-hook-form';
-import { Form, Col, Row, InputGroup, Button } from 'react-bootstrap';
+import { Form, Col, Row, Button } from 'react-bootstrap';
 
 export interface AnalystFormProps {
   info: QueuedArticle;
@@ -15,14 +14,14 @@ export interface AnalystFormProps {
 type ArticleSubmission = Omit<Article, '_id'>;
 
 const formatDate = (dateText: string) => {
-  let sArray = dateText.split('-');
-  let year = sArray[0];
-  let month = sArray[1].padStart(2, '0');
-  let day = sArray[2].padStart(2, '0');
+  const sArray = dateText.split('-');
+  const year = sArray[0];
+  const month = sArray[1].padStart(2, '0');
+  const day = sArray[2].padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
-const deleteOldArticle = async (id: string): Promise<any> => {
+const deleteOldArticle = async (id: string): Promise<void> => {
   const response = await fetch(DOMAIN + 'analyst/id/' + id, {
     method: 'DELETE',
   });
@@ -51,7 +50,7 @@ const sendArticle = async (data: string, id: string): Promise<void> => {
 };
 
 const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
-  let articleData = data.info;
+  const articleData = data.info;
   const [formData, setFormData] = useState<ArticleSubmission>({
     title: articleData.title,
     authors: articleData.authors,
