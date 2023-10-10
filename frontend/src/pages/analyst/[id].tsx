@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
 import DOMAIN from '../../../DOMAIN';
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/schema/queuedArticle';
@@ -7,29 +6,26 @@ import { Container, NavLink } from 'react-bootstrap';
 import AnalystArticleSubmissionForm from '../../../components/AnalystArticleEditForm';
 
 export interface QueuedArticleProps {
-  articleInfo: {
-    message: string;
-    existingArticle: QueuedArticle;
-  };
+  existingArticle: QueuedArticle;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  if (params && params.id) {
-    const articleInfo = await fetch(`${DOMAIN}analyst/id/${params.id}`).then((data) => data.json());
-    return { props: { articleInfo } };
+  if (params?.id) {
+    const { existingArticle } = await fetch(`${DOMAIN}analyst/id/${params.id}`).then((data) => data.json());
+    return { props: { existingArticle } };
   }
   return {
     props: { error: true },
   };
 };
 
-export const Page = ({ articleInfo }: QueuedArticleProps) => {
+export const Page = ({ existingArticle }: QueuedArticleProps) => {
   return (
     <Container>
       <div>
         <NavLink href="/analyst">Back</NavLink>
       </div>
-      <AnalystArticleSubmissionForm info={articleInfo.existingArticle} />
+      <AnalystArticleSubmissionForm info={existingArticle} />
     </Container>
   );
 };
