@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Row, Table } from 'react-bootstrap';
 import fieldnames from '../table/fieldNames.json';
 import {useCallback} from 'react';
 
+//Needed for setting the 
 //not a fan of this code either, I was just getting desperate
 type SortKeys = keyof fields
 type SortOrder = 'asc' | 'desc';
 
+//Just to get a hold of the field keys and set the fields type to store one of any of the different keys
 type fields = typeof fieldnames
 
 export type ComputedRow<T> = {
@@ -29,32 +31,42 @@ interface SortableTableProps<T> {
   data: T[];
 }
 
-//for sorting the table, using any for table data to get rid of an error
+//for sorting the table, the idea is that it would take in a key to sort by and whether it should be in ascending or descending order. 
 //not good code, was getting desperate
-function SortData({tableData, sortKey, reverse}: {tableData: any, sortKey: SortKeys, reverse: boolean})
+
+//was using these for reference/holding onto scrapped ideas:
+//function SortableTable  <T,>({ headers, data }: SortableTableProps<T>)
+//function SortData<T, SortableTableHeader>({tableData, sortKey, reverse}: {tableData: T[], sortKey: SortKeys, reverse: boolean})
+//function SortData<T>({headers, data}: SortableTableProps<T>, {sortKey, reverse}: { sortKey: SortKeys, reverse: boolean})
+function SortData<T>({data, sortKey, reverse}: {data: T[], sortKey: SortKeys, reverse: boolean}) //Liam
 {
-  if(!sortKey) return tableData
+  if(!sortKey) return data
+  //why can't something just work
 
-  //const sortedData = tableData.sort((a, b) =>{
-  //  return a[sortKey] > b[sortKey] ? 1 : -1
-  //}) 
+  //I know this is just gibberish at this point, 
+  //I was just throwing things at the wall
+  const sortedData = data.sort((a) => {
+    return a > sortKey ? 1 : -1 
+  })
 
-  //if(reverse)
-  //{
-    //return sortedData.reverse()
-  //}
+  if(reverse)
+  {
+    return sortedData.reverse()
+  }
 
-  return tableData
+  return sortedData
 }
 
-//retrieves data sorted as a table
+//retrieves data sorted as a table, I had to change to a function because I couldn't get the right parameters with a const
 function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
 
+  //selecting which state to use, was going to be dynamic
   const [sortKey, setSortKey] = useState<SortKeys>('Title'); 
   const [SortOrder, setSortOrder] = useState<SortOrder>('asc'); 
 
+  //calling the sort function
   const sortedData = useCallback(() => 
-    SortData({tableData: data, sortKey, reverse: SortOrder === 'desc'}), 
+    SortData({data, sortKey, reverse: SortOrder === 'desc'}), 
     [data, sortKey, SortOrder]
     );
 
@@ -67,6 +79,9 @@ function SortableTable  <T,>({ headers, data }: SortableTableProps<T>) {
       </tr>
     </thead>
     <tbody data-testid="data-table-body">
+      {//was originally going to change data.map to something like this: sortedData.map((row, i) => ( 
+      //Didn't go through with becase I couldn't get the output correct on the sortdata function //Liam 
+      }
       {data.map((row, i) => (
         <tr key={i}>
           {headers.map((header, j) =>
