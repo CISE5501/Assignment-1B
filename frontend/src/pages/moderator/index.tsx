@@ -1,18 +1,15 @@
-import React from 'react';
-import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
-import SortableTable, { ComputedRow, DataRow } from '@/components/table/SortableTable';
-import { PageProps, handleDelete } from '@/common/queueCommon';
-import { getServerData } from '@/common/queueCommon';
-import DOMAIN from '@/DOMAIN';
+import { QueuedArticle } from '../../schema/queuedArticle';
+import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
+import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
+import DOMAIN from '@/common/DOMAIN';
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');
 
 const promote = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'moderator/promote/' + id, {
+  const response = await fetch(DOMAIN + 'moderator/promote/id/' + id, {
     method: 'PUT',
   });
   if (response.ok) {
@@ -24,7 +21,8 @@ const promote = async (id: string): Promise<void> => {
 };
 
 //returns table using data from queuedArticles where isModerated = false
-const Index = ({ queueData, duplicates }: PageProps) => {
+const Index = ({ queueData, duplicates, rejected }: PageProps) => {
+  const warning = { fontWeight: 'bold' };
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
@@ -54,7 +52,12 @@ const Index = ({ queueData, duplicates }: PageProps) => {
     {
       computed: true,
       label: 'Warnings',
-      content: (data) => (duplicates.includes(data.doi) ? <strong>Duplicate</strong> : ''),
+      content: (data) => (
+        <ul>
+          {duplicates.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
+      ),
     },
     {
       computed: true,
@@ -62,11 +65,11 @@ const Index = ({ queueData, duplicates }: PageProps) => {
       content: (data) => (
         <div>
           <button type="button" onClick={() => handleDelete('queue', data)}>
-            Delete
+            Reject
           </button>
           <br />
           <button type="button" onClick={() => promote(data._id)}>
-            Mark Moderated
+            Accept
           </button>
         </div>
       ),
@@ -75,12 +78,13 @@ const Index = ({ queueData, duplicates }: PageProps) => {
 
   return (
     <Container>
-      <Link href="/">Return Home</Link>
-      <br></br>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
-      <SortableTable headers={headersList} data={queueData.articleData} />
-      {queueData.articleData.length === 0 ? <strong>No Articles Needing Moderation</strong> : ''}
+      {queueData.length === 0 ? (
+        <strong>No Articles Needing Moderation</strong>
+      ) : (
+        <SortableTable headers={headersList} data={queueData} />
+      )}
     </Container>
   );
 };

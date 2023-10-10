@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/analyst/index';
+import Index, { IndexProps } from '@/pages/analyst';
 import '@testing-library/jest-dom';
-import { QueuedArticle } from '@/src/schema/queuedArticle';
+import { QueuedArticle } from '../../src/schema/queuedArticle';
 
 const tempArray = [
   {
@@ -21,36 +21,30 @@ const tempArray = [
 
 function renderHome(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: [],
-    },
+    queueData: [],
+    duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
 function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
   const defaultProps: IndexProps = {
-    data: {
-      message: '',
-      articleData: tempArray,
-    },
+    queueData: tempArray,
+    duplicates: [],
+    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
-
-test('should display 1 return link', async () => {
-  renderHome();
-  expect(screen.getByText('Return Home')).toBeInTheDocument();
-});
 
 test('should have empty table', async () => {
   renderHome();
   expect(screen.getAllByTestId('data-table-body').length).toBe(1);
 });
 
-test("should have table with an article entry and an 'Is Moderated' column", async () => {
+test('should have table with an article entry and buttons to analyse', async () => {
   renderHomeWithArticles();
   expect(screen.getByRole('table')).toBeInTheDocument();
-  expect(screen.getByText('Is Moderated')).toBeInTheDocument();
+  expect(screen.getByText('Actions')).toBeInTheDocument();
+  expect(screen.getByText('Edit')).toBeInTheDocument();
 });

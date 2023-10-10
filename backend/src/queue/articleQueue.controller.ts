@@ -2,12 +2,14 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Res, Delete } from '@ne
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
+import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 
 @Controller('queue')
 export class QueueController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
+    private readonly rejectedEntryService: RejectedEntryService,
   ) {}
 
   @Get()
@@ -57,7 +59,7 @@ export class QueueController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.getArticle(articleId);
@@ -70,10 +72,11 @@ export class QueueController {
     }
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      await this.rejectedEntryService.addEntry({ doi: deletedArticle.doi });
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
@@ -83,7 +86,7 @@ export class QueueController {
     }
   }
 
-  @Get('/includes/:id')
+  @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
       await this.queuedArticleService.getArticle(articleId);

@@ -48,7 +48,7 @@ export class AnalystController {
     }
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.getArticle(articleId);
@@ -61,7 +61,7 @@ export class AnalystController {
     }
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
@@ -74,7 +74,7 @@ export class AnalystController {
     }
   }
 
-  @Put('/promote/:id')
+  @Put('/promote/id/:id')
   async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       // Get article
