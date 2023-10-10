@@ -26,10 +26,9 @@ const deleteOldArticle = async (id: string): Promise<void> => {
     method: 'DELETE',
   });
   if (response.ok) {
-    alert('Successfully deleted.');
     window.location.replace('/analyst');
   } else {
-    alert('Failed to delete.');
+    alert('Failed to delete old article.');
   }
 };
 
@@ -42,7 +41,7 @@ const sendArticle = async (data: string, id: string): Promise<void> => {
     body: data,
   });
   if (response.ok) {
-    alert(response.status + ' Successfully sent article');
+    alert('Successfully sent article');
     deleteOldArticle(id); //comment this line out if you don't want to create articles every time
   } else {
     alert('Failed');
