@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Put, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Put, Res, Delete } from '@nestjs/common';
 import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
