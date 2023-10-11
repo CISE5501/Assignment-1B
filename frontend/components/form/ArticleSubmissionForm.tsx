@@ -26,6 +26,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
+  // When sendArticle is called the article data is in json format 
   const sendArticle = async (formData: QueuedArticleSubmission): Promise<void> => {
     await fetch(DOMAIN + 'articles/new', {
       method: 'POST',
@@ -46,6 +47,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       });
   };
 
+  // Error handlings
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,6 +71,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
+    // DOI check making sure that it is a valid doi format
     const doiCheckRegex = /doi:\S+\/\S+/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
@@ -82,6 +85,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     }
   };
 
+  // handles the input form that updates the formData based on input
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
     const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
@@ -104,10 +108,12 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     }
   };
 
+  // updates keywords with a new array
   const handleKeywordChange = (newArray: string[]) => {
     setFormData({ ...formData, ['keywords']: newArray });
   };
 
+  // updates authors with a new array
   const handleAuthorChange = (newArray: string[]) => {
     setFormData({ ...formData, ['authors']: newArray });
   };

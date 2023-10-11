@@ -51,6 +51,7 @@ const SearchDisplay = () => {
     filteredArticles: [],
     keywords: [],
   });
+  // retrieves searched query and updates the components with the search results
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const field = document.querySelector('select')?.value;
