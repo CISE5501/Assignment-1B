@@ -20,7 +20,7 @@ export class UserController {
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
     private readonly starRatingService: StarRatingService,
-  ) { }
+  ) {}
 
   // getArticles: Retrieves all stored article objects from articles database
   @Get()
@@ -38,7 +38,11 @@ export class UserController {
 
   // findArticlesByQuery: Retrieves a list of article objects that are relevant to a specific method or methods (keywords)
   @Get('/filter')
-  async findArticlesByQuery(@Query('keywords') keywords: string, @Query('field') field: string, @Res() response) {
+  async findArticlesByQuery(
+    @Query('keywords') keywords: string,
+    @Query('field') field: string,
+    @Res() response,
+  ) {
     try {
       const articleData = await this.articleService.getAllArticles();
       const filteredArticles: typeof articleData = [];

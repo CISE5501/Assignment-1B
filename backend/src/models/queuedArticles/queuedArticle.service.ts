@@ -39,7 +39,7 @@ export class QueuedArticleService {
   async getAllModeratedArticles(): Promise<IQueuedArticle[]> {
     const articleData = await this.articleModel.find().where({ isModerated: true });
     if (!articleData || articleData.length == 0) {
-      []
+      [];
     }
     return articleData;
   }
@@ -57,7 +57,10 @@ export class QueuedArticleService {
     return newArticle.save();
   }
 
-  async updateQueuedArticle(articleId: string, updateArticleDto: UpdateQueuedArticleDto): Promise<IQueuedArticle> {
+  async updateQueuedArticle(
+    articleId: string,
+    updateArticleDto: UpdateQueuedArticleDto,
+  ): Promise<IQueuedArticle> {
     const existingArticle = await this.articleModel.findByIdAndUpdate(articleId, updateArticleDto, {
       new: true,
     });

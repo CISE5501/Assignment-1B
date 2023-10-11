@@ -8,22 +8,21 @@ import { GetServerSideProps } from 'next';
 const DOMAIN = process.env.DOMAIN;
 
 export type PageProps = {
-  queueData : QueuedArticle[],
+  queueData: QueuedArticle[];
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const { articleData: queueData } = await fetch(DOMAIN + "analyst/index").then((data) => data.json());
+    const { articleData: queueData } = await fetch(DOMAIN + 'analyst/index').then((data) => data.json());
     return {
       props: {
-        queueData
+        queueData,
       },
     };
   } catch {
     throw 'Failed to fetch resources. Please reload the page.';
   }
 };
-
 
 const Index = ({ queueData }: PageProps) => {
   const headersList: (
@@ -68,7 +67,11 @@ const Index = ({ queueData }: PageProps) => {
     <Container>
       <h1>Analyst View</h1>
       <h2>Articles in Queue Pending Analysis</h2>
-      {queueData.length === 0 ? <strong>No Articles Needing Analysis</strong> : <SortableTable headers={headersList} data={queueData} />}
+      {queueData.length === 0 ? (
+        <strong>No Articles Needing Analysis</strong>
+      ) : (
+        <SortableTable headers={headersList} data={queueData} />
+      )}
     </Container>
   );
 };

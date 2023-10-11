@@ -16,7 +16,6 @@ import { UpdateRatingDto } from './dto/update-rating.dto';
 export class StarRatingService {
   constructor(@InjectModel('StarRating') private articleModel: Model<IStarRating>) {}
 
-  
   async getAllRatings(): Promise<IStarRating[]> {
     const allRatings = await this.articleModel.find();
     return allRatings;
@@ -44,7 +43,7 @@ export class StarRatingService {
     const avgRating = ratingsSum / starRatings.length;
     return avgRating;
   }
-  
+
   async createRating(createRatingDto: CreateRatingDto): Promise<IStarRating> {
     const newRating = await new this.articleModel(createRatingDto);
     return newRating.save();

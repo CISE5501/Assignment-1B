@@ -18,7 +18,8 @@ export class ModeratorController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
-    private readonly rejectedEntryService: RejectedEntryService) {}
+    private readonly rejectedEntryService: RejectedEntryService,
+  ) {}
 
   // getArticles: returns list of queuedArticle objects which have NOT been moderated
   @Get('/index')
@@ -30,7 +31,7 @@ export class ModeratorController {
         articleData,
       });
     } catch (err) {
-      return response.status(err.status).json({message: err.response});
+      return response.status(err.status).json({ message: err.response });
     }
   }
 
@@ -88,7 +89,9 @@ export class ModeratorController {
   @Put('/promote/id/:id')
   async promoteQueuedArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle = await this.queuedArticleService.updateQueuedArticle(articleId, { isModerated: true });
+      const existingArticle = await this.queuedArticleService.updateQueuedArticle(articleId, {
+        isModerated: true,
+      });
       return response.status(HttpStatus.OK).json({
         message: 'Article marked as moderated successfully',
         existingArticle,

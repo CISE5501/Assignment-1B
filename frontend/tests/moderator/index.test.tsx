@@ -1,5 +1,5 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/moderator';
+import Index, { PageProps } from '@/pages/moderator';
 import '@testing-library/jest-dom';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 
@@ -49,7 +49,7 @@ const duplicates = ['doi1', 'doi3', 'doi4'];
 const rejected = ['doi1', 'doi2', 'doi5'];
 
 function renderPage(articles: QueuedArticle[], duplicates: string[], rejected: string[]) {
-  const defaultProps: IndexProps = {
+  const defaultProps: PageProps = {
     queueData: articles,
     duplicates: duplicates,
     rejected: rejected,
@@ -62,13 +62,6 @@ function checkHeaderContents(tHeader: HTMLElement) {
   const columns = within(row).getAllByRole('columnheader');
   expect(columns.length).toBe(12);
 }
-
-function checkRowContents(
-  tableRows: HTMLElement[],
-  articles: QueuedArticle[],
-  duplicates: string[],
-  rejected: string[],
-) {}
 
 afterEach(cleanup);
 

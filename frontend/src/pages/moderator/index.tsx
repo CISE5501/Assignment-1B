@@ -10,12 +10,14 @@ export type PageProps = {
   queueData: QueuedArticle[];
   duplicates: string[];
   rejected: string[];
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const { articleData: queueData } = await fetch(DOMAIN + 'moderator/index').then((data) => data.json());
-    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'moderator/duplicates').then((data) => data.json());
+    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'moderator/duplicates').then((data) =>
+      data.json(),
+    );
     const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'moderator/rejected').then((data) => data.json());
     return {
       props: {
@@ -59,74 +61,77 @@ const acceptArticle = async (id: string) => {
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates, rejected }: PageProps) => {
-
   const handleReject = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault;
     rejectArticle(id);
-  }
+  };
   const handleAccept = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault;
     acceptArticle(id);
-  }
+  };
   const warning = { fontWeight: 'bold' };
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
   )[] = [
-      { key: 'title', label: 'Title' },
-      {
-        key: 'authors',
-        label: 'Authors',
-        displayAs: (authors: string[]) => authors.join('; '),
-      },
-      { key: 'date', label: 'Date' },
-      { key: 'journal', label: 'Journal' },
-      { key: 'volume', label: 'Volume' },
-      { key: 'issue', label: 'Issue' },
-      {
-        key: 'pageRange',
-        label: 'Page Range',
-        displayAs: ([start, end]: [number, number]) => start + '-' + end,
-      },
-      { key: 'doi', label: 'DOI' },
-      {
-        key: 'keywords',
-        label: 'Keywords',
-        displayAs: (keywords: string[]) => keywords.join(', '),
-      },
-      { key: 'abstract', label: 'Abstract' },
-      {
-        computed: true,
-        label: 'Warnings',
-        content: (data) => (
-          <ul>
-            {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
-            {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
-          </ul>
-        ),
-      },
-      {
-        computed: true,
-        label: 'Actions',
-        content: (data) => (
-          <div>
-            <button type="button" onClick={(event) => handleReject(event, data._id)}>
-              Reject
-            </button>
-            <br />
-            <button type="button" onClick={(event) => handleAccept(event, data._id)}>
-              Accept
-            </button>
-          </div>
-        ),
-      },
-    ];
+    { key: 'title', label: 'Title' },
+    {
+      key: 'authors',
+      label: 'Authors',
+      displayAs: (authors: string[]) => authors.join('; '),
+    },
+    { key: 'date', label: 'Date' },
+    { key: 'journal', label: 'Journal' },
+    { key: 'volume', label: 'Volume' },
+    { key: 'issue', label: 'Issue' },
+    {
+      key: 'pageRange',
+      label: 'Page Range',
+      displayAs: ([start, end]: [number, number]) => start + '-' + end,
+    },
+    { key: 'doi', label: 'DOI' },
+    {
+      key: 'keywords',
+      label: 'Keywords',
+      displayAs: (keywords: string[]) => keywords.join(', '),
+    },
+    { key: 'abstract', label: 'Abstract' },
+    {
+      computed: true,
+      label: 'Warnings',
+      content: (data) => (
+        <ul>
+          {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
+      ),
+    },
+    {
+      computed: true,
+      label: 'Actions',
+      content: (data) => (
+        <div>
+          <button type="button" onClick={(event) => handleReject(event, data._id)}>
+            Reject
+          </button>
+          <br />
+          <button type="button" onClick={(event) => handleAccept(event, data._id)}>
+            Accept
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Container>
       <h1>Moderator View</h1>
       <h2>Articles in Queue Pending Moderation</h2>
-      {queueData.length === 0 ? <strong>No Articles Needing Moderation</strong>: <SortableTable headers={headersList} data={queueData} />}
+      {queueData.length === 0 ? (
+        <strong>No Articles Needing Moderation</strong>
+      ) : (
+        <SortableTable headers={headersList} data={queueData} />
+      )}
     </Container>
   );
 };

@@ -20,7 +20,7 @@ export class ArticleService {
   async getAllArticles(): Promise<IArticle[]> {
     const articleData = await this.articleModel.find();
     if (!articleData || articleData.length == 0) {
-      []
+      [];
     }
     return articleData;
   }

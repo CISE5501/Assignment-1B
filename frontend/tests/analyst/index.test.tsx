@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, {PageProps} from '@/pages/analyst';
+import Index, { PageProps } from '@/pages/analyst';
 import '@testing-library/jest-dom';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 
