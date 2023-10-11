@@ -1,13 +1,17 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
+import KeywordsInput from './KeywordsInput';
+import AuthorInput from './AuthorInput';
+import { Form, Col, Row, Button } from 'react-bootstrap';
+
 const DOMAIN = process.env.DOMAIN;
 
 type Props = object;
 
 type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
 
-const ArticleSubmissionForm: React.FC<Props> = () => {
+const QueuedArticleSubmissionForm: React.FC<Props> = () => {
   const [formData, setFormData] = useState<QueuedArticleSubmission>({
     title: '',
     authors: [],
@@ -28,75 +32,42 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
   }
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [index, setIndex] = useState<number[]>([]);
-  const [counter, setCounter] = useState<number>(1);
-  const [authorFields, setAuthorFields] = useState<AuthorField[]>([{ id: 0, value: '' }]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errorValidation: { [key: string]: string } = {};
-
-    if (isNaN(formData.volume) || formData.volume < 0) {
-      errorValidation.volume = 'Volume must be a valid positive number';
+    if (isNaN(formData.volume)) {
+      errorValidation.volume = 'Volume must be a number';
     }
-
-    if (isNaN(formData.issue) || formData.issue < 0) {
-      errorValidation.issue = 'Issue must be a valid positive number';
+    if (isNaN(formData.issue)) {
+      errorValidation.issue = 'Issue must be a number';
     }
-
     if (!Array.isArray(formData.pageRange) || formData.pageRange.length !== 2) {
       errorValidation.pageRange = 'Page Range must be an array of two numbers';
     }
-
     if (formData.pageRange[0] > formData.pageRange[1]) {
       errorValidation.pageRange = 'First page range cannot be bigger than second!';
     }
-
-    if (formData.pageRange[0] < 0 || formData.pageRange[1] < 0) {
-      errorValidation.pageRange = 'Page Ranges must be a valid positive number';
-    }
-
     for (const author of formData.authors) {
       if (!author.includes(' ')) {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
-
     const doiCheckRegex = /doi:\S+\/\S+/;
     const validDOI = doiCheckRegex.test(formData.doi);
-
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
     }
-
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
       return;
     } else {
-      setErrors({});
+      //sendArticle(JSON.stringify(formData), articleData._id);
     }
-
-    fetch(DOMAIN + 'articles/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert('Successfully submitted article');
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        alert('Failed to submit article');
-        console.log(err);
-      });
   };
 
-  const handleForm = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
     const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
     const type = e.currentTarget.type;
@@ -106,7 +77,6 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
       array: ['authors', 'keywords', 'pageRange'],
     };
-
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
       const newData = { [name]: value };
@@ -119,177 +89,139 @@ const ArticleSubmissionForm: React.FC<Props> = () => {
     }
   };
 
-  const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const updatedAuthorFields = authorFields.map((field) =>
-      field.id === id ? { ...field, value: e.target.value } : field,
-    );
-    setAuthorFields(updatedAuthorFields);
-    handleForm(e);
+  const handleKeywordChange = (newArray: string[]) => {
+    setFormData({ ...formData, ['keywords']: newArray });
   };
 
-  const addAuthor = () => {
-    const newIndex = [...index, counter];
-    setIndex(newIndex);
-
-    setAuthorFields([...authorFields, { id: counter, value: '' }]);
-    setCounter(counter + 1);
-  };
-
-  const deleteAuthor = (id: number) => {
-    if (authorFields.length == 1) {
-      return;
-    }
-
-    const updatedAuthorFields = authorFields.filter((field) => field.id !== id);
-    setAuthorFields(updatedAuthorFields);
+  const handleAuthorChange = (newArray: string[]) => {
+    setFormData({ ...formData, ['authors']: newArray });
   };
 
   // TODO change onChange to on deselect
   return (
-    <form aria-label="form" className={styles.Form} onSubmit={handleSubmit}>
-      <div className={styles.FormContent}>
-        <div className={styles.LeftColumn}>
-          <label>
-            {' '}
-            Article Title:
-            <input
-              data-testid="title"
-              required
-              className={styles.Input}
-              onChange={handleForm}
-              type="text"
-              data-key="title"
-            />
+    <div>
+      <Form role="form" onSubmit={handleSubmit}>
+        <Row>
+          {/*title*/}
+          <Form.Group as={Col} controlId="title">
+            <Form.Label>Article Title</Form.Label>
+            <Form.Control required data-key="title" onChange={handleForm} />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
-          </label>
-          <br />
-          {authorFields.map((field) => (
-            <div key={field.id}>
-              <label>
-                {' '}
-                Author:
-                <input
-                  required
-                  className={styles.Input}
-                  onChange={(e) => handleAuthorChange(e, field.id)}
-                  type="text"
-                  value={field.value}
-                  data-key="authors"
-                  data-index={field.id}
-                />
-                {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
-                <button type="button" onClick={addAuthor}>
-                  +
-                </button>
-                <button type="button" onClick={() => deleteAuthor(field.id)}>
-                  -
-                </button>
-              </label>
-            </div>
-          ))}
-          <br />
-          <label>
-            {' '}
-            Keywords:
-            <input
+          </Form.Group>
+          {/*journal*/}
+          <Form.Group as={Col} controlId="journal">
+            <Form.Label>Journal</Form.Label>
+            <Form.Control
               required
-              className={styles.Input}
+              data-key="journal"
               onChange={handleForm}
-              type="text"
-              data-key="keywords"
-              data-index="0"
             />
-            {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
-          </label>
-          <br />
-          <label>
-            {' '}
-            Abstract:
-            <input required className={styles.Input} onChange={handleForm} type="text" data-key="abstract" />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
-          </label>
-        </div>
-        <div className={styles.RightColumn}>
-          <label>
-            {' '}
-            Journal:
-            <input required className={styles.Input} onChange={handleForm} type="text" data-key="journal" />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
-          </label>
-          <br />
-          <div className={styles.RightColumnRow}>
-            <label>
-              {' '}
-              Date:
-              <input required className={styles.Input} onChange={handleForm} type="date" data-key="date" />
-              {errors.date && <p className={styles.Error}>{errors.date}</p>}
-            </label>
-            <br />
-            <label>
-              {' '}
-              DOI:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="text"
-                data-key="doi"
-                placeholder="doi:10.1000/182"
-              />
-              {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
-            </label>
-            <br />
-          </div>
-          <div className={styles.RightColumnRow}>
-            <label>
-              {' '}
-              Volume:
-              <input className={styles.Input} onChange={handleForm} type="number" data-key="volume" />
-              {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
-            </label>
-            <br />
-            <label>
-              {' '}
-              Issue:
-              <input required className={styles.Input} onChange={handleForm} type="number" data-key="issue" />
-              {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
-            </label>
-            <br />
-          </div>
-          <div className={styles.RightColumnRow}>
-            <label>
-              {' '}
-              Page Range 1:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="number"
-                data-key="pageRange"
-                data-index="0"
-              />
-            </label>
-            <label>
-              {' '}
-              Page Range 2:
-              <input
-                className={styles.Input}
-                onChange={handleForm}
-                type="number"
-                data-key="pageRange"
-                data-index="1"
-              />
-            </label>
-            <label>
-              <br />
-              {errors.pageRange && <p className={styles.Error}>{errors.pageRange}</p>}
-            </label>
-          </div>
-        </div>
-      </div>
-      <button disabled={formData === undefined ? true : false} type="submit">
-        Submit
-      </button>
-    </form>
+          </Form.Group>
+        </Row>
+        <Row className={styles.RightColumn}>
+          <Form.Group as={Col} controlId="authors">
+            {/*authors*/}
+            <AuthorInput
+              updateFormData={handleAuthorChange}
+              dataKey={'authors'}/>
+            {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
+          </Form.Group>
+          <Form.Group as={Col}>
+            <Row>
+              {/*date*/}
+              <Form.Group as={Col} controlId="date">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  data-key="date"
+                  onChange={handleForm}
+                  type="date"
+                />
+                {errors.date && <p className={styles.Error}>{errors.date}</p>}
+              </Form.Group>
+              {/*doi*/}
+              <Form.Group as={Col} controlId="doi">
+                <Form.Label>DOI</Form.Label>
+                <Form.Control required data-key="doi" placeholder="doi:100.1000/5501" onChange={handleForm}/>
+                {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
+              </Form.Group>
+            </Row>
+            <Row>
+              {/*volume*/}
+              <Form.Group as={Col} controlId="volume">
+                <Form.Label>Volume</Form.Label>
+                <Form.Control
+                  required
+                  data-key="volume"
+                  onChange={handleForm}
+                  type="number"
+                />
+                {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
+              </Form.Group>
+              {/*issue*/}
+              <Form.Group as={Col} controlId="issue">
+                <Form.Label>Issue</Form.Label>
+                <Form.Control
+                  required
+                  data-key="issue"
+                  onChange={handleForm}
+                  type="number"
+                />
+                {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group as={Col}>
+                <Row>
+                  {/*pageRange*/}
+                  <Form.Group as={Col} controlId="pageRange">
+                    <Form.Label>Page Start</Form.Label>
+                    <Form.Control
+                      required
+                      data-key="pageRange"
+                      data-index="0"
+                      onChange={handleForm}
+                      type="number"
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} controlId="pageRange">
+                    <Form.Label>Page End</Form.Label>
+                    <Form.Control
+                      required
+                      data-key="pageRange"
+                      data-index="1"
+                      onChange={handleForm}
+                      type="number"
+                    />
+                  </Form.Group>
+                  {errors.pagerange && <p className={styles.Error}>{errors.pagerange}</p>}
+                </Row>
+              </Form.Group>
+            </Row>
+            <Row>
+              {/*keywords*/}
+              <KeywordsInput
+                updateFormData={handleKeywordChange}
+                dataKey={'keywords'} defaultValue={[]}              />
+              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+            </Row>
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="abstract">
+            <Form.Label>Abstract</Form.Label>
+            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
+            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+          </Form.Group>
+        </Row>
+        <Button type="submit" disabled={formData === undefined ? true : false}>
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 };
 
-export default ArticleSubmissionForm;
+
+export default QueuedArticleSubmissionForm;

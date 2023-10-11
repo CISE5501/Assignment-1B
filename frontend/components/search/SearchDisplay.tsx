@@ -39,7 +39,6 @@ export const searchKeywords = async (field: string, input: string) => {
   try {
     const response = await fetch(DOMAIN + `articles/filter?field=${field}&keywords=${input}`);
     const result: SearchProps = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.error('Error fetching data:', error);

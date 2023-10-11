@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { Form, Col, InputGroup, Button } from 'react-bootstrap';
 
 interface AuthorInputProps {
-  defaultValue: string[];
+  defaultValue?: string[];
   dataKey: string;
   updateFormData: (newArray: string[]) => void;
 }
@@ -18,9 +18,9 @@ function getValues(array: AuthorField[]): string[] {
 
 const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps) => {
   const [authorFields, setAuthorFields] = useState<AuthorField[]>(
-    defaultValue.map((value, index) => ({ id: index, value: value })),
+    defaultValue?.map((value, index) => ({ id: index, value: value})) || [{id: 0, value: ""}],
   );
-  const [, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
+  const [index, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
   const [counter, setCounter] = useState<number>(authorFields.length);
   const [tempIndex, setTempIndex] = useState<number>(0);
 
@@ -72,7 +72,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
             <InputGroup>
               <Form.Control
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleAuthorChange(e, index.id)}
-                defaultValue={index.value}
+                defaultValue={index.value} placeholder='John Doe'
               />
               <Button type="button" onClick={() => deleteAuthor(index.id)}>
                 X
