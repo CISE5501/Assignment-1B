@@ -66,6 +66,24 @@ export class ModeratorController {
     }
   }
 
+  // getRejected: returns a list of rejected articles' dois
+  @Get('/rejected')
+  async getRejectedDOIs(@Res() response) {
+    try {
+      const rejectedEntries = await this.rejectedEntryService.getAllEntries();
+      const rejectedDOIs = rejectedEntries.map((item) => item.doi);
+      return response.status(HttpStatus.OK).json({
+        message: 'Rejected entries found successfully',
+        rejectedDOIs,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.OK).json({
+        message: 'Failed to fetch rejected entries',
+        rejectedDOIs: [],
+      });
+    }
+  }
+
   //updates a queuedArticle object's isModerated status to true, marking it ready for analysis
   @Put('/promote/id/:id')
   async promoteQueuedArticle(@Res() response, @Param('id') articleId: string) {

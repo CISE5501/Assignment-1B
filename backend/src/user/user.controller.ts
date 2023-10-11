@@ -2,7 +2,6 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nes
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
-import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 import { CreateRatingDto } from 'src/models/ratings/dto/create-rating.dto';
 import { StarRatingService } from 'src/models/ratings/starRating.service';
 
@@ -20,7 +19,6 @@ export class UserController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
-    private readonly rejectedEntryService: RejectedEntryService,
     private readonly starRatingService: StarRatingService,
   ) { }
 
@@ -109,24 +107,6 @@ export class UserController {
       return response.status(HttpStatus.OK).json({
         message: 'Article rating fetching failed',
         rating: null,
-      });
-    }
-  }
-
-  // getRejected: returns a list of rejected articles' dois
-  @Get('/rejected')
-  async getRejectedDOIs(@Res() response) {
-    try {
-      const rejectedEntries = await this.rejectedEntryService.getAllEntries();
-      const rejectedDOIs = rejectedEntries.map((item) => item.doi);
-      return response.status(HttpStatus.OK).json({
-        message: 'Rejected entries found successfully',
-        rejectedDOIs,
-      });
-    } catch (err) {
-      return response.status(HttpStatus.OK).json({
-        message: 'Failed to fetch rejected entries',
-        rejectedDOIs: [],
       });
     }
   }
