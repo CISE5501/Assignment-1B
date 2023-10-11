@@ -18,7 +18,7 @@ export class ModeratorController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
-    private readonly rejectedEntryService: RejectedEntryService,) {}
+    private readonly rejectedEntryService: RejectedEntryService) {}
 
   // getArticles: returns list of queuedArticle objects which have NOT been moderated
   @Get('/index')
@@ -30,7 +30,7 @@ export class ModeratorController {
         articleData,
       });
     } catch (err) {
-      return response.status(err.status).json(err.response);
+      return response.status(err.status).json({message: err.response});
     }
   }
 
@@ -49,7 +49,7 @@ export class ModeratorController {
   }
 
   // listDuplicateArticleDOIs: returns list of dois which exist in both the queuedArticles database and articles database
-  @Get('duplicates')
+  @Get('/duplicates')
   async listDuplicateArticleDOIs(@Res() response) {
     try {
       const accepted = await this.articleService.getAllArticles();

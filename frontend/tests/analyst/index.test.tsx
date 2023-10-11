@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index, { IndexProps } from '@/pages/analyst';
+import Index, {PageProps} from '@/pages/analyst';
 import '@testing-library/jest-dom';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 
@@ -19,27 +19,23 @@ const tempArray = [
   },
 ] as QueuedArticle[];
 
-function renderHome(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
+function renderHome(props: Partial<PageProps> = {}) {
+  const defaultProps: PageProps = {
     queueData: [],
-    duplicates: [],
-    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
-function renderHomeWithArticles(props: Partial<IndexProps> = {}) {
-  const defaultProps: IndexProps = {
+function renderHomeWithArticles(props: Partial<PageProps> = {}) {
+  const defaultProps: PageProps = {
     queueData: tempArray,
-    duplicates: [],
-    rejected: [],
   };
   return render(<Index {...defaultProps} {...props} />);
 }
 
 test('should have empty table', async () => {
   renderHome();
-  expect(screen.getAllByTestId('data-table-body').length).toBe(1);
+  expect(screen.getByText('No Articles Needing Analysis')).toBeInTheDocument();
 });
 
 test('should have table with an article entry and buttons to analyse', async () => {

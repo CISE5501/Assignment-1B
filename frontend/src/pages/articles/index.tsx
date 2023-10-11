@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
 
-const DOMAIN = process.env.DOMAIN;
+const DOMAIN = process.env.DOMAIN as string;
 
 export type RatedArticle = Article & { rating: number | null };
 

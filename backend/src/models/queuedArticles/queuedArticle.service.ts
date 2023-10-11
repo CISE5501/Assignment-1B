@@ -23,7 +23,7 @@ export class QueuedArticleService {
   async getAllQueuedArticles(): Promise<IQueuedArticle[]> {
     const articleData = await this.articleModel.find();
     if (!articleData || articleData.length == 0) {
-      throw new NotFoundException('Articles data not found!');
+      return [];
     }
     return articleData;
   }
@@ -31,7 +31,7 @@ export class QueuedArticleService {
   async getAllUnmoderatedArticles(): Promise<IQueuedArticle[]> {
     const articleData = await this.articleModel.find().where({ isModerated: false });
     if (!articleData || articleData.length == 0) {
-      throw new NotFoundException('Articles data not found!');
+      return [];
     }
     return articleData;
   }
@@ -39,7 +39,7 @@ export class QueuedArticleService {
   async getAllModeratedArticles(): Promise<IQueuedArticle[]> {
     const articleData = await this.articleModel.find().where({ isModerated: true });
     if (!articleData || articleData.length == 0) {
-      throw new NotFoundException('Articles data not found!');
+      []
     }
     return articleData;
   }
