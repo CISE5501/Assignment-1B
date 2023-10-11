@@ -20,7 +20,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
   const [authorFields, setAuthorFields] = useState<AuthorField[]>(
     defaultValue?.map((value, index) => ({ id: index, value: value })) || [{ id: 0, value: '' }],
   );
-  const [index, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
+  const [, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
   const [counter, setCounter] = useState<number>(authorFields.length);
   const [tempIndex, setTempIndex] = useState<number>(0);
 
