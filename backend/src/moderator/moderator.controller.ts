@@ -1,13 +1,20 @@
-import { Body, Controller, Get, HttpStatus, Param, Put, Res, Delete } from '@nestjs/common';
-import { UpdateQueuedArticleDto } from 'src/models/queuedArticles/dto/update-article.dto';
+import { Controller, Get, HttpStatus, Param, Put, Res, Delete } from '@nestjs/common';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
-//controller- routes articles to get/post methods
+/*
+  Routes paths with prefix '/moderator' in the URL to functions declared in service modules.
+  This controller contains functions accessible by a moderator role:
+    - Getting a list of queuedArticle objects
+    - Getting a specified queuedArticle object
+    - Updating a queuedArticle object's status (isModerated)
+    - Deleting a specified queuedArticle object
+*/
 
 @Controller('moderator')
 export class ModeratorController {
   constructor(private readonly queuedArticleService: QueuedArticleService) {}
 
+  // getArticles: returns list of queuedArticle objects which have NOT been moderated
   @Get('/index')
   async getArticles(@Res() response) {
     try {
@@ -21,27 +28,11 @@ export class ModeratorController {
     }
   }
 
-  @Put('/id/:id')
-  async updateArticle(
-    @Res() response,
-    @Param('id') articleId: string,
-    @Body() updateArticleDto: UpdateQueuedArticleDto,
-  ) {
-    try {
-      const existingArticle = await this.queuedArticleService.updateArticle(articleId, updateArticleDto);
-      return response.status(HttpStatus.OK).json({
-        message: 'Article has been successfully updated',
-        existingArticle,
-      });
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
-  }
-
+  //retrieves a queuedArticle object which has a matching id to the queried string
   @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle = await this.queuedArticleService.getArticle(articleId);
+      const existingArticle = await this.queuedArticleService.getQueuedArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
@@ -51,26 +42,28 @@ export class ModeratorController {
     }
   }
 
-  @Delete('/id/:id')
-  async deleteArticle(@Res() response, @Param('id') articleId: string) {
+  //updates a queuedArticle object's isModerated status to true, marking it ready for analysis
+  @Put('/promote/id/:id')
+  async promoteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      const existingArticle = await this.queuedArticleService.updateQueuedArticle(articleId, { isModerated: true });
       return response.status(HttpStatus.OK).json({
-        message: 'Article deleted successfully',
-        deletedArticle,
+        message: 'Article marked as moderated successfully',
+        existingArticle,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
     }
   }
 
-  @Put('/promote/id/:id')
-  async promoteArticle(@Res() response, @Param('id') articleId: string) {
+  //deletes a queuedArticle object from the queuedArticle database which has a matching id to the queried string
+  @Delete('/id/:id')
+  async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle = await this.queuedArticleService.updateArticle(articleId, { isModerated: true });
+      const deletedArticle = await this.queuedArticleService.deleteQueuedArticle(articleId);
       return response.status(HttpStatus.OK).json({
-        message: 'Article marked as moderated successfully',
-        existingArticle,
+        message: 'Article deleted successfully',
+        deletedArticle,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);

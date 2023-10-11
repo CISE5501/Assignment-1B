@@ -3,7 +3,8 @@ import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
 import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
-import DOMAIN from '@/common/DOMAIN';
+
+const DOMAIN = process.env.DOMAIN;
 
 export type IndexProps = PageProps;
 export const getServerSideProps = getServerData('moderator/index');

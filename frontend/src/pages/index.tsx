@@ -1,6 +1,6 @@
-import DOMAIN from '@/common/DOMAIN';
 import SearchDisplay from '../../components/search/SearchDisplay';
 import 'bootstrap/dist/css/bootstrap.min.css';
+const DOMAIN = process.env.DOMAIN;
 
 const deleteAll = async (): Promise<void> => {
   const response = await fetch(DOMAIN + 'articles/deleteAll', {

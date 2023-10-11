@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '../schema/queuedArticle';
-import DOMAIN from '@/common/DOMAIN';
+
+const DOMAIN = process.env.DOMAIN;
 
 export const getServerData: (url: string) => GetServerSideProps = (url) => async () => {
   try {

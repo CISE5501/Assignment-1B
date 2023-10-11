@@ -26,6 +26,7 @@ import { StarRatingService } from './models/ratings/starRating.service';
         uri: config.get<string>('MONGO_URI'),
       }),
     }),
+    //connects to different collections within the database
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
     MongooseModule.forFeature([{ name: 'QueuedArticle', schema: QueuedArticleSchema }]),
     MongooseModule.forFeature([{ name: 'RejectedEntry', schema: RejectedEntrySchema }]),

@@ -1,7 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
-import DOMAIN from '@/common/DOMAIN';
+const DOMAIN = process.env.DOMAIN;
 
 type Props = object;
 

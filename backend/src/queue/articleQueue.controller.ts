@@ -4,6 +4,15 @@ import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 
+/*
+  Routes paths with prefix '/queue' in the URL to functions declared in service modules.
+  This controller contains functions accessible by analyst/moderator roles:
+    - Getting a list of queuedArticle objects
+    - Getting a specified queuedArticle object
+    - Updating a queuedArticle object's status (isModerated)
+    - Deleting a specified queuedArticle object
+*/
+
 @Controller('queue')
 export class QueueController {
   constructor(
@@ -28,7 +37,7 @@ export class QueueController {
   @Post()
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
-      const newArticle = await this.queuedArticleService.createArticle(createArticleDto);
+      const newArticle = await this.queuedArticleService.createQueuedArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Queue article has been created successfully',
         newArticle,
@@ -62,7 +71,7 @@ export class QueueController {
   @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const existingArticle = await this.queuedArticleService.getArticle(articleId);
+      const existingArticle = await this.queuedArticleService.getQueuedArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,
@@ -75,7 +84,7 @@ export class QueueController {
   @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      const deletedArticle = await this.queuedArticleService.deleteQueuedArticle(articleId);
       await this.rejectedEntryService.addEntry({ doi: deletedArticle.doi });
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
@@ -89,7 +98,7 @@ export class QueueController {
   @Get('/includes/id/:id')
   async doesArticleExist(@Res() response, @Param('id') articleId: string) {
     try {
-      await this.queuedArticleService.getArticle(articleId);
+      await this.queuedArticleService.getQueuedArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         exists: true,

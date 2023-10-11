@@ -5,6 +5,14 @@ import { IArticle } from 'src/models/articles/article.interface';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { UpdateArticleDto } from 'src/models/articles/dto/update-article.dto';
 
+/*
+  Exports functions that can be used to interact with the 'articles' database:
+    - Get all articles
+    - Get a specified article
+    - Add a new article
+    - Update a specified article
+    - Delete a specified article
+*/
 @Injectable()
 export class ArticleService {
   constructor(@InjectModel('Article') private articleModel: Model<IArticle>) {}
@@ -46,174 +54,5 @@ export class ArticleService {
       throw new NotFoundException(`Article #${articleId} not found`);
     }
     return deletedArticle;
-  }
-
-  async deleteArticles(): Promise<void> {
-    const response = await this.articleModel.deleteMany({});
-    if (!response) {
-      throw new NotFoundException(`Articles not deleted`);
-    }
-  }
-
-  async createArticleExamples(): Promise<IArticle> {
-    const addedArticles = await this.articleModel.insertMany([
-      {
-        title: 't1',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't2',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't3',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't4',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't5',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't6',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't7',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't8',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 't9',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 'v1',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 'v2',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 'v3',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-      {
-        title: 'v4',
-        authors: ['first author', 'second author'],
-        date: '2023-01-23',
-        journal: 1,
-        volume: 1,
-        issue: 1,
-        pageRange: [12, 23],
-        doi: 'doi:102.1000/22343',
-        keywords: ['SCRUM', 'Agile'],
-        abstract: 'ashdkasjhd',
-      },
-    ]);
-    return;
   }
 }

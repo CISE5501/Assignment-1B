@@ -6,7 +6,8 @@ import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
-import DOMAIN from '@/common/DOMAIN';
+
+const DOMAIN = process.env.DOMAIN;
 
 export type RatedArticle = Article & { rating: number | null };
 
