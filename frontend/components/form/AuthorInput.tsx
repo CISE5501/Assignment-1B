@@ -18,7 +18,7 @@ function getValues(array: AuthorField[]): string[] {
 
 const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps) => {
   const [authorFields, setAuthorFields] = useState<AuthorField[]>(
-    defaultValue?.map((value, index) => ({ id: index, value: value})) || [{id: 0, value: ""}],
+    defaultValue?.map((value, index) => ({ id: index, value: value })) || [{ id: 0, value: '' }],
   );
   const [index, setIndex] = useState<number[]>(authorFields.map((field, index) => index));
   const [counter, setCounter] = useState<number>(authorFields.length);
@@ -72,7 +72,8 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
             <InputGroup>
               <Form.Control
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleAuthorChange(e, index.id)}
-                defaultValue={index.value} placeholder='John Doe'
+                defaultValue={index.value}
+                placeholder="John Doe"
               />
               <Button type="button" onClick={() => deleteAuthor(index.id)}>
                 X

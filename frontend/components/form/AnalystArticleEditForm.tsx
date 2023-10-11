@@ -182,7 +182,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
-                <Form.Control required data-key="doi" defaultValue={articleData.doi} placeholder="doi:100.1000/5501" onChange={handleForm} />
+                <Form.Control
+                  required
+                  data-key="doi"
+                  defaultValue={articleData.doi}
+                  placeholder="doi:100.1000/5501"
+                  onChange={handleForm}
+                />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>

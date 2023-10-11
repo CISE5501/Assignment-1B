@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
 import KeywordsInput from './KeywordsInput';
@@ -26,10 +26,25 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
-  interface AuthorField {
-    id: number;
-    value: string;
-  }
+  const sendArticle = async (formData: QueuedArticleSubmission): Promise<void> => {
+    await fetch(DOMAIN + 'articles/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert('Successfully submitted article');
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        alert('Failed to submit article');
+        console.log(err);
+      });
+  };
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -63,7 +78,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       setErrors(errorValidation);
       return;
     } else {
-      //sendArticle(JSON.stringify(formData), articleData._id);
+      sendArticle(formData);
     }
   };
 
@@ -97,7 +112,6 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     setFormData({ ...formData, ['authors']: newArray });
   };
 
-  // TODO change onChange to on deselect
   return (
     <div>
       <Form role="form" onSubmit={handleSubmit}>
@@ -111,20 +125,14 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
           {/*journal*/}
           <Form.Group as={Col} controlId="journal">
             <Form.Label>Journal</Form.Label>
-            <Form.Control
-              required
-              data-key="journal"
-              onChange={handleForm}
-            />
+            <Form.Control required data-key="journal" onChange={handleForm} />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </Form.Group>
         </Row>
         <Row className={styles.RightColumn}>
           <Form.Group as={Col} controlId="authors">
             {/*authors*/}
-            <AuthorInput
-              updateFormData={handleAuthorChange}
-              dataKey={'authors'}/>
+            <AuthorInput updateFormData={handleAuthorChange} dataKey={'authors'} />
             {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </Form.Group>
           <Form.Group as={Col}>
@@ -132,18 +140,13 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
               {/*date*/}
               <Form.Group as={Col} controlId="date">
                 <Form.Label>Date</Form.Label>
-                <Form.Control
-                  required
-                  data-key="date"
-                  onChange={handleForm}
-                  type="date"
-                />
+                <Form.Control required data-key="date" onChange={handleForm} type="date" />
                 {errors.date && <p className={styles.Error}>{errors.date}</p>}
               </Form.Group>
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
-                <Form.Control required data-key="doi" placeholder="doi:100.1000/5501" onChange={handleForm}/>
+                <Form.Control required data-key="doi" placeholder="doi:100.1000/5501" onChange={handleForm} />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>
@@ -151,23 +154,13 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
               {/*volume*/}
               <Form.Group as={Col} controlId="volume">
                 <Form.Label>Volume</Form.Label>
-                <Form.Control
-                  required
-                  data-key="volume"
-                  onChange={handleForm}
-                  type="number"
-                />
+                <Form.Control required data-key="volume" onChange={handleForm} type="number" />
                 {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
               </Form.Group>
               {/*issue*/}
               <Form.Group as={Col} controlId="issue">
                 <Form.Label>Issue</Form.Label>
-                <Form.Control
-                  required
-                  data-key="issue"
-                  onChange={handleForm}
-                  type="number"
-                />
+                <Form.Control required data-key="issue" onChange={handleForm} type="number" />
                 {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
               </Form.Group>
             </Row>
@@ -201,9 +194,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
             </Row>
             <Row>
               {/*keywords*/}
-              <KeywordsInput
-                updateFormData={handleKeywordChange}
-                dataKey={'keywords'} defaultValue={[]}              />
+              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'keywords'} defaultValue={[]} />
               {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
             </Row>
           </Form.Group>
@@ -222,6 +213,5 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     </div>
   );
 };
-
 
 export default QueuedArticleSubmissionForm;
