@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { ModeratorController } from './moderator/moderator.controller';
 import { AnalystController } from './analyst/analyst.controller';
-import { QueueController } from './queue/articleQueue.controller';
 import { QueuedArticleSchema } from './models/queuedArticles/queuedArticle.schema';
 import { QueuedArticleService } from './models/queuedArticles/queuedArticle.service';
 import { ArticleSchema } from './models/articles/article.schema';
@@ -26,12 +25,13 @@ import { StarRatingService } from './models/ratings/starRating.service';
         uri: config.get<string>('MONGO_URI'),
       }),
     }),
+    //connects to different collections within the database
     MongooseModule.forFeature([{ name: 'Article', schema: ArticleSchema }]),
     MongooseModule.forFeature([{ name: 'QueuedArticle', schema: QueuedArticleSchema }]),
     MongooseModule.forFeature([{ name: 'RejectedEntry', schema: RejectedEntrySchema }]),
     MongooseModule.forFeature([{ name: 'StarRating', schema: StarRatingSchema }]),
   ],
-  controllers: [AppController, ModeratorController, AnalystController, QueueController, UserController],
+  controllers: [AppController, ModeratorController, AnalystController, UserController],
   providers: [AppService, ArticleService, QueuedArticleService, RejectedEntryService, StarRatingService],
 })
 export class AppModule {}

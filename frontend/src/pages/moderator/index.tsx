@@ -2,13 +2,52 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
-import { PageProps, handleDelete, getServerData } from '../../common/queueCommon';
-import DOMAIN from '@/common/DOMAIN';
+import { GetServerSideProps } from 'next';
 
-export type IndexProps = PageProps;
-export const getServerSideProps = getServerData('moderator/index');
+const DOMAIN = process.env.DOMAIN;
 
-const promote = async (id: string): Promise<void> => {
+export type PageProps = {
+  queueData: QueuedArticle[];
+  duplicates: string[];
+  rejected: string[];
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const { articleData: queueData } = await fetch(DOMAIN + 'moderator/index').then((data) => data.json());
+    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'moderator/duplicates').then((data) =>
+      data.json(),
+    );
+    const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'moderator/rejected').then((data) => data.json());
+    return {
+      props: {
+        queueData,
+        duplicates,
+        rejected,
+      },
+    };
+  } catch {
+    throw new Error('Failed to fetch resources. Please reload the page.');
+  }
+};
+
+const rejectArticle = async (id: string) => {
+  try {
+    const res = await fetch(DOMAIN + `moderator/id/${id}`, {
+      method: 'DELETE',
+    });
+    if (res.ok) {
+      alert('Article deleted successfully');
+      window.location.reload();
+    } else {
+      console.error('Error deleting article:', res.statusText);
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+};
+
+const acceptArticle = async (id: string) => {
   const response = await fetch(DOMAIN + 'moderator/promote/id/' + id, {
     method: 'PUT',
   });
@@ -22,6 +61,14 @@ const promote = async (id: string): Promise<void> => {
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates, rejected }: PageProps) => {
+  const handleReject = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.preventDefault;
+    rejectArticle(id);
+  };
+  const handleAccept = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.preventDefault;
+    acceptArticle(id);
+  };
   const warning = { fontWeight: 'bold' };
   const headersList: (
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
@@ -54,8 +101,8 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
       label: 'Warnings',
       content: (data) => (
         <ul>
-          {duplicates.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
-          {rejected.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+          {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
         </ul>
       ),
     },
@@ -64,11 +111,11 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
       label: 'Actions',
       content: (data) => (
         <div>
-          <button type="button" onClick={() => handleDelete('queue', data)}>
+          <button type="button" onClick={(event) => handleReject(event, data._id)}>
             Reject
           </button>
           <br />
-          <button type="button" onClick={() => promote(data._id)}>
+          <button type="button" onClick={(event) => handleAccept(event, data._id)}>
             Accept
           </button>
         </div>
