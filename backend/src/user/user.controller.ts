@@ -76,24 +76,6 @@ export class UserController {
     }
   }
 
-  //  do we need this?
-  // doesArticleExist: used to check for duplicates within the database.
-  @Get('/includes/id/:id')
-  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
-    try {
-      await this.articleService.getArticle(articleId);
-      return response.status(HttpStatus.OK).json({
-        message: 'Article found successfully',
-        exists: true,
-      });
-    } catch (err) {
-      return response.status(HttpStatus.OK).json({
-        message: 'Article does not exist',
-        exists: false,
-      });
-    }
-  }
-
   // getArticleRating: used to return the rating value (stored in rating database) that corresponds with the queried doi
   @Get('/rating')
   async getArticleRating(@Res() response, @Query('doi') doi: string) {
