@@ -13,7 +13,7 @@ interface KeywordsInputProps {
 const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputProps) => {
   //sets initial value of keywords to the default value
   const [keywords, setKeywords] = useState<string[]>(defaultValue);
-  
+
   //handle user pressing enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // If user did not press enter key, return

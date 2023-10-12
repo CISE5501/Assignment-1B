@@ -26,7 +26,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
-  // When sendArticle is called the article data is in json format 
+  // When sendArticle is called the article data is in json format
   const sendArticle = async (formData: QueuedArticleSubmission): Promise<void> => {
     await fetch(DOMAIN + 'articles/new', {
       method: 'POST',
@@ -43,7 +43,6 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       })
       .catch((err) => {
         alert('Failed to submit article');
-        console.log(err);
       });
   };
 

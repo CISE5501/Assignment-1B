@@ -31,6 +31,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     throw new Error('Failed to fetch resources. Please reload the page.');
   }
 };
+
 //rejects a specified article from the queued article collection, and adds the id to the rejected collection
 const rejectArticle = async (id: string) => {
   try {

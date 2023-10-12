@@ -48,7 +48,6 @@ export const searchKeywords = async (field: string, input: string) => {
 };
 
 const SearchDisplay = () => {
-  
   //sets the inital value
   const [data, setData] = useState<SearchProps>({
     message: '',

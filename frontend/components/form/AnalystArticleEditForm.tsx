@@ -22,7 +22,7 @@ const formatDate = (dateText: string) => {
   return `${year}-${month}-${day}`;
 };
 
-//deletes article with specified id from the queued article database through 
+//deletes article with specified id from the queued article database through
 const deleteOldArticle = async (id: string): Promise<void> => {
   const response = await fetch(DOMAIN + 'analyst/id/' + id, {
     method: 'DELETE',

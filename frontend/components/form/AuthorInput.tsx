@@ -5,7 +5,7 @@ import { Form, Col, InputGroup, Button } from 'react-bootstrap';
 interface AuthorInputProps {
   defaultValue?: string[];
   dataKey: string;
-  updateFormData: (newArray: string[]) => void; 
+  updateFormData: (newArray: string[]) => void;
 }
 
 interface AuthorField {
