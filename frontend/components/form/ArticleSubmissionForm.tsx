@@ -88,7 +88,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
 
     // Check article is not a duplicate
     const searchQuery = await fetch(DOMAIN + 'articles/doi/' + encodeURIComponent(formData.doi)).then(data => data.json());
-    if (searchQuery.filteredArticles.length > 0) {
+    if (searchQuery.filteredArticles?.length > 0) {
       alert(`Article with DOI ${formData.doi} already exists in the queue!`);
       return;
     }
