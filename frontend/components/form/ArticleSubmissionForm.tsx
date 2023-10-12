@@ -72,7 +72,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
     // DOI check making sure that it is a valid doi format
-    const doiCheckRegex = /doi:\S+\/\S+/;
+    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
