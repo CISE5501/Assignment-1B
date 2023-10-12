@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
+//props
 export type ComputedRow<T> = {
   computed: true;
   label: string;
@@ -10,7 +11,6 @@ export type ComputedRow<T> = {
 export type DataRow<T> = {
   label: string;
   key: keyof T;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   displayAs?: (data: any, row: T) => React.JSX.Element | string;
 };
 
@@ -44,7 +44,6 @@ const SortableTable = <T,>({ headers, data }: SortableTableProps<T>) => (
                 {header.displayAs ? (
                   header.displayAs(row[header.key], row)
                 ) : (
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   <span>{row[header.key] as any}</span>
                 )}
               </td>

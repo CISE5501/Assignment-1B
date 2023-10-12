@@ -3,13 +3,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../components/table/SortableTable';
 const DOMAIN = process.env.DOMAIN;
-
+//props
 export interface SearchProps {
   message: string;
   keywords: string[];
   filteredArticles: Article[];
 }
 
+//returns headersList, and sets format for values in the data rows
 export const headersList: DataRow<Article>[] = [
   { key: 'title', label: 'Title' },
   {
@@ -35,6 +36,7 @@ export const headersList: DataRow<Article>[] = [
   { key: 'abstract', label: 'Abstract' },
 ];
 
+//searches for articles containing the relevant keywords
 export const searchKeywords = async (field: string, input: string) => {
   try {
     const response = await fetch(DOMAIN + `articles/filter?field=${field}&keywords=${input}`);
@@ -46,12 +48,15 @@ export const searchKeywords = async (field: string, input: string) => {
 };
 
 const SearchDisplay = () => {
+  
+  //sets the inital value
   const [data, setData] = useState<SearchProps>({
     message: '',
     filteredArticles: [],
     keywords: [],
   });
-  // retrieves searched query and updates the components with the search results
+
+  //retrieves searched query and updates the components with the search results
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const field = document.querySelector('select')?.value;

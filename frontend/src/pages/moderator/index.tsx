@@ -3,15 +3,16 @@ import { Container } from 'react-bootstrap';
 import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
 import { GetServerSideProps } from 'next';
-
 const DOMAIN = process.env.DOMAIN;
 
+//props
 export type PageProps = {
   queueData: QueuedArticle[];
   duplicates: string[];
   rejected: string[];
 };
 
+//calls data from the 'moderator' path to get the list of queued articles, duplicates and previously rejected articles
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const { articleData: queueData } = await fetch(DOMAIN + 'moderator/index').then((data) => data.json());
@@ -30,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     throw new Error('Failed to fetch resources. Please reload the page.');
   }
 };
-
+//rejects a specified article from the queued article collection, and adds the id to the rejected collection
 const rejectArticle = async (id: string) => {
   try {
     const res = await fetch(DOMAIN + `moderator/id/${id}`, {
@@ -47,6 +48,7 @@ const rejectArticle = async (id: string) => {
   }
 };
 
+//sets the status of the specified article so that isModerated = true, marking it ready for analysis
 const acceptArticle = async (id: string) => {
   const response = await fetch(DOMAIN + 'moderator/promote/id/' + id, {
     method: 'PUT',
