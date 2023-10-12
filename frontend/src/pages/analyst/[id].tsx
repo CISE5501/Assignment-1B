@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DOMAIN from '@/common/DOMAIN';
 import { GetServerSideProps } from 'next';
 import { QueuedArticle } from '@/schema/queuedArticle';
 import { Container, NavLink } from 'react-bootstrap';
 import AnalystArticleSubmissionForm from '../../../components/form/AnalystArticleEditForm';
+
+const DOMAIN = process.env.DOMAIN;
 
 export interface QueuedArticleProps {
   existingArticle: QueuedArticle;

@@ -3,6 +3,14 @@ import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 
+/*
+  Routes paths with prefix '/analyst' in the URL to functions declared in service modules.
+  This controller contains functions accessible by an analyst role:
+    - Getting a list of queuedArticle objects
+    - Getting a specified queuedArticle object
+    - Posting a new article object
+    - Deleting a specified queuedArticle object
+*/
 @Controller('analyst')
 export class AnalystController {
   constructor(
@@ -10,6 +18,7 @@ export class AnalystController {
     private readonly queuedArticleService: QueuedArticleService,
   ) {}
 
+  // getArticles: returns list of queuedArticle objects which have been moderated
   @Get('/index')
   async getArticles(@Res() response) {
     try {
@@ -23,6 +32,21 @@ export class AnalystController {
     }
   }
 
+  //retrieves a queuedArticle object which has a matching id to the queried string
+  @Get('/id/:id')
+  async getArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      const existingArticle = await this.queuedArticleService.getQueuedArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        existingArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  //creates a new article object which is sent to the articles database
   @Post()
   async createArticle(@Res() response, @Body() createArticleDto: CreateArticleDto) {
     // Check article isn't a duplicate
@@ -51,53 +75,17 @@ export class AnalystController {
     }
   }
 
-  @Get('/id/:id')
-  async getArticle(@Res() response, @Param('id') articleId: string) {
-    try {
-      const existingArticle = await this.queuedArticleService.getArticle(articleId);
-      return response.status(HttpStatus.OK).json({
-        message: 'Article found successfully',
-        existingArticle,
-      });
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
-  }
-
+  //deletes a queuedArticle object from the queuedArticle database which has a matching id to the queried string
   @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
-      const deletedArticle = await this.queuedArticleService.deleteArticle(articleId);
+      const deletedArticle = await this.queuedArticleService.deleteQueuedArticle(articleId);
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
-    }
-  }
-
-  @Put('/promote/id/:id')
-  async promoteArticle(@Res() response, @Param('id') articleId: string) {
-    try {
-      // Get article
-      const article = await this.queuedArticleService.getArticle(articleId);
-      // Match scema
-      const { _doc: intermediaryArticle }: any = { ...article };
-      delete intermediaryArticle.isModerated;
-      // Add article to accepted database
-      await this.articleService.createArticle(intermediaryArticle);
-      // Delete article from queue
-      await this.queuedArticleService.deleteArticle(articleId);
-      // Return response
-      return response.status(HttpStatus.OK).json({
-        message: 'Article promoted to database successfully',
-        newArticle: article,
-      });
-    } catch (err) {
-      console.log(err);
-      const status = err.response?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
-      return response.status(status).json(err.response);
     }
   }
 }

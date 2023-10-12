@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
-import DOMAIN from '@/common/DOMAIN';
 import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+
+const DOMAIN = process.env.DOMAIN;
 
 export interface AnalystFormProps {
   info: QueuedArticle;
@@ -181,7 +182,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
-                <Form.Control required data-key="doi" defaultValue={articleData.doi} onChange={handleForm} />
+                <Form.Control
+                  required
+                  data-key="doi"
+                  defaultValue={articleData.doi}
+                  placeholder="doi:100.1000/5501"
+                  onChange={handleForm}
+                />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>
@@ -252,7 +259,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
             </Row>
           </Form.Group>
         </Row>
-        <Row className={styles.LeftColumn}>
+        <Row>
           <Form.Group as={Col} controlId="abstract">
             <Form.Label>Abstract</Form.Label>
             <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />

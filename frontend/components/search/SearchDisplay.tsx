@@ -2,7 +2,7 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../components/table/SortableTable';
-import DOMAIN from '@/common/DOMAIN';
+const DOMAIN = process.env.DOMAIN;
 
 export interface SearchProps {
   message: string;
@@ -39,7 +39,6 @@ export const searchKeywords = async (field: string, input: string) => {
   try {
     const response = await fetch(DOMAIN + `articles/filter?field=${field}&keywords=${input}`);
     const result: SearchProps = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -52,6 +51,7 @@ const SearchDisplay = () => {
     filteredArticles: [],
     keywords: [],
   });
+  // retrieves searched query and updates the components with the search results
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const field = document.querySelector('select')?.value;
