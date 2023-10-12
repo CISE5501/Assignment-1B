@@ -73,17 +73,12 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
+
     // DOI check making sure that it is a valid doi format
     const doiCheckRegex = /doi:\S+\/\S+/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
-    }
-    if (Object.values(errorValidation).filter((item) => item).length > 0) {
-      setErrors(errorValidation);
-      return;
-    } else {
-      sendArticle(formData);
     }
 
     // Check article is not a duplicate
@@ -93,24 +88,13 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       return;
     }
 
-    // Submit the article
-    fetch(DOMAIN + 'articles/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert('Successfully submitted article');
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        alert('Failed to submit article');
-        console.log(err);
-      });
+    if (Object.values(errorValidation).filter((item) => item).length > 0) {
+      setErrors(errorValidation);
+      return;
+    } else {
+      // Submit the article
+      sendArticle(formData);
+    }
   };
 
   // handles the input form that updates the formData based on input
