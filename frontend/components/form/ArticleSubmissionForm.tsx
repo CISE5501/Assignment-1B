@@ -6,6 +6,9 @@ import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { DOI_CHECK_REGEX } from '../../src/common';
 
+// IMPORTANT: Need to sync with URL_REGEX in /../backend/src/common.ts
+const URL_REGEX = /\S*(?:http|www|\.\w+\/)\S+/g;
+
 const DOMAIN = process.env.DOMAIN;
 
 type Props = object;
@@ -70,6 +73,11 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       if (!author.includes(' ')) {
         errorValidation.authors = 'Author first and last name is required!';
       }
+    }
+    // Show warning when field contains URLs
+    if (URL_REGEX.test(formData.abstract)) {
+      errorValidation.abstract = `Abstract must not contain a URL`;
+      formData.abstract = formData.abstract.replace(URL_REGEX, '[URL removed]');
     }
     // DOI check making sure that it is a valid doi format
     const validDOI = DOI_CHECK_REGEX.test(formData.doi);
