@@ -75,9 +75,9 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
     // Show warning when field contains URLs
-    if (URL_REGEX.test(formData.abstract)) {
-      errorValidation.abstract = `Abstract must not contain a URL`;
-      formData.abstract = formData.abstract.replace(URL_REGEX, '[URL removed]');
+    if (URL_REGEX.test(formData.claim)) {
+      errorValidation.claim = `Claim must not contain a URL`;
+      formData.claim = formData.claim.replace(URL_REGEX, '[URL removed]');
     }
     // DOI check making sure that it is a valid doi format
     const validDOI = DOI_CHECK_REGEX.test(formData.doi);
