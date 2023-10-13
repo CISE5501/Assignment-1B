@@ -28,7 +28,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch {
-    throw new Error('Failed to fetch resources. Please reload the page.');
+    throw new Error(
+      'Failed to fetch resources. Is the database offline? Please reload the page and try again.',
+    );
   }
 };
 
