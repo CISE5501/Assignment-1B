@@ -81,10 +81,12 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     }
 
     // Check article is not a duplicate
-    const searchQuery = await fetch(DOMAIN + 'articles/doi/' + encodeURIComponent(formData.doi)).then(data => data.json());
-    if (searchQuery.filteredArticles?.length > 0) {
-      alert(`Article with DOI ${formData.doi} already exists in the queue!`);
-      return;
+    for (const [path, desc] of [['articles', 'Database'], ['moderator', 'Queue']]) {
+      const searchQuery = await fetch(DOMAIN + path + '/doi/' + encodeURIComponent(formData.doi)).then(data => data.json());
+      if (searchQuery.filteredArticles?.length > 0) {
+        alert(`Article with DOI ${formData.doi} already exists in the ${desc}!`);
+        return;
+      }
     }
 
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
