@@ -42,7 +42,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         }
       })
       .catch((err) => {
-        alert('Failed to submit article');
+        alert('Failed to submit article: '+err);
       });
   };
 
