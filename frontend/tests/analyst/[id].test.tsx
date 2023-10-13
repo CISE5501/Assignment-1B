@@ -12,7 +12,7 @@ const egArticle = {
   issue: 2,
   pageRange: [3, 5],
   doi: 'dsfsdfsdfsdf',
-  keywords: ['sad', 'asd'],
+  se_methods: ['sad', 'asd'],
   claim: 'sfasd',
   isModerated: true,
 } as QueuedArticle;

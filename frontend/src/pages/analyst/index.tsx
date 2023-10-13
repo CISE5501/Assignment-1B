@@ -49,9 +49,9 @@ const Index = ({ queueData }: PageProps) => {
       },
       { key: 'doi', label: 'DOI' },
       {
-        key: 'keywords',
-        label: 'Keywords',
-        displayAs: (keywords) => keywords.join(', '),
+        key: 'se_methods',
+        label: 'SE Methods',
+        displayAs: (se_methods) => se_methods.join(', '),
       },
       { key: 'claim', label: 'Claim' },
       {

@@ -10,6 +10,6 @@ export type Article = {
   issue: number;
   pageRange: [number, number];
   doi: string;
-  keywords: string[];
+  se_methods: string[];
   claim: string;
 };

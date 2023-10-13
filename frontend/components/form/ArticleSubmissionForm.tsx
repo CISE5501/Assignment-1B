@@ -21,7 +21,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     issue: 0,
     pageRange: [0, 0],
     doi: '',
-    keywords: [],
+    se_methods: [],
     claim: '',
     isModerated: false,
   });
@@ -93,7 +93,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
-      array: ['authors', 'keywords', 'pageRange'],
+      array: ['authors', 'se_methods', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
@@ -109,7 +109,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
 
   // updates keywords with a new array
   const handleKeywordChange = (newArray: string[]) => {
-    setFormData({ ...formData, ['keywords']: newArray });
+    setFormData({ ...formData, ['se_methods']: newArray });
   };
 
   // updates authors with a new array
@@ -198,9 +198,9 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
               </Form.Group>
             </Row>
             <Row>
-              {/*keywords*/}
-              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'keywords'} defaultValue={[]} />
-              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+              {/*se methods*/}
+              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'se_methods'} defaultValue={[]} />
+              {errors.se_methods && <p className={styles.Error}>{errors.se_methods}</p>}
             </Row>
           </Form.Group>
         </Row>

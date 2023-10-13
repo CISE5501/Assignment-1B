@@ -96,9 +96,9 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
       },
       { key: 'doi', label: 'DOI' },
       {
-        key: 'keywords',
-        label: 'Keywords',
-        displayAs: (keywords: string[]) => keywords.join(', '),
+        key: 'se_methods',
+        label: 'SE methods',
+        displayAs: (se_methods: string[]) => se_methods.join(', '),
       },
       { key: 'claim', label: 'Claim' },
       {

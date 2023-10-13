@@ -17,7 +17,7 @@ export class CreateQueuedArticleDto {
   @IsString()
   readonly doi: string;
   @IsArray()
-  readonly keywords: string[];
+  readonly se_methods: string[];
   @IsString()
   readonly claim: string;
   @IsBoolean()

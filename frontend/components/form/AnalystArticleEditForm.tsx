@@ -63,7 +63,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     issue: articleData.issue,
     pageRange: [articleData.pageRange[0], articleData.pageRange[1]],
     doi: articleData.doi,
-    keywords: articleData.keywords,
+    se_methods: articleData.se_methods,
     claim: articleData.claim,
   });
   //setting inital error values
@@ -115,7 +115,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof ArticleSubmission>> = {
       single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
-      array: ['authors', 'keywords', 'pageRange'],
+      array: ['authors', 'se_methods', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
@@ -130,7 +130,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   };
   //handles keyword array changes
   const handleKeywordChange = (newArray: string[]) => {
-    setFormData({ ...formData, ['keywords']: newArray });
+    setFormData({ ...formData, ['se_methods']: newArray });
   };
   //handles author array changes
   const handleAuthorChange = (newArray: string[]) => {
@@ -253,13 +253,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               </Form.Group>
             </Row>
             <Row>
-              {/*keywords*/}
+              {/*se methods*/}
               <KeywordsInput
                 updateFormData={handleKeywordChange}
-                dataKey={'keywords'}
-                defaultValue={articleData.keywords}
+                dataKey={'se_methods'}
+                defaultValue={articleData.se_methods}
               />
-              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+              {errors.se_methods && <p className={styles.Error}>{errors.se_methods}</p>}
             </Row>
           </Form.Group>
         </Row>

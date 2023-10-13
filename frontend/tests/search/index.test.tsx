@@ -15,7 +15,7 @@ const tempArray = [
     issue: 2,
     pageRange: [3, 5],
     doi: 'dsfsdfsdfsdf',
-    keywords: ['sad', 'asd'],
+    se_methods: ['sad', 'asd'],
     claim: 'sfasd',
   },
 ] as Article[];
@@ -67,7 +67,7 @@ describe('Testing initial rendering', () => {
   test('Test 5: submitting the form will return data if the keyword entered is stored in the database', async () => {
     renderSearch();
     const responseMock = () =>
-      JSON.stringify({ message: '', filteredArticles: tempArray, keywords: ['sdf'] } as SearchProps);
+      JSON.stringify({ message: '', filteredArticles: tempArray, se_methods: ['sdf'] } as SearchProps);
     fetchMock.mockResponseOnce(responseMock());
     const result = await searchKeywords('field', 'sdf');
     await waitFor(() => {

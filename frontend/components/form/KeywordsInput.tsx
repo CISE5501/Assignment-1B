@@ -54,7 +54,7 @@ const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputP
 
   return (
     <Form.Group as={Col} controlId={dataKey} data-key={dataKey}>
-      <Form.Label>Keywords</Form.Label>
+      <Form.Label>SE Methods</Form.Label>
       <br />
       {keywords.map((keyword, index) => (
         <div className={styles.keywordItem} key={index}>
