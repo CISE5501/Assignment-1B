@@ -4,7 +4,9 @@ import styles from './SubmissionForm.module.scss';
 import KeywordsInput from './KeywordsInput';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { URL_REGEX } from '../../../backend/src/common'; // NOTE: imports from 'backend' project
+
+// IMPORTANT: Need to sync with URL_REGEX in /../backend/src/common.ts
+const URL_REGEX = /\S*(?:http|www|\.\w+\/)\S+/g;
 
 const DOMAIN = process.env.DOMAIN;
 
