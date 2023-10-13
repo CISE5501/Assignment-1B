@@ -37,9 +37,23 @@ export class ModeratorController {
 
   //retrieves a queuedArticle object which has a matching id to the queried string
   @Get('/id/:id')
-  async getArticle(@Res() response, @Param('id') articleId: string) {
+  async getArticleById(@Res() response, @Param('id') articleId: string) {
     try {
       const existingArticle = await this.queuedArticleService.getQueuedArticle(articleId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article found successfully',
+        existingArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  //retrieves a queuedArticle object which has a matching DOI to the queried string
+  @Get('/doi/:doi')
+  async getArticleByDoi(@Res() response, @Param('doi') doi: string) {
+    try {
+      const existingArticle = await this.queuedArticleService.getQueuedArticleByDoi(doi);
       return response.status(HttpStatus.OK).json({
         message: 'Article found successfully',
         existingArticle,

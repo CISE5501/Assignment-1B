@@ -52,6 +52,14 @@ export class QueuedArticleService {
     return existingArticle;
   }
 
+  async getQueuedArticleByDoi(doi: string): Promise<IQueuedArticle> {
+    const existingArticle = await this.articleModel.findById({ doi }).exec();
+    if (!existingArticle) {
+      throw new NotFoundException(`Article with DOI ${doi} not found`);
+    }
+    return existingArticle;
+  }
+
   async createQueuedArticle(createArticleDto: CreateQueuedArticleDto): Promise<IQueuedArticle> {
     const newArticle = await new this.articleModel(createArticleDto);
     return newArticle.save();
