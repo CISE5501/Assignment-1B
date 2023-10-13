@@ -63,8 +63,8 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     issue: articleData.issue,
     pageRange: [articleData.pageRange[0], articleData.pageRange[1]],
     doi: articleData.doi,
-    keywords: articleData.keywords,
-    abstract: articleData.abstract,
+    se_methods: articleData.se_methods,
+    claim: articleData.claim,
   });
   //setting inital error values
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -114,8 +114,8 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof ArticleSubmission>> = {
-      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
-      array: ['authors', 'keywords', 'pageRange'],
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
+      array: ['authors', 'se_methods', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
@@ -130,7 +130,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   };
   //handles keyword array changes
   const handleKeywordChange = (newArray: string[]) => {
-    setFormData({ ...formData, ['keywords']: newArray });
+    setFormData({ ...formData, ['se_methods']: newArray });
   };
   //handles author array changes
   const handleAuthorChange = (newArray: string[]) => {
@@ -253,21 +253,21 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               </Form.Group>
             </Row>
             <Row>
-              {/*keywords*/}
+              {/*se methods*/}
               <KeywordsInput
                 updateFormData={handleKeywordChange}
-                dataKey={'keywords'}
-                defaultValue={articleData.keywords}
+                dataKey={'se_methods'}
+                defaultValue={articleData.se_methods}
               />
-              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+              {errors.se_methods && <p className={styles.Error}>{errors.se_methods}</p>}
             </Row>
           </Form.Group>
         </Row>
         <Row>
-          <Form.Group as={Col} controlId="abstract">
-            <Form.Label>Abstract</Form.Label>
-            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+          <Form.Group as={Col} controlId="claim">
+            <Form.Label>Claim</Form.Label>
+            <Form.Control data-key="claim" as="textarea" rows={2} onChange={handleForm} />
+            {errors.claim && <p className={styles.Error}>{errors.claim}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>
