@@ -53,7 +53,7 @@ export class QueuedArticleService {
   }
 
   async getQueuedArticleByDoi(doi: string): Promise<IQueuedArticle> {
-    const existingArticle = await this.articleModel.findById({ doi }).exec();
+    const existingArticle = await this.articleModel.findOne({ doi }).exec();
     if (!existingArticle) {
       throw new NotFoundException(`Article with DOI ${doi} not found`);
     }
