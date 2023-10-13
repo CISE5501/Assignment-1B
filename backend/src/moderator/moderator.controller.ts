@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Param, Put, Res, Delete } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Put, Res, Delete, Query } from '@nestjs/common';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
 import { RejectedEntryService } from 'src/models/rejected/rejected.service';
@@ -61,6 +61,22 @@ export class ModeratorController {
       return response.status(HttpStatus.OK).json({
         message: 'All duplicate articles found successfully',
         duplicateDOIs,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  // getDataOfField: returns list of values of a given field for all articles and queued articles
+  @Get('/values')
+  async getDataOfField(@Res() response, @Query('field') field: string) {
+    try {
+      const acceptedArticles = await this.articleService.getAllArticles();
+      const queuedArticles = await this.queuedArticleService.getAllQueuedArticles();
+      const inDatabases = [...acceptedArticles, ...queuedArticles].map((article) => article[field]);
+      return response.status(HttpStatus.OK).json({
+        message: 'All duplicate articles found successfully',
+        data: inDatabases,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
