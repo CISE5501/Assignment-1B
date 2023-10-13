@@ -5,6 +5,7 @@ import KeywordsInput from './KeywordsInput';
 import { Article } from '@/schema/article';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { DOI_CHECK_REGEX } from '../../src/common';
 const DOMAIN = process.env.DOMAIN;
 
 //props
@@ -93,8 +94,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
       }
     }
     //checking DOI is valid format
-    const doiCheckRegex = /doi:10.\d{4}\/\S+/;
-    const validDOI = doiCheckRegex.test(formData.doi);
+    const validDOI = DOI_CHECK_REGEX.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
     }
