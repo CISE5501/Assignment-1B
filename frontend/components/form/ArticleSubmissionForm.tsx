@@ -4,7 +4,7 @@ import styles from './SubmissionForm.module.scss';
 import KeywordsInput from './KeywordsInput';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { URL_REGEX } from '../../backend/src/common';
+import { URL_REGEX } from '../../../backend/src/common';
 
 const DOMAIN = process.env.DOMAIN;
 
