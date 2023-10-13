@@ -10,8 +10,8 @@ export class Article {
   @Prop() issue: number;
   @Prop() pageRange: [number, number];
   @Prop() doi: string;
-  @Prop() keywords: string[];
-  @Prop() abstract: string;
+  @Prop() se_methods: string[];
+  @Prop() claim: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

@@ -3,6 +3,7 @@ import { Form, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './SubmissionForm.module.scss';
 
+//props
 interface KeywordsInputProps {
   defaultValue: string[];
   dataKey: string;
@@ -10,7 +11,10 @@ interface KeywordsInputProps {
 }
 
 const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputProps) => {
+  //sets initial value of keywords to the default value
   const [keywords, setKeywords] = useState<string[]>(defaultValue);
+
+  //handle user pressing enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // If user did not press enter key, return
     if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
@@ -27,25 +31,30 @@ const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputP
       e.target.value = '';
     }
   };
-
+  //removes keywords
   const removeKeyword = (index: number) => {
     const temp = keywords.filter((element, i) => i !== index);
     setKeywords(temp);
     updateFormData(temp);
   };
 
+  //keyword
   const keywordList = [
-    'SCRUM',
-    'Software Development Life Cycle (SDLC)',
+    'Agile Methodolgies',
+    'Artificial Intelligence',
+    'DevOps',
     'Kanban',
     'Lean',
-    'Agile Methodolgies',
+    'SCRUM',
+    'Security',
+    'Software Development Life Cycle',
+    'Software Testing',
     'Waterfall',
   ];
 
   return (
     <Form.Group as={Col} controlId={dataKey} data-key={dataKey}>
-      <Form.Label>Keywords</Form.Label>
+      <Form.Label>SE Methods</Form.Label>
       <br />
       {keywords.map((keyword, index) => (
         <div className={styles.keywordItem} key={index}>

@@ -17,7 +17,7 @@ export class CreateArticleDto {
   @IsString()
   readonly doi: string;
   @IsArray()
-  readonly keywords: string[];
+  readonly se_methods: string[];
   @IsString()
-  readonly abstract: string;
+  readonly claim: string;
 }

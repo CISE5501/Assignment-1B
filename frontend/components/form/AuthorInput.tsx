@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { Form, Col, InputGroup, Button } from 'react-bootstrap';
 
+//props
 interface AuthorInputProps {
   defaultValue?: string[];
   dataKey: string;
@@ -12,11 +13,13 @@ interface AuthorField {
   value: string;
 }
 
+//extracts the name from an array of AuthorField objects and saves as a string array
 function getValues(array: AuthorField[]): string[] {
   return array.map((field) => field.value);
 }
 
 const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps) => {
+  //sets intial value of authorfields array
   const [authorFields, setAuthorFields] = useState<AuthorField[]>(
     defaultValue?.map((value, index) => ({ id: index, value: value })) || [{ id: 0, value: '' }],
   );
@@ -24,7 +27,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
   const [counter, setCounter] = useState<number>(authorFields.length);
   const [tempIndex, setTempIndex] = useState<number>(0);
 
-  //console.log("index: " + index + "counter: "+ counter);
+  //handles changes made to author inputs
   const handleAuthorChange = (e: React.FormEvent<HTMLInputElement>, id: number) => {
     const updatedAuthorFields = authorFields.map((field) =>
       field.id === id ? { ...field, value: e.currentTarget.value as string } : field,
@@ -33,6 +36,7 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
     updateFormData(getValues(authorFields));
   };
 
+  //adds an author
   const addAuthor = () => {
     if (tempIndex !== 0) {
       setIndex((prevIndexes) => [...prevIndexes, tempIndex]);
@@ -44,10 +48,9 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
     }
     setCounter((prevCounter) => prevCounter + 1);
     updateFormData(getValues(authorFields));
-
-    //console.log("index: " + index + "counter: "+ counter);
   };
 
+  //deletes an author
   const deleteAuthor = (id: number) => {
     if (authorFields.length == 1) {
       return;
@@ -59,8 +62,6 @@ const AuthorInput = ({ defaultValue, dataKey, updateFormData }: AuthorInputProps
     setIndex((prevIndexes) => [...prevIndexes.filter((item) => item !== id)]);
     setCounter((prevCounter) => prevCounter - 1);
     updateFormData(getValues(authorFields));
-
-    //console.log("index: " + index + "counter: "+ counter);
   };
 
   return (
