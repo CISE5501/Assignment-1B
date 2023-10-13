@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 export class CreateArticleDto {
   @IsString()
   readonly title: string;
@@ -17,7 +17,7 @@ export class CreateArticleDto {
   @IsString()
   readonly doi: string;
   @IsArray()
-  readonly keywords: string[];
+  readonly se_methods: string[];
   @IsString()
-  readonly abstract: string;
+  readonly claim: string;
 }

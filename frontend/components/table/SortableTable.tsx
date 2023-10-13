@@ -11,6 +11,7 @@ type SortOrder = 'asc' | 'desc';
 //Just to get a hold of the field keys and set the fields type to store one of any of the different keys
 type fields = typeof fieldnames
 
+//props
 export type ComputedRow<T> = {
   computed: true;
   label: string;

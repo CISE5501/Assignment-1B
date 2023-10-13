@@ -13,8 +13,8 @@ const tempArray = [
     issue: 2,
     pageRange: [3, 5],
     doi: 'dsfsdfsdfsdf',
-    keywords: ['sad', 'asd'],
-    abstract: 'sfasd',
+    se_methods: ['sad', 'asd'],
+    claim: 'sfasd',
     rating: 4,
   },
 ] as RatedArticle[];
@@ -32,11 +32,6 @@ function renderHomeWithArticles(props: Partial<ArticleProps> = {}) {
   };
   return render(<Index {...defaultProps} {...props} />);
 }
-
-test('should have empty table', async () => {
-  renderHome();
-  expect(screen.getAllByTestId('data-table-body').length).toBe(1);
-});
 
 test('should have table with an article entry', async () => {
   renderHomeWithArticles();

@@ -10,8 +10,8 @@ export class QueuedArticle {
   @Prop() issue: number;
   @Prop() pageRange: [number, number];
   @Prop() doi: string;
-  @Prop() keywords: string[];
-  @Prop() abstract: string;
+  @Prop() se_methods: string[];
+  @Prop() claim: string;
   @Prop() isModerated: boolean;
 }
 

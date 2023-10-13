@@ -1,68 +1,52 @@
 import React, { useState } from 'react';
-import { QueuedArticle } from '../src/schema/queuedArticle';
+import { QueuedArticle } from '../../src/schema/queuedArticle';
 import styles from './SubmissionForm.module.scss';
-import DOMAIN from '../DOMAIN';
 import KeywordsInput from './KeywordsInput';
-import { Article } from '@/schema/article';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 
-export interface AnalystFormProps {
-  info: QueuedArticle;
-}
+const DOMAIN = process.env.DOMAIN;
 
-type ArticleSubmission = Omit<Article, '_id'>;
+type Props = object;
 
-const formatDate = (dateText: string) => {
-  const sArray = dateText.split('-');
-  const year = sArray[0];
-  const month = sArray[1].padStart(2, '0');
-  const day = sArray[2].padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+type QueuedArticleSubmission = Omit<QueuedArticle, '_id'>;
 
-const deleteOldArticle = async (id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'analyst/id/' + id, {
-    method: 'DELETE',
-  });
-  if (response.ok) {
-    window.location.replace('/analyst');
-  } else {
-    alert('Failed to delete old article.');
-  }
-};
-
-const sendArticle = async (data: string, id: string): Promise<void> => {
-  const response = await fetch(DOMAIN + 'analyst', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: data,
-  });
-  if (response.ok) {
-    alert('Successfully sent article');
-    deleteOldArticle(id); //comment this line out if you don't want to create articles every time
-  } else {
-    alert('Failed');
-  }
-};
-
-const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
-  const articleData = data.info;
-  const [formData, setFormData] = useState<ArticleSubmission>({
-    title: articleData.title,
-    authors: articleData.authors,
-    date: articleData.date,
-    journal: articleData.journal,
-    volume: articleData.volume,
-    issue: articleData.issue,
-    pageRange: [articleData.pageRange[0], articleData.pageRange[1]],
-    doi: articleData.doi,
-    keywords: articleData.keywords,
-    abstract: articleData.abstract,
+const QueuedArticleSubmissionForm: React.FC<Props> = () => {
+  const [formData, setFormData] = useState<QueuedArticleSubmission>({
+    title: '',
+    authors: [],
+    date: '',
+    journal: '',
+    volume: 0,
+    issue: 0,
+    pageRange: [0, 0],
+    doi: '',
+    se_methods: [],
+    claim: '',
+    isModerated: false,
   });
 
+  // When sendArticle is called the article data is in json format
+  const sendArticle = async (formData: QueuedArticleSubmission): Promise<void> => {
+    await fetch(DOMAIN + 'articles/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert('Successfully submitted article');
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        alert('Failed to submit article: ' + err);
+      });
+  };
+
+  // Error handlings
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,30 +70,30 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
-    const doiCheckRegex = /doi:\S+\/\S+/;
+    // DOI check making sure that it is a valid doi format
+    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
     }
     if (Object.values(errorValidation).filter((item) => item).length > 0) {
       setErrors(errorValidation);
-      console.log(errorValidation);
-
       return;
     } else {
-      sendArticle(JSON.stringify(formData), articleData._id);
+      sendArticle(formData);
     }
   };
 
+  // handles the input form that updates the formData based on input
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const index = e.currentTarget.dataset.index;
-    const name = e.currentTarget.dataset.key as keyof ArticleSubmission;
+    const name = e.currentTarget.dataset.key as keyof QueuedArticleSubmission;
     const type = e.currentTarget.type;
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
-    const formKeys: Record<'single' | 'array', Array<keyof ArticleSubmission>> = {
-      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
-      array: ['authors', 'keywords', 'pageRange'],
+    const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
+      array: ['authors', 'se_methods', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
@@ -123,45 +107,37 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     }
   };
 
+  // updates keywords with a new array
   const handleKeywordChange = (newArray: string[]) => {
-    setFormData({ ...formData, ['keywords']: newArray });
+    setFormData({ ...formData, ['se_methods']: newArray });
   };
 
+  // updates authors with a new array
   const handleAuthorChange = (newArray: string[]) => {
     setFormData({ ...formData, ['authors']: newArray });
   };
 
-  // TODO change onChange to on deselect
   return (
     <div>
       <Form role="form" onSubmit={handleSubmit}>
-        <Row className={styles.LeftColumn}>
+        <Row>
           {/*title*/}
           <Form.Group as={Col} controlId="title">
             <Form.Label>Article Title</Form.Label>
-            <Form.Control required data-key="title" onChange={handleForm} defaultValue={articleData.title} />
+            <Form.Control required data-key="title" onChange={handleForm} />
             {errors.title && <p className={styles.Error}>{errors.title}</p>}
           </Form.Group>
           {/*journal*/}
           <Form.Group as={Col} controlId="journal">
             <Form.Label>Journal</Form.Label>
-            <Form.Control
-              required
-              data-key="journal"
-              defaultValue={articleData.journal}
-              onChange={handleForm}
-            />
+            <Form.Control required data-key="journal" onChange={handleForm} />
             {errors.journal && <p className={styles.Error}>{errors.journal}</p>}
           </Form.Group>
         </Row>
         <Row className={styles.RightColumn}>
           <Form.Group as={Col} controlId="authors">
             {/*authors*/}
-            <AuthorInput
-              updateFormData={handleAuthorChange}
-              dataKey={'authors'}
-              defaultValue={articleData.authors}
-            />
+            <AuthorInput updateFormData={handleAuthorChange} dataKey={'authors'} />
             {errors.authors && <p className={styles.Error}>{errors.authors}</p>}
           </Form.Group>
           <Form.Group as={Col}>
@@ -169,19 +145,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               {/*date*/}
               <Form.Group as={Col} controlId="date">
                 <Form.Label>Date</Form.Label>
-                <Form.Control
-                  required
-                  data-key="date"
-                  defaultValue={formatDate(articleData.date)}
-                  onChange={handleForm}
-                  type="date"
-                />
+                <Form.Control required data-key="date" onChange={handleForm} type="date" />
                 {errors.date && <p className={styles.Error}>{errors.date}</p>}
               </Form.Group>
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
-                <Form.Control required data-key="doi" defaultValue={articleData.doi} onChange={handleForm} />
+                <Form.Control required data-key="doi" placeholder="doi:100.1000/5501" onChange={handleForm} />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>
@@ -189,25 +159,13 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               {/*volume*/}
               <Form.Group as={Col} controlId="volume">
                 <Form.Label>Volume</Form.Label>
-                <Form.Control
-                  required
-                  data-key="volume"
-                  defaultValue={articleData.volume}
-                  onChange={handleForm}
-                  type="number"
-                />
+                <Form.Control required data-key="volume" onChange={handleForm} type="number" />
                 {errors.volume && <p className={styles.Error}>{errors.volume}</p>}
               </Form.Group>
               {/*issue*/}
               <Form.Group as={Col} controlId="issue">
                 <Form.Label>Issue</Form.Label>
-                <Form.Control
-                  required
-                  data-key="issue"
-                  defaultValue={articleData.issue}
-                  onChange={handleForm}
-                  type="number"
-                />
+                <Form.Control required data-key="issue" onChange={handleForm} type="number" />
                 {errors.issue && <p className={styles.Error}>{errors.issue}</p>}
               </Form.Group>
             </Row>
@@ -221,7 +179,6 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                       required
                       data-key="pageRange"
                       data-index="0"
-                      defaultValue={articleData.pageRange[0]}
                       onChange={handleForm}
                       type="number"
                     />
@@ -232,7 +189,6 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                       required
                       data-key="pageRange"
                       data-index="1"
-                      defaultValue={articleData.pageRange[1]}
                       onChange={handleForm}
                       type="number"
                     />
@@ -242,21 +198,17 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
               </Form.Group>
             </Row>
             <Row>
-              {/*keywords*/}
-              <KeywordsInput
-                updateFormData={handleKeywordChange}
-                dataKey={'keywords'}
-                defaultValue={articleData.keywords}
-              />
-              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+              {/*se methods*/}
+              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'se_methods'} defaultValue={[]} />
+              {errors.se_methods && <p className={styles.Error}>{errors.se_methods}</p>}
             </Row>
           </Form.Group>
         </Row>
-        <Row className={styles.LeftColumn}>
-          <Form.Group as={Col} controlId="abstract">
-            <Form.Label>Abstract</Form.Label>
-            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+        <Row>
+          <Form.Group as={Col} controlId="claim">
+            <Form.Label>Claim</Form.Label>
+            <Form.Control data-key="claim" as="textarea" rows={2} onChange={handleForm} />
+            {errors.claim && <p className={styles.Error}>{errors.claim}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>
@@ -267,4 +219,4 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
   );
 };
 
-export default AnalystArticleSubmissionForm;
+export default QueuedArticleSubmissionForm;

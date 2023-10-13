@@ -5,6 +5,14 @@ import { IArticle } from 'src/models/articles/article.interface';
 import { CreateArticleDto } from 'src/models/articles/dto/create-article.dto';
 import { UpdateArticleDto } from 'src/models/articles/dto/update-article.dto';
 
+/*
+  Exports functions that can be used to interact with the 'articles' database:
+    - Get all articles
+    - Get a specified article
+    - Add a new article
+    - Update a specified article
+    - Delete a specified article
+*/
 @Injectable()
 export class ArticleService {
   constructor(@InjectModel('Article') private articleModel: Model<IArticle>) {}
@@ -12,7 +20,7 @@ export class ArticleService {
   async getAllArticles(): Promise<IArticle[]> {
     const articleData = await this.articleModel.find();
     if (!articleData || articleData.length == 0) {
-      throw new NotFoundException('Articles data not found!');
+      [];
     }
     return articleData;
   }

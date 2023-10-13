@@ -2,21 +2,27 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nes
 import { CreateQueuedArticleDto } from 'src/models/queuedArticles/dto/create-article.dto';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
-import { RejectedEntryService } from 'src/models/rejected/rejected.service';
 import { CreateRatingDto } from 'src/models/ratings/dto/create-rating.dto';
 import { StarRatingService } from 'src/models/ratings/starRating.service';
 
-//controller- routes articles to get/post methods
-
+/*
+  Routes paths with prefix '/articles' in the URL to functions declared in service modules.
+  This controller contains functions accessible by any public user:
+    - Getting a list of article objects with/without filters applied
+    - Getting a specified queuedArticle object
+    - Getting a specified rating object
+    - Posting a new rating object
+    - Posting a new queuedArticle object
+*/
 @Controller('articles')
 export class UserController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
-    private readonly rejectedEntryService: RejectedEntryService,
     private readonly starRatingService: StarRatingService,
   ) {}
 
+  // getArticles: Retrieves all stored article objects from articles database
   @Get()
   async getArticles(@Res() response) {
     try {
@@ -30,10 +36,11 @@ export class UserController {
     }
   }
 
+  // findArticlesByQuery: Retrieves a list of article objects that are relevant to a specific method or methods (keywords)
   @Get('/filter')
   async findArticlesByQuery(
     @Query('keywords') keywords: string,
-    @Query('field') field = 'all',
+    @Query('field') field: string,
     @Res() response,
   ) {
     try {
@@ -59,6 +66,7 @@ export class UserController {
     }
   }
 
+  // getArticle: returns an article object stored in the database if it matches the queried id in the URL
   @Get('/id/:id')
   async getArticle(@Res() response, @Param('id') articleId: string) {
     try {
@@ -72,22 +80,7 @@ export class UserController {
     }
   }
 
-  @Get('/includes/id/:id')
-  async doesArticleExist(@Res() response, @Param('id') articleId: string) {
-    try {
-      await this.articleService.getArticle(articleId);
-      return response.status(HttpStatus.OK).json({
-        message: 'Article found successfully',
-        exists: true,
-      });
-    } catch (err) {
-      return response.status(HttpStatus.OK).json({
-        message: 'Article does not exist',
-        exists: false,
-      });
-    }
-  }
-
+  // getArticleRating: used to return the rating value (stored in rating database) that corresponds with the queried doi
   @Get('/rating')
   async getArticleRating(@Res() response, @Query('doi') doi: string) {
     try {
@@ -104,27 +97,11 @@ export class UserController {
     }
   }
 
-  @Get('/rejected')
-  async getRejectedDOIs(@Res() response) {
-    try {
-      const rejectedEntries = await this.rejectedEntryService.getAllEntries();
-      const rejectedDOIs = rejectedEntries.map((item) => item.doi);
-      return response.status(HttpStatus.OK).json({
-        message: 'Rejected entries found successfully',
-        rejectedDOIs,
-      });
-    } catch (err) {
-      return response.status(HttpStatus.OK).json({
-        message: 'Failed to fetch rejected entries',
-        rejectedDOIs: [],
-      });
-    }
-  }
-
+  // sends a new queuedArticle object to the queuedArticles database for moderation.
   @Post('/new')
   async createArticle(@Res() response, @Body() createArticleDto: CreateQueuedArticleDto) {
     try {
-      const newArticle = await this.queuedArticleService.createArticle(createArticleDto);
+      const newArticle = await this.queuedArticleService.createQueuedArticle(createArticleDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Article has been created successfully',
         newArticle,
@@ -136,6 +113,7 @@ export class UserController {
     }
   }
 
+  // sends a new rating object to the ratings database
   @Post('/rate')
   async rateArticle(@Res() response, @Body() createRatingDto: CreateRatingDto) {
     try {

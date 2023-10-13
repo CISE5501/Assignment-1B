@@ -9,7 +9,7 @@ export interface IQueuedArticle extends Document {
   issue: number;
   pageRange: [number, number];
   doi: string;
-  keywords: string[];
-  abstract: string;
+  se_methods: string[];
+  claim: string;
   isModerated: boolean;
 }
