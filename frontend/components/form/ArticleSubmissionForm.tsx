@@ -26,7 +26,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     isModerated: false,
   });
 
-  // When sendArticle is called the article data is in json format 
+  // When sendArticle is called the article data is in json format
   const sendArticle = async (formData: QueuedArticleSubmission): Promise<void> => {
     await fetch(DOMAIN + 'articles/new', {
       method: 'POST',
@@ -42,8 +42,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         }
       })
       .catch((err) => {
-        alert('Failed to submit article');
-        console.log(err);
+        alert('Failed to submit article: '+err);
       });
   };
 
@@ -72,7 +71,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
     // DOI check making sure that it is a valid doi format
-    const doiCheckRegex = /doi:\S+\/\S+/;
+    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';

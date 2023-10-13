@@ -4,13 +4,14 @@ import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
-
 const DOMAIN = process.env.DOMAIN;
 
+//props
 export type PageProps = {
   queueData: QueuedArticle[];
 };
 
+//gets a list of moderated articles from the server through 'analyst/index' path
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const { articleData: queueData } = await fetch(DOMAIN + 'analyst/index').then((data) => data.json());

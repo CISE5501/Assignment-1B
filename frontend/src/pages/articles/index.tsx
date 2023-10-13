@@ -6,9 +6,9 @@ import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
+const DOMAIN = process.env.DOMAIN;
 
-const DOMAIN = process.env.DOMAIN as string;
-
+//props
 export type RatedArticle = Article & { rating: number | null };
 
 export interface ArticleProps {
@@ -36,7 +36,6 @@ const Index = ({ articleData }: ArticleProps) => {
         body: JSON.stringify(updatedRating),
       };
       await fetch(DOMAIN + 'articles/rate', reqData);
-      console.log('Updated star rating: ' + rating + '/5');
       window.location.reload();
     } catch {
       alert('Failed to update star rating');
