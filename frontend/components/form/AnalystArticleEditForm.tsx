@@ -93,7 +93,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
       }
     }
     //checking DOI is valid format
-    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
+    const doiCheckRegex = /doi:10.1\d{3}\/\S+/;
     const validDOI = doiCheckRegex.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
