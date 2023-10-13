@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
+//props
 export type ComputedRow<T> = {
   computed: true;
   label: string;
