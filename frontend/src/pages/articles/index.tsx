@@ -64,7 +64,7 @@ const Index = ({ articleData }: ArticleProps) => {
       label: 'Keywords',
       displayAs: (keywords: string[]) => keywords.join(', '),
     },
-    { key: 'abstract', label: 'Abstract' },
+    { key: 'claim', label: 'Claim' },
     {
       key: 'rating',
       label: 'Star Rating',

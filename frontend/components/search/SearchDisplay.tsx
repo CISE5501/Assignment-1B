@@ -33,7 +33,7 @@ export const headersList: DataRow<Article>[] = [
     label: 'Keywords',
     displayAs: (keywords: string[]) => keywords.join(', '),
   },
-  { key: 'abstract', label: 'Abstract' },
+  { key: 'claim', label: 'claim' },
 ];
 
 //searches for articles containing the relevant keywords

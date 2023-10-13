@@ -11,7 +11,7 @@ export class Article {
   @Prop() pageRange: [number, number];
   @Prop() doi: string;
   @Prop() keywords: string[];
-  @Prop() abstract: string;
+  @Prop() claim: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

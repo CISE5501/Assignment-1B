@@ -16,7 +16,7 @@ const tempArray = [
     pageRange: [3, 5],
     doi: 'dsfsdfsdfsdf',
     keywords: ['sad', 'asd'],
-    abstract: 'sfasd',
+    claim: 'sfasd',
   },
 ] as Article[];
 

@@ -64,7 +64,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     pageRange: [articleData.pageRange[0], articleData.pageRange[1]],
     doi: articleData.doi,
     keywords: articleData.keywords,
-    abstract: articleData.abstract,
+    claim: articleData.claim,
   });
   //setting inital error values
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -114,7 +114,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof ArticleSubmission>> = {
-      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
       array: ['authors', 'keywords', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
@@ -264,10 +264,10 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
           </Form.Group>
         </Row>
         <Row>
-          <Form.Group as={Col} controlId="abstract">
-            <Form.Label>Abstract</Form.Label>
-            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+          <Form.Group as={Col} controlId="claim">
+            <Form.Label>Claim</Form.Label>
+            <Form.Control data-key="claim" as="textarea" rows={2} onChange={handleForm} />
+            {errors.claim && <p className={styles.Error}>{errors.claim}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>

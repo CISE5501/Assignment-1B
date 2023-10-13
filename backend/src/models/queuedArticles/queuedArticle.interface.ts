@@ -10,6 +10,6 @@ export interface IQueuedArticle extends Document {
   pageRange: [number, number];
   doi: string;
   keywords: string[];
-  abstract: string;
+  claim: string;
   isModerated: boolean;
 }

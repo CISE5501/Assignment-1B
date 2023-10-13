@@ -22,7 +22,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     pageRange: [0, 0],
     doi: '',
     keywords: [],
-    abstract: '',
+    claim: '',
     isModerated: false,
   });
 
@@ -42,7 +42,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         }
       })
       .catch((err) => {
-        alert('Failed to submit article: '+err);
+        alert('Failed to submit article: ' + err);
       });
   };
 
@@ -92,7 +92,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
-      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
       array: ['authors', 'keywords', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
@@ -205,10 +205,10 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
           </Form.Group>
         </Row>
         <Row>
-          <Form.Group as={Col} controlId="abstract">
-            <Form.Label>Abstract</Form.Label>
-            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+          <Form.Group as={Col} controlId="claim">
+            <Form.Label>Claim</Form.Label>
+            <Form.Control data-key="claim" as="textarea" rows={2} onChange={handleForm} />
+            {errors.claim && <p className={styles.Error}>{errors.claim}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>

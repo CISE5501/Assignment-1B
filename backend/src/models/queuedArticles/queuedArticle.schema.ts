@@ -11,7 +11,7 @@ export class QueuedArticle {
   @Prop() pageRange: [number, number];
   @Prop() doi: string;
   @Prop() keywords: string[];
-  @Prop() abstract: string;
+  @Prop() claim: string;
   @Prop() isModerated: boolean;
 }
 

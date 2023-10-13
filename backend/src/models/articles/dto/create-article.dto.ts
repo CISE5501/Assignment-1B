@@ -19,5 +19,5 @@ export class CreateArticleDto {
   @IsArray()
   readonly keywords: string[];
   @IsString()
-  readonly abstract: string;
+  readonly claim: string;
 }

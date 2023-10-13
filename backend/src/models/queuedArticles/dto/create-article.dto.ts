@@ -19,7 +19,7 @@ export class CreateQueuedArticleDto {
   @IsArray()
   readonly keywords: string[];
   @IsString()
-  readonly abstract: string;
+  readonly claim: string;
   @IsBoolean()
   readonly isModerated: boolean;
 }

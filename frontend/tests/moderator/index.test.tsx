@@ -14,7 +14,7 @@ const tempArray = [
     pageRange: [3, 5],
     doi: 'doi1',
     keywords: ['scrum', 'agile'],
-    abstract: 'this is an abstract',
+    claim: 'this is a claim',
     isModerated: false,
   },
   {
@@ -27,7 +27,7 @@ const tempArray = [
     pageRange: [3, 51],
     doi: 'doi2',
     keywords: ['scrum', 'agile'],
-    abstract: 'this too is an abstract',
+    claim: 'this too is a claim',
     isModerated: false,
   },
   {
@@ -40,7 +40,7 @@ const tempArray = [
     pageRange: [3, 51],
     doi: 'doi3',
     keywords: ['scrum', 'agile'],
-    abstract: 'this too is again an abstract',
+    claim: 'this too is again a claim',
     isModerated: false,
   },
 ] as QueuedArticle[];
@@ -83,7 +83,7 @@ describe('Testing rendering without article entries', () => {
 });
 
 describe('Testing table rendering: ', () => {
-  test('Test 1: the table should have the following columns: title, authors, date, journal, volume, issue, page range, doi, keywords, abstract, warnings, actions', async () => {
+  test('Test 1: the table should have the following columns: title, authors, date, journal, volume, issue, page range, doi, keywords, claim, warnings, actions', async () => {
     const { getByRole } = renderPage(tempArray, [], []);
     const table = getByRole('table');
     const theader = within(table).getAllByRole('rowgroup')[0];

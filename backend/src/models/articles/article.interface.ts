@@ -10,5 +10,5 @@ export interface IArticle extends Document {
   pageRange: [number, number];
   doi: string;
   keywords: string[];
-  abstract: string;
+  claim: string;
 }
