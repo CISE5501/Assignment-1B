@@ -4,6 +4,7 @@ import styles from './SubmissionForm.module.scss';
 import KeywordsInput from './KeywordsInput';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { DOI_CHECK_REGEX } from '../../src/common';
 
 const DOMAIN = process.env.DOMAIN;
 
@@ -71,8 +72,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
       }
     }
     // DOI check making sure that it is a valid doi format
-    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
-    const validDOI = doiCheckRegex.test(formData.doi);
+    const validDOI = DOI_CHECK_REGEX.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
     }
