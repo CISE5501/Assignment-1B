@@ -40,11 +40,15 @@ const KeywordsInput = ({ defaultValue, dataKey, updateFormData }: KeywordsInputP
 
   //keyword
   const keywordList = [
-    'SCRUM',
-    'Software Development Life Cycle (SDLC)',
+    'Agile Methodolgies',
+    'Artificial Intelligence',
+    'DevOps',
     'Kanban',
     'Lean',
-    'Agile Methodolgies',
+    'SCRUM',
+    'Security',
+    'Software Development Life Cycle',
+    'Software Testing',
     'Waterfall',
   ];
 
