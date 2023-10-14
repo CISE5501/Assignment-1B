@@ -6,7 +6,7 @@ const DOMAIN = process.env.DOMAIN;
 //props
 export interface SearchProps {
   message: string;
-  keywords: string[];
+  se_methods: string[];
   filteredArticles: Article[];
 }
 
@@ -29,11 +29,11 @@ export const headersList: DataRow<Article>[] = [
   },
   { key: 'doi', label: 'DOI' },
   {
-    key: 'keywords',
-    label: 'Keywords',
-    displayAs: (keywords: string[]) => keywords.join(', '),
+    key: 'se_methods',
+    label: 'SE methods',
+    displayAs: (se_methods: string[]) => se_methods.join(', '),
   },
-  { key: 'abstract', label: 'Abstract' },
+  { key: 'claim', label: 'claim' },
 ];
 
 //searches for articles containing the relevant keywords
@@ -52,7 +52,7 @@ const SearchDisplay = () => {
   const [data, setData] = useState<SearchProps>({
     message: '',
     filteredArticles: [],
-    keywords: [],
+    se_methods: [],
   });
 
   //retrieves searched query and updates the components with the search results
@@ -69,19 +69,19 @@ const SearchDisplay = () => {
 
   return (
     <div data-testid="container" className="container">
-      <h2>Search for Keywords</h2>
+      <h2>Search for SE Methods</h2>
       <form onSubmit={handleSubmit}>
-        <input data-testid="searchInput" type="text" size={80} name="keywords" />
+        <input data-testid="searchInput" type="text" size={80} name="se_methods" />
         <select name="field">
           <option value="all">Any Field</option>
-          <option value="keywords">SE Methods</option>
+          <option value="se_methods">SE Methods</option>
         </select>
         <button data-testid="searchButton" type="submit" style={{ marginLeft: '2em' }}>
           search
         </button>
       </form>
       <div data-testid="result" id="result" hidden>
-        <h3>Search Results for &quot;{data.keywords}&quot;</h3>
+        <h3>Search Results for &quot;{data.se_methods}&quot;</h3>
         {data.filteredArticles.length === 0 ? (
           'No Results'
         ) : (

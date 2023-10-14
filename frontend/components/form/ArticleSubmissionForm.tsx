@@ -4,6 +4,10 @@ import styles from './SubmissionForm.module.scss';
 import KeywordsInput from './KeywordsInput';
 import AuthorInput from './AuthorInput';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { DOI_CHECK_REGEX } from '../../src/common';
+
+// IMPORTANT: Need to sync with URL_REGEX in /../backend/src/common.ts
+const URL_REGEX = /\S*(?:http|www|\.\w+\/)\S+/g;
 
 const DOMAIN = process.env.DOMAIN;
 
@@ -21,8 +25,8 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     issue: 0,
     pageRange: [0, 0],
     doi: '',
-    keywords: [],
-    abstract: '',
+    se_methods: [],
+    claim: '',
     isModerated: false,
   });
 
@@ -42,7 +46,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         }
       })
       .catch((err) => {
-        alert('Failed to submit article: '+err);
+        alert('Failed to submit article: ' + err);
       });
   };
 
@@ -70,9 +74,13 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
         errorValidation.authors = 'Author first and last name is required!';
       }
     }
+    // Show warning when field contains URLs
+    if (URL_REGEX.test(formData.claim)) {
+      errorValidation.claim = `Claim must not contain a URL`;
+      formData.claim = formData.claim.replace(URL_REGEX, '[URL removed]');
+    }
     // DOI check making sure that it is a valid doi format
-    const doiCheckRegex = /doi:10.1\d{3}\/\d/;
-    const validDOI = doiCheckRegex.test(formData.doi);
+    const validDOI = DOI_CHECK_REGEX.test(formData.doi);
     if (!validDOI) {
       errorValidation.doi = 'Not a valid DOI!';
     }
@@ -92,8 +100,8 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
     const rawValue = e.currentTarget.value;
     const value = type === 'number' ? parseInt(rawValue) : rawValue;
     const formKeys: Record<'single' | 'array', Array<keyof QueuedArticleSubmission>> = {
-      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'abstract'],
-      array: ['authors', 'keywords', 'pageRange'],
+      single: ['title', 'date', 'journal', 'volume', 'issue', 'doi', 'claim'],
+      array: ['authors', 'se_methods', 'pageRange'],
     };
     if (!name) throw `Form item ${name} has no name parameter!`;
     if (formKeys.single.includes(name)) {
@@ -109,7 +117,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
 
   // updates keywords with a new array
   const handleKeywordChange = (newArray: string[]) => {
-    setFormData({ ...formData, ['keywords']: newArray });
+    setFormData({ ...formData, ['se_methods']: newArray });
   };
 
   // updates authors with a new array
@@ -198,17 +206,17 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
               </Form.Group>
             </Row>
             <Row>
-              {/*keywords*/}
-              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'keywords'} defaultValue={[]} />
-              {errors.keywords && <p className={styles.Error}>{errors.keywords}</p>}
+              {/*se methods*/}
+              <KeywordsInput updateFormData={handleKeywordChange} dataKey={'se_methods'} defaultValue={[]} />
+              {errors.se_methods && <p className={styles.Error}>{errors.se_methods}</p>}
             </Row>
           </Form.Group>
         </Row>
         <Row>
-          <Form.Group as={Col} controlId="abstract">
-            <Form.Label>Abstract</Form.Label>
-            <Form.Control data-key="abstract" as="textarea" rows={2} onChange={handleForm} />
-            {errors.abstract && <p className={styles.Error}>{errors.abstract}</p>}
+          <Form.Group as={Col} controlId="claim">
+            <Form.Label>Claim</Form.Label>
+            <Form.Control data-key="claim" as="textarea" rows={2} onChange={handleForm} />
+            {errors.claim && <p className={styles.Error}>{errors.claim}</p>}
           </Form.Group>
         </Row>
         <Button type="submit" disabled={formData === undefined ? true : false}>

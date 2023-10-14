@@ -13,8 +13,8 @@ const tempArray = [
     issue: 2,
     pageRange: [3, 5],
     doi: 'dsfsdfsdfsdf',
-    keywords: ['sad', 'asd'],
-    abstract: 'sfasd',
+    se_methods: ['sad', 'asd'],
+    claim: 'sfasd',
     isModerated: true,
   },
 ] as QueuedArticle[];
