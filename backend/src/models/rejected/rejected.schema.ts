@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
-export class RejectedEntry {
+export class Reject {
   @Prop() doi: string;
 }
 
-export const RejectedEntrySchema = SchemaFactory.createForClass(RejectedEntry);
+export const RejectSchema = SchemaFactory.createForClass(Reject);

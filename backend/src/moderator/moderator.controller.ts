@@ -1,7 +1,8 @@
-import { Controller, Get, HttpStatus, Param, Put, Res, Delete } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Put, Res, Delete, Post, Body } from '@nestjs/common';
 import { ArticleService } from 'src/models/articles/article.service';
 import { QueuedArticleService } from 'src/models/queuedArticles/queuedArticle.service';
-import { RejectedEntryService } from 'src/models/rejected/rejected.service';
+import { CreateRejectedEntryDto } from 'src/models/rejected/dto/create-entry.dto';
+import { RejectService } from 'src/models/rejected/rejected.service';
 
 /*
   Routes paths with prefix '/moderator' in the URL to functions declared in service modules.
@@ -18,7 +19,7 @@ export class ModeratorController {
   constructor(
     private readonly articleService: ArticleService,
     private readonly queuedArticleService: QueuedArticleService,
-    private readonly rejectedEntryService: RejectedEntryService,
+    private readonly rejectedEntryService: RejectService,
   ) {}
 
   // getArticles: returns list of queuedArticle objects which have NOT been moderated
@@ -101,12 +102,27 @@ export class ModeratorController {
     }
   }
 
+  @Post('/id/:id')
+  async rejectArticle(@Res() response, @Param('id') articleId: string) {
+    try {
+      const article = await this.queuedArticleService.getQueuedArticle(articleId);
+      const s: CreateRejectedEntryDto = new CreateRejectedEntryDto();
+      s.doi = article.doi;
+      const deletedArticle = await this.rejectedEntryService.addEntry(s);
+      return response.status(HttpStatus.OK).json({
+        message: 'Article rejected successfully',
+        deletedArticle,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
   //deletes a queuedArticle object from the queuedArticle database which has a matching id to the queried string
   @Delete('/id/:id')
   async deleteArticle(@Res() response, @Param('id') articleId: string) {
     try {
       const deletedArticle = await this.queuedArticleService.deleteQueuedArticle(articleId);
-      await this.rejectedEntryService.addEntry({ doi: deletedArticle.doi });
       return response.status(HttpStatus.OK).json({
         message: 'Article deleted successfully',
         deletedArticle,

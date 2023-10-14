@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IRejectedEntry } from 'src/models/rejected/rejected.interface';
+import { IReject } from 'src/models/rejected/rejected.interface';
 import { CreateRejectedEntryDto } from 'src/models/rejected/dto/create-entry.dto';
 
 /*
@@ -13,10 +13,10 @@ import { CreateRejectedEntryDto } from 'src/models/rejected/dto/create-entry.dto
 */
 
 @Injectable()
-export class RejectedEntryService {
-  constructor(@InjectModel('RejectedEntry') private entryModel: Model<IRejectedEntry>) {}
+export class RejectService {
+  constructor(@InjectModel('Reject') private entryModel: Model<IReject>) {}
 
-  async getAllEntries(): Promise<IRejectedEntry[]> {
+  async getAllEntries(): Promise<IReject[]> {
     const entries = await this.entryModel.find().exec();
     if (!entries || entries.length === 0) {
       throw new NotFoundException(`No entries found`);
@@ -24,7 +24,7 @@ export class RejectedEntryService {
     return entries;
   }
 
-  async getEntry(doi: string): Promise<IRejectedEntry> {
+  async getEntry(doi: string): Promise<IReject> {
     const entries = await this.entryModel.find().where({ doi }).exec();
     if (!entries || entries.length === 0) {
       throw new NotFoundException(`Entry with DOI ${doi} not found`);
@@ -32,11 +32,10 @@ export class RejectedEntryService {
     return entries[0];
   }
 
-  async addEntry(createEntryDto: CreateRejectedEntryDto): Promise<IRejectedEntry> {
+  async addEntry(createEntryDto: CreateRejectedEntryDto): Promise<IReject> {
     try {
-      this.getEntry(createEntryDto.doi);
+      await this.getEntry(createEntryDto.doi);
       // Throws if entry is not present
-      return null;
     } catch {
       // Create new entry
       const newEntry = await new this.entryModel(createEntryDto);
@@ -44,7 +43,7 @@ export class RejectedEntryService {
     }
   }
 
-  async deleteEntry(doi: string): Promise<IRejectedEntry> {
+  async deleteEntry(doi: string): Promise<IReject> {
     const entryId = (await this.getEntry(doi))._id;
     const deletedEntry = await this.entryModel.findByIdAndDelete(entryId);
     if (!deletedEntry) {
