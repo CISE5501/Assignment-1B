@@ -13,10 +13,12 @@ export type PageProps = {
 };
 
 //calls data from the 'moderator' path to get the list of queued articles, duplicates and previously rejected articles
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const { articleData: queueData } = await fetch(DOMAIN + 'moderator/index').then((data) => data.json());
-    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'moderator/duplicates').then((data) => data.json());
+    const { duplicateDOIs: duplicates } = await fetch(DOMAIN + 'moderator/duplicates').then((data) =>
+      data.json(),
+    );
     const { rejectedDOIs: rejected } = await fetch(DOMAIN + 'moderator/rejected').then((data) => data.json());
     return {
       props: {
@@ -25,9 +27,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         rejected,
       },
     };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.log(e);
-    return { props: { error: true } }
+    return { props: { error: true } };
   }
 };
 
@@ -71,7 +74,6 @@ const acceptArticle = async (id: string) => {
 
 //returns table using data from queuedArticles where isModerated = false
 const Index = ({ queueData, duplicates, rejected }: PageProps) => {
-
   const handleReject = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault;
     rejectArticle(id);
@@ -85,54 +87,54 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
   )[] = [
-      { key: 'title', label: 'Title' },
-      {
-        key: 'authors',
-        label: 'Authors',
-        displayAs: (authors: string[]) => authors.join('; '),
-      },
-      { key: 'date', label: 'Date' },
-      { key: 'journal', label: 'Journal' },
-      { key: 'volume', label: 'Volume' },
-      { key: 'issue', label: 'Issue' },
-      {
-        key: 'pageRange',
-        label: 'Page Range',
-        displayAs: ([start, end]: [number, number]) => start + '-' + end,
-      },
-      { key: 'doi', label: 'DOI' },
-      {
-        key: 'se_methods',
-        label: 'SE methods',
-        displayAs: (se_methods: string[]) => se_methods.join(', '),
-      },
-      { key: 'claim', label: 'Claim' },
-      {
-        computed: true,
-        label: 'Warnings',
-        content: (data) => (
-          <ul>
-            {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
-            {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
-          </ul>
-        ),
-      },
-      {
-        computed: true,
-        label: 'Actions',
-        content: (data) => (
-          <div>
-            <button type="button" onClick={(event) => handleReject(event, data._id)}>
-              Reject
-            </button>
-            <br />
-            <button type="button" onClick={(event) => handleAccept(event, data._id)}>
-              Accept
-            </button>
-          </div>
-        ),
-      },
-    ];
+    { key: 'title', label: 'Title' },
+    {
+      key: 'authors',
+      label: 'Authors',
+      displayAs: (authors: string[]) => authors.join('; '),
+    },
+    { key: 'date', label: 'Date' },
+    { key: 'journal', label: 'Journal' },
+    { key: 'volume', label: 'Volume' },
+    { key: 'issue', label: 'Issue' },
+    {
+      key: 'pageRange',
+      label: 'Page Range',
+      displayAs: ([start, end]: [number, number]) => start + '-' + end,
+    },
+    { key: 'doi', label: 'DOI' },
+    {
+      key: 'se_methods',
+      label: 'SE methods',
+      displayAs: (se_methods: string[]) => se_methods.join(', '),
+    },
+    { key: 'claim', label: 'Claim' },
+    {
+      computed: true,
+      label: 'Warnings',
+      content: (data) => (
+        <ul>
+          {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
+      ),
+    },
+    {
+      computed: true,
+      label: 'Actions',
+      content: (data) => (
+        <div>
+          <button type="button" onClick={(event) => handleReject(event, data._id)}>
+            Reject
+          </button>
+          <br />
+          <button type="button" onClick={(event) => handleAccept(event, data._id)}>
+            Accept
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Container>
