@@ -19,7 +19,7 @@ export const headersList: DataRow<Article>[] = [
     label: 'Authors',
     displayAs: (authors: string[]) => authors.join('; '),
   },
-  { key: 'date', label: 'Date', displayAs: formatDate, },
+  { key: 'date', label: 'Date', displayAs: formatDate },
   { key: 'journal', label: 'Journal' },
   { key: 'volume', label: 'Volume' },
   { key: 'issue', label: 'Issue' },
@@ -83,7 +83,9 @@ const SearchDisplay = ({ size, buttonMargin = '0', dropdown = true }: SearchDisp
             <option value="all">Any Field</option>
             <option value="se_methods">SE Methods</option>
           </select>
-        ) : ''}
+        ) : (
+          ''
+        )}
         <button data-testid="searchButton" type="submit" style={{ marginLeft: buttonMargin }}>
           Search
         </button>
@@ -96,7 +98,7 @@ const SearchDisplay = ({ size, buttonMargin = '0', dropdown = true }: SearchDisp
           <SortableTable headers={headersList} data={data.filteredArticles} />
         )}
       </div>
-    </div >
+    </div>
   );
 };
 

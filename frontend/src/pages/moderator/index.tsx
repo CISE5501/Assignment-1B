@@ -88,54 +88,54 @@ const Index = ({ queueData, duplicates, rejected }: PageProps) => {
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
   )[] = [
-      { key: 'title', label: 'Title' },
-      {
-        key: 'authors',
-        label: 'Authors',
-        displayAs: (authors: string[]) => authors.join('; '),
-      },
-      { key: 'date', label: 'Date', displayAs: formatDate },
-      { key: 'journal', label: 'Journal' },
-      { key: 'volume', label: 'Volume' },
-      { key: 'issue', label: 'Issue' },
-      {
-        key: 'pageRange',
-        label: 'Page Range',
-        displayAs: ([start, end]: [number, number]) => start + '-' + end,
-      },
-      { key: 'doi', label: 'DOI' },
-      {
-        key: 'se_methods',
-        label: 'SE methods',
-        displayAs: (se_methods: string[]) => se_methods.join(', '),
-      },
-      { key: 'claim', label: 'Claim' },
-      {
-        computed: true,
-        label: 'Warnings',
-        content: (data) => (
-          <ul>
-            {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
-            {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
-          </ul>
-        ),
-      },
-      {
-        computed: true,
-        label: 'Actions',
-        content: (data) => (
-          <div>
-            <button type="button" onClick={(event) => handleReject(event, data._id)}>
-              Reject
-            </button>
-            <br />
-            <button type="button" onClick={(event) => handleAccept(event, data._id)}>
-              Accept
-            </button>
-          </div>
-        ),
-      },
-    ];
+    { key: 'title', label: 'Title' },
+    {
+      key: 'authors',
+      label: 'Authors',
+      displayAs: (authors: string[]) => authors.join('; '),
+    },
+    { key: 'date', label: 'Date', displayAs: formatDate },
+    { key: 'journal', label: 'Journal' },
+    { key: 'volume', label: 'Volume' },
+    { key: 'issue', label: 'Issue' },
+    {
+      key: 'pageRange',
+      label: 'Page Range',
+      displayAs: ([start, end]: [number, number]) => start + '-' + end,
+    },
+    { key: 'doi', label: 'DOI' },
+    {
+      key: 'se_methods',
+      label: 'SE methods',
+      displayAs: (se_methods: string[]) => se_methods.join(', '),
+    },
+    { key: 'claim', label: 'Claim' },
+    {
+      computed: true,
+      label: 'Warnings',
+      content: (data) => (
+        <ul>
+          {duplicates?.includes(data.doi) ? <li style={warning}>Duplicate</li> : ''}
+          {rejected?.includes(data.doi) ? <li style={warning}>Previously Rejected</li> : ''}
+        </ul>
+      ),
+    },
+    {
+      computed: true,
+      label: 'Actions',
+      content: (data) => (
+        <div>
+          <button type="button" onClick={(event) => handleReject(event, data._id)}>
+            Reject
+          </button>
+          <br />
+          <button type="button" onClick={(event) => handleAccept(event, data._id)}>
+            Accept
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Container>
