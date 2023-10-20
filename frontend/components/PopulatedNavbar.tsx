@@ -6,6 +6,7 @@ const PopulatedNavBar = () => {
   return (
     <NavBar>
       <NavItem>SPEED</NavItem>
+      <SearchDisplay size={20} dropdown={false} />
       <NavItem route="/" end>
         Home
       </NavItem>

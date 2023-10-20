@@ -47,7 +47,13 @@ export const searchKeywords = async (field: string, input: string) => {
   }
 };
 
-const SearchDisplay = () => {
+interface SearchDisplayProps {
+  size: number;
+  buttonMargin?: string;
+  dropdown?: boolean;
+}
+
+const SearchDisplay = ({ size, buttonMargin = '0', dropdown = true }: SearchDisplayProps) => {
   //sets the inital value
   const [data, setData] = useState<SearchProps>({
     message: '',
@@ -69,15 +75,16 @@ const SearchDisplay = () => {
 
   return (
     <div data-testid="container" className="container">
-      <h2>Search for SE Methods</h2>
       <form onSubmit={handleSubmit}>
-        <input data-testid="searchInput" type="text" size={80} name="se_methods" />
-        <select name="field">
-          <option value="all">Any Field</option>
-          <option value="se_methods">SE Methods</option>
-        </select>
-        <button data-testid="searchButton" type="submit" style={{ marginLeft: '2em' }}>
-          search
+        <input data-testid="searchInput" type="text" size={size} name="se_methods" />
+        {dropdown ? (
+          <select name="field">
+            <option value="all">Any Field</option>
+            <option value="se_methods">SE Methods</option>
+          </select>
+        ) : ''}
+        <button data-testid="searchButton" type="submit" style={{ marginLeft: buttonMargin }}>
+          Search
         </button>
       </form>
       <div data-testid="result" id="result" hidden>
@@ -88,7 +95,7 @@ const SearchDisplay = () => {
           <SortableTable headers={headersList} data={data.filteredArticles} />
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
