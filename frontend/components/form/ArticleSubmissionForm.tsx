@@ -159,7 +159,7 @@ const QueuedArticleSubmissionForm: React.FC<Props> = () => {
               {/*doi*/}
               <Form.Group as={Col} controlId="doi">
                 <Form.Label>DOI</Form.Label>
-                <Form.Control required data-key="doi" placeholder="doi:100.1000/5501" onChange={handleForm} />
+                <Form.Control required data-key="doi" placeholder="doi:10.1000/5501" onChange={handleForm} />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
               </Form.Group>
             </Row>

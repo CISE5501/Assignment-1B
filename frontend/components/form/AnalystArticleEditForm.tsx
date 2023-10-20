@@ -190,7 +190,7 @@ const AnalystArticleSubmissionForm: React.FC<AnalystFormProps> = (data) => {
                   required
                   data-key="doi"
                   defaultValue={articleData.doi}
-                  placeholder="doi:100.1000/5501"
+                  placeholder="doi:10.1000/5501"
                   onChange={handleForm}
                 />
                 {errors.doi && <p className={styles.Error}>{errors.doi}</p>}
