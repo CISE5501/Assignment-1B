@@ -4,6 +4,7 @@ import { QueuedArticle } from '../../schema/queuedArticle';
 import SortableTable, { ComputedRow, DataRow } from '../../../components/table/SortableTable';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
+import { formatDate } from '@/common';
 const DOMAIN = process.env.DOMAIN;
 
 //props
@@ -32,39 +33,39 @@ const Index = ({ queueData }: PageProps) => {
     | (DataRow<QueuedArticle> & { key: keyof QueuedArticle })
     | ComputedRow<QueuedArticle>
   )[] = [
-    { key: 'title', label: 'Title' },
-    {
-      key: 'authors',
-      label: 'Authors',
-      displayAs: (authors) => authors.join('; '),
-    },
-    { key: 'date', label: 'Date' },
-    { key: 'journal', label: 'Journal' },
-    { key: 'volume', label: 'Volume' },
-    { key: 'issue', label: 'Issue' },
-    {
-      key: 'pageRange',
-      label: 'Page Range',
-      displayAs: ([start, end]) => start + '-' + end,
-    },
-    { key: 'doi', label: 'DOI' },
-    {
-      key: 'se_methods',
-      label: 'SE Methods',
-      displayAs: (se_methods) => se_methods.join(', '),
-    },
-    { key: 'claim', label: 'Claim' },
-    {
-      computed: true,
-      label: 'Actions',
-      content: (data) => (
-        <div>
-          <br />
-          <Link href={`analyst/${data._id}`}>Edit</Link>
-        </div>
-      ),
-    },
-  ];
+      { key: 'title', label: 'Title' },
+      {
+        key: 'authors',
+        label: 'Authors',
+        displayAs: (authors) => authors.join('; '),
+      },
+      { key: 'date', label: 'Date', displayAs: formatDate },
+      { key: 'journal', label: 'Journal' },
+      { key: 'volume', label: 'Volume' },
+      { key: 'issue', label: 'Issue' },
+      {
+        key: 'pageRange',
+        label: 'Page Range',
+        displayAs: ([start, end]) => start + '-' + end,
+      },
+      { key: 'doi', label: 'DOI' },
+      {
+        key: 'se_methods',
+        label: 'SE Methods',
+        displayAs: (se_methods) => se_methods.join(', '),
+      },
+      { key: 'claim', label: 'Claim' },
+      {
+        computed: true,
+        label: 'Actions',
+        content: (data) => (
+          <div>
+            <br />
+            <Link href={`analyst/${data._id}`}>Edit</Link>
+          </div>
+        ),
+      },
+    ];
 
   return (
     <Container>

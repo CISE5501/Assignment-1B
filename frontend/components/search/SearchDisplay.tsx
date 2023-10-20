@@ -2,6 +2,7 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../components/table/SortableTable';
+import { formatDate } from '@/common';
 const DOMAIN = process.env.DOMAIN;
 //props
 export interface SearchProps {
@@ -18,7 +19,7 @@ export const headersList: DataRow<Article>[] = [
     label: 'Authors',
     displayAs: (authors: string[]) => authors.join('; '),
   },
-  { key: 'date', label: 'Date' },
+  { key: 'date', label: 'Date', displayAs: formatDate, },
   { key: 'journal', label: 'Journal' },
   { key: 'volume', label: 'Volume' },
   { key: 'issue', label: 'Issue' },

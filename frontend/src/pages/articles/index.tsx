@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Article } from '@/schema/article';
 import SortableTable, { DataRow } from '../../../components/table/SortableTable';
+import { formatDate } from '@/common';
 const DOMAIN = process.env.DOMAIN;
 
 //props
@@ -49,7 +50,7 @@ const Index = ({ articleData }: ArticleProps) => {
       label: 'Authors',
       displayAs: (authors: string[]) => authors.join('; '),
     },
-    { key: 'date', label: 'Date' },
+    { key: 'date', label: 'Date', displayAs: formatDate },
     { key: 'journal', label: 'Journal' },
     { key: 'volume', label: 'Volume' },
     { key: 'issue', label: 'Issue' },
